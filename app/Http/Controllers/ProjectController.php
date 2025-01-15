@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Project;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+
+class ProjectController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        // First get the project without employees
+        $project = Project::with(['consultants', 'clients.client', 'devices', 'manager'])
+        ->find($id);
+
+        if (!$project) {
+            abort(404, 'Project not found');
+        }
+        $projects = Project::where('status' , 'in-progress')->where('id', '!=', $id)->get();
+        // Get paginated employees separately
+        $project->employees = $project->employees()->with('position')->paginate(10);
+
+        $clientsCount = $project->clients()->count() ?? '0';
+        $consultantsCount = $project->consultants()->count() ?? '0';
+
+        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function transfer(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'project_id' => 'required|exists:projects,id',
+        ]);
+        $employee = Employee::find($request->employee_id);
+        $employee->project_id = $request->project_id;
+        $employee->save();
+        return redirect()->back()->with('success', 'Employee transferred successfully');
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Project $project)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Project $project)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Project $project)
+    {
+        //
+    }
+}
