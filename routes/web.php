@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/project' , ProjectManage::class)->name('project.index');
     Route::get('/client' , ClientManage::class)->name('client.index');
     Route::get('/sim' , SimCardManage::class)->name('sim.index');
+    Route::get('/resign/employee/{id}' , [EmployeeController::class , 'preResign'])->name('employee.preResign');
+    Route::post('/resign/employee/{id}/clearance/{clr}' , [EmployeeController::class , 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
     ->name('clearance.upload-signature');
     Route::get('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');

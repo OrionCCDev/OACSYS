@@ -77,14 +77,12 @@
                                                                     <span class="badge badge-success">{{ $sim->sim_number }}</span>
                                                                     @endforeach
                                                                 </td>
-
                                                                 <td>
                                                                     {{ $employee->department->name }}
                                                                 </td>
                                                                 <td>
                                                                     {{ $employee->position->name }}
                                                                 </td>
-
                                                                     <td class="text-center">
                                                                         <div class="btn-group" role="group">
                                                                             <a href="{{ route('employees.show' , $employee->id) }}" class="btn btn-sm btn-success" title="View Details">
@@ -99,8 +97,6 @@
                                                                             </button>
                                                                         </div>
                                                                     </td>
-
-
                                                                     <td class="text-center">
                                                                         <div class="btn-group btn-group-rounded mr-25" role="group" aria-label="First group">
                                                                             <button type="button" class="btn btn-outline-info"><i class="icon-layers"></i></button>
@@ -108,7 +104,7 @@
                                                                         </div>
                                                                     </td>
                                                                     <td class="text-center">
-                                                                        <button class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></button>
+                                                                        <a href="{{ route('employee.preResign' , ['id' => $employee->id]) }}" class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></a>
                                                                     </td>
                                                                     <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
                                                                         aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
