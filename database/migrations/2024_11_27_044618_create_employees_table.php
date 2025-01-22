@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('orion_email')->nullable()->unique();
             $table->string('personal_mobile')->nullable();
             $table->string('personal_email')->nullable();
-            $table->enum('type' , ['owner' , 'manager' , 'employee' , 'labor'])->default('employee');
+            $table->enum('type' , ['owner' , 'manager' , 'employee' , 'labor' , 'resigned'])->default('employee');
             $table->text('notes')->nullable();
             $table->timestamp('hire_date')->nullable();
             $table->timestamp('resign_date')->nullable();

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('clear_code')->unique()->nullable();
             $table->string('clear_image')->nullable();
-            $table->enum('status' , ['pending' , 'finished']);
+            $table->enum('status' , ['pending' , 'finished' , 'pending_resign' , 'resigned'])->default('pending');
             $table->foreignId('employee_id')->constrained()->nullOnDelete();
             $table->foreignId('client_employee_id')->constrained('client_employees' , 'id')->nullOnDelete();
             $table->foreignId('consultant_id')->constrained()->nullOnDelete();

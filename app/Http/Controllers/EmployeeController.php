@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clearance;
 use Log;
 use App\Models\Project;
 use App\Models\SimCard;
@@ -119,8 +120,61 @@ class EmployeeController extends Controller
     {
         $projects = Project::where('status', 'in-progress')->get();
         $managers = Employee::where('type', 'manager')->get();
-
         return view('employees.edit', compact('employee', 'projects', 'managers'));
+    }
+
+    public function preResign($id)
+    {
+        $employee = Employee::with('devices', 'department', 'position', 'sim_card', 'project', 'clearance')->find($id);
+        // dd($employee);
+        if ($employee->clearance->where('status', 'pending_resign')->count() > 0) {
+            $clearanceResign = $employee->clearance->where('status', 'pending_resign')->first();
+        } elseif ($employee->clearance->where('status', 'resigned')->count() > 0) {
+            $clearanceResign = $employee->clearance->where('status', 'resigned')->first();
+        } else {
+            $clearanceResign = Clearance::create([
+                'employee_id' => $employee->id,
+                'status' => 'pending_resign',
+            ]);
+        }
+
+        return view('employees.resign', compact('employee', 'clearanceResign'));
+    }
+
+    public function finishResign($id , $clr , Request $request)
+    {
+        $validatedData = $request->validate([
+            'signature' => 'required|mimes:png,jpg,jpeg,webp,pdf|max:2048',
+        ]);
+        $employee = Employee::with('devices','sim_card')->find($id);
+
+
+        $finalClearance = Clearance::find($clr);
+
+        if ($request->hasFile('signature')) {
+            $signature = $request->file('signature');
+            $signatureName = time() . '.' . $signature->getClientOriginalExtension();
+            $signature->move(public_path('X-Files/Dash/imgs/clearance'), $signatureName);
+            $finalClearance->update([
+                'clear_image' => $signatureName,
+                'status' => 'resigned',
+            ]);
+        }
+        $employee->update([
+            'resign_date' => now(),
+            'projectt_id' => null,
+            'type' => 'resigned',
+        ]);
+        $employee->devices()->update([
+            'employee_id' => null,
+            'status' => 'available',
+        ]);
+        $employee->sim_card()->update([
+            'employee_id' => null,
+            'status' => 'available',
+        ]);
+
+        return to_route('employees.index');
     }
 
     /**
