@@ -16,12 +16,14 @@
         type="text/css" />
 
     <!-- Toggles CSS -->
-    <link href="{{ asset('X-Files/Dash/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('X-Files/Dash/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet"
+        type="text/css" />
     <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/toggles.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/themes/toggles-light.css') }}" rel="stylesheet"
         type="text/css">
-        <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/toggles.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/themes/toggles-light.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/toggles.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('X-Files/Dash/vendors/jquery-toggles/css/themes/toggles-light.css') }}" rel="stylesheet"
+        type="text/css">
     <!-- Toastr CSS -->
     <link href="{{ asset('X-Files/Dash/vendors/jquery-toast-plugin/dist/jquery.toast.min.css') }}" rel="stylesheet"
         type="text/css">
@@ -29,10 +31,13 @@
     <!-- Custom CSS -->
     <link href="{{ asset('X-Files/Dash/dist/css/style.css') }}" rel="stylesheet" type="text/css">
     @yield('custom_css')
-@livewireStyles()
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @livewireStyles()
 </head>
 
 <body>
+
+
     <!-- Preloader -->
     <div class="preloader-it">
         <div class="loader-pendulums"></div>
@@ -236,13 +241,20 @@
             <div class="nicescroll-bar">
                 <div class="navbar-nav-wrap" style="padding-top: 50px">
                     <ul class="navbar-nav flex-column">
+                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
+                        Auth::user()->hasRole('o-hr'))
+
+
                         <li class="nav-item {{ Request::is('employees*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('employees.index') }}">
                                 <span class="feather-icon"><i data-feather="activity"></i></span>
                                 <span class="nav-link-text">Employees</span>
                             </a>
                         </li>
+
+                        @endif
                         <hr class="nav-separator">
+                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') )
 
                         <li class="nav-item {{ Request::is('device*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('device.index') }}">
@@ -264,43 +276,69 @@
                                 <span class="nav-link-text">Receives</span>
                             </a>
                         </li>
+                        @endif
+
                         <hr class="nav-separator">
-                         <li class="nav-item">
-                            <a class="nav-link link-with-badge"
-                                >
+                        <li class="nav-item">
+                            <a class="nav-link link-with-badge">
                                 <span class="feather-icon"><i data-feather="package"></i></span>
                                 <span class="nav-link-text">Control SyS</span>
 
                             </a>
-                            <ul  class="nav flex-column  collapse-level-1">
+                            <ul class="nav flex-column  collapse-level-1">
                                 <li class="nav-item">
                                     <ul class="nav flex-column">
+                                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin')
+                                        )
 
                                         <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('sim.index') }}">Sim Cards</a>
-                                        </li>
                                         <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('position.index') }}">Positions</a>
                                         </li>
+                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('sim.index') }}">Sim Cards</a>
+                                        </li>
+
                                         <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('project.index') }}">Projects</a>
                                         </li>
                                         <li class="nav-item {{ Request::is('consultant*') ? 'active' : '' }}">
                                             <a class="nav-link" href="file-manager.html">Consultants</a>
                                         </li>
+                                        @elseif (Auth::user()->hasRole('o-hr') )
+
+                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
+                                        </li>
+                                        <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('position.index') }}">Positions</a>
+                                        </li>
+                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('sim.index') }}">Sim Cards</a>
+                                        </li>
+
+                                        @endif
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         <hr class="nav-separator">
+                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') )
 
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link collapsed " href="javascript:void(0);" data-toggle="collapse" data-target="#Components_drp" aria-expanded="false">
-                                    <span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></span>
+                                <a class="nav-link collapsed " href="javascript:void(0);" data-toggle="collapse"
+                                    data-target="#Components_drp" aria-expanded="false">
+                                    <span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-layout">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                                        </svg></span>
                                     <span class="nav-link-text">Client</span>
                                 </a>
                                 <ul id="Components_drp" class="nav flex-column collapse-level-1 collapse" style="">
@@ -310,7 +348,8 @@
                                                 <a class="nav-link " href="{{ route('client.index') }}">Clients</a>
                                             </li>
                                             <li class="nav-item {{ Request::is('clientEmployee*') ? 'active' : '' }}">
-                                                <a class="nav-link " href="{{ route('clientEmployee.index') }}">Client Employees</a>
+                                                <a class="nav-link " href="{{ route('clientEmployee.index') }}">Client
+                                                    Employees</a>
                                             </li>
 
 
@@ -320,6 +359,7 @@
                             </li>
 
                         </ul>
+                        @endif
                         {{--<li class="nav-item">
                             <a class="nav-link" href="javascript:void(0);" data-toggle="collapse"
                                 data-target="#auth_drp">

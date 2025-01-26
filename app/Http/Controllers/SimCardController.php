@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SimCard;
 use Illuminate\Http\Request;
-
+use App\Imports\SimCardImport;
+use Maatwebsite\Excel\Facades\Excel;
 class SimCardController extends Controller
 {
     /**
@@ -14,7 +15,13 @@ class SimCardController extends Controller
     {
         //
     }
+    // public function import(Request $request)
+    // {
+    //     $file = $request->file('excel_file');
+    //     Excel::import(new SimCardImport, $file);
 
+    //     return redirect()->back()->with('success', 'SimCards updated successfully');
+    // }
     /**
      * Show the form for creating a new resource.
      */

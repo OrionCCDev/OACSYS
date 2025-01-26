@@ -7,12 +7,21 @@
                 {{-- <p>Questions about onboarding lead data? <a href="#">Learn more.</a></p> --}}
             </div>
         </div>
+
         <!-- Title -->
         <div class="hk-pg">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="hk-row">
                         <div class="col-sm-12">
+                            {{-- <form action="{{ route('simcards.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <input type="file" name="excel_file" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Import Excel</button>
+                            </form>
+                             --}}
                             <section class="hk-sec-wrapper">
                                 <h5 class="hk-sec-title">Add New SimCard Number</h5>
                                 <div class="row">
@@ -28,6 +37,28 @@
                                                         <input type="text" wire:model.lazy='SimCard_number'
                                                             name="SimCard_number" class="form-control"
                                                             id="AddNewSimCard" placeholder="SimCard Number">
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Provider</div>
+                                                        </div>
+                                                        <select wire:model.lazy='sim_provider' class="form-control">
+                                                            <option value="">Select Provider</option>
+                                                            <option value="DU">DU</option>
+                                                            <option value="Etisalat">E&</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Plan</div>
+                                                        </div>
+                                                        <input type="text" wire:model.lazy='sim_plan'
+                                                            class="form-control" placeholder="Data Plan">
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
@@ -104,6 +135,8 @@
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>SimCard Number</th>
+                                                <th>Plan</th>
+                                                <th>Provider</th>
                                                 <th>Owner</th>
                                                 <th>Handle</th>
                                             </tr>
@@ -112,19 +145,26 @@
                                             @foreach ($data as $sim )
                                             <tr wire:key="{{ $sim->id }}">
                                                 @if ($edtId == $sim->id)
-                                                    <td>
-                                                        <input type="text" wire:model='edtNumber' value="{{ $edtNumber }}" >
-                                                        <button wire:click="update({{ $sim->id }})" class="btn btn-warning btn-wth-icon btn-rounded icon-right btn-sm"><span class="btn-text">Update</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></span> </span></button>
-                                                        <button wire:click="cancel" class="btn btn-danger btn-wth-icon btn-rounded icon-right btn-sm"><span class="btn-text">Cancel</span> <span class="icon-label"><i class="fa fa-times"></i> </span></button>
-                                                        @error('edtNumber')
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </td>
-                                                @else
+                                                <td>
+                                                    <input type="text" wire:model='edtNumber' value="{{ $edtNumber }}" >
+                                                    <!-- existing buttons -->
+                                                </td>
+                                                <td>
+                                                    <select wire:model='edtProvider' class="form-control">
+                                                        <option value="">Select Provider</option>
+                                                        <option value="DU">DU</option>
+                                                        <option value="Etisalat">E&</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" wire:model='edtPlan' value="{{ $edtPlan }}" >
+                                                    <!-- existing update/cancel buttons -->
+                                                </td>
+                                            @else
                                                 <td>{{ $sim->sim_number }}</td>
-                                                @endif
+                                                <td>{{ $sim->sim_provider }}</td>
+                                                <td>{{ $sim->sim_plan }}</td>
+                                            @endif
                                                 <td>
                                                     @if($sim->employee)
                                                     <span class="badge badge-indigo">{{ $sim->employee->name }}</span>
@@ -137,10 +177,18 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button wire:click='edt({{ $sim->id }})' class="btn btn-info mr-25 " data-toggle="tooltip"
-                                                        data-original-title="Edit">
-                                                        <i class="icon-pencil"></i>
+                                                    @if ($edtId == $sim->id)
+                                                    <button wire:click="update({{ $sim->id }})" class="btn btn-success mr-25" data-toggle="tooltip" data-original-title="Save">
+                                                        <i class="icon-check"></i> Save
                                                     </button>
+                                                    <button wire:click="cancel" class="btn btn-danger mr-25" data-toggle="tooltip" data-original-title="Cancel">
+                                                        <i class="icon-close"></i> Cancel
+                                                    </button>
+                                                @else
+                                                    <button wire:click='edt({{ $sim->id }})' class="btn btn-info mr-25" data-toggle="tooltip" data-original-title="Edit">
+                                                        <i class="icon-pencil"></i> Edit
+                                                    </button>
+                                                @endif
 
 
 

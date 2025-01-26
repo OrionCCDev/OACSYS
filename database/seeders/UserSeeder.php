@@ -13,19 +13,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $u1 = User::create([
             'name' => 'AhmedSayed',
             'email' => 'a.sayed@it.orion',
             'password' => bcrypt('THEgh0$t'),
             'image' => 'sayed.jpg',
-            'role' => 'admin'
+            'orion_role_lvl' => 'o-super-admin'
         ]);
-        User::create([
+        $u2 = User::create([
             'name' => 'AhmedFaisal',
             'email' => 'a.faisal@it.orion',
             'password' => bcrypt('AHMED@ALHAG@128'),
             'image' => 'faisal.jpg',
-            'role' => 'admin'
+            'orion_role_lvl' => 'o-super-admin'
         ]);
+        $u3 = User::create([
+            'name' => 'hr',
+            'email' => 'hr@orion.com',
+            'password' => bcrypt('hr@123'),
+            'image' => 'hr.jpg',
+            'orion_role_lvl' => 'o-hr'
+        ]);
+
+        $u1->addRole('o-super-admin');
+        $u2->addRole('o-super-admin');
+        $u3->addRole('o-hr');
     }
 }

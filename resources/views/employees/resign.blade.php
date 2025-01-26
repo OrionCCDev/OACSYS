@@ -1,5 +1,30 @@
 @extends('layouts.app')
+@section('custom_css')
+<style>
+    @media print {
+        #PrintingArea {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        body {
+            margin: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .no-print {
+            display: none;
+        }
+    }
+</style>
+@endsection
 @section('content')
 <div class="hk-pg-wrapper">
     <div class="container mt-xl-50 mt-sm-30 mt-15">
@@ -34,8 +59,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="{{ route('employee.resign-upload-signature',[ 'id' => $employee->id , 'clr' =>$clearanceResign->id ]) }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form
+                            action="{{ route('employee.resign-upload-signature',[ 'id' => $employee->id , 'clr' =>$clearanceResign->id ]) }}"
+                            method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group">
@@ -53,7 +79,7 @@
                 </div>
             </div>
             @endif
-            <button onclick="window.print()" class="btn btn-info mr-3">
+            <button onclick="printClearance()" class="btn btn-info mr-3">
                 Print Clearance
             </button>
             <a href="{{ url()->previous() }}" class="btn btn-sky mr-3">
@@ -64,7 +90,6 @@
 
         </div>
         <div class="row" id="PrintingArea">
-
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">
@@ -86,14 +111,22 @@
                     <hr class="mt-0">
                     <div class="invoice-to-wrap pb-20">
                         <div class="row">
-                            <div class="col-12 mb-30 text-center" style="justify-items: center">
-                                <p><strong>Name:</strong>
-                                {{ $employee->name }}
-                                </p>
-                                <p><strong>ID:</strong>
-                                {{ $employee->employee_id }}
-                                </p>
-                                <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'. $employee->profile_image) }}" width="150px" height="150px" class="img-fluid circle" alt="img">
+                            <div class="col-6 mb-30 text-center" style="justify-items: center">
+                                <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'. $employee->profile_image) }}"
+                                    width="150px" height="150px" class="img-fluid circle" alt="img">
+                            </div>
+                            <div class="col-6 mb-30 text-center row" style="justify-items: center">
+                                <div class="col-12 text-center align-content-center">
+                                    <p><strong>Name:</strong>
+                                        {{ $employee->name }}
+                                    </p>
+                                </div>
+                                <div class="col-12 text-center align-content-center">
+                                    <p><strong>ID:</strong>
+                                        {{ $employee->employee_id }}
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -104,7 +137,7 @@
                     </h3>
                     <h5 class="mt-3" style="color:#174094 ">Items</h5>
                     <hr>
-                    <div class="invoice-details" style="min-height:550px">
+                    <div class="invoice-details" style="min-height:450px">
                         <div class="table-wrap">
                             <div class="table-responsive">
                                 @if(count($employee->devices) > 0)
@@ -126,18 +159,14 @@
                                             <td>{{ $device->device_model }}</td>
                                         </tr>
                                         @endforeach
-
                                     </tbody>
                                 </table>
                                 @else
-                                <h4>I have No Devices</h4>
+                                <h4 class="text-center">I have No Devices</h4>
                                 @endif
 
                             </div>
                         </div>
-
-
-
                         @if(count($employee->sim_card) > 0)
                         <div class="table-wrap" style="margin-top: 50px">
                             <div class="table-responsive">
@@ -158,11 +187,10 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                         @else
-                        <h4>I have No Sim Card</h4>
+                        <h4 class="text-center">I have No Sim Card</h4>
                         @endif
 
                     </div>
@@ -202,12 +230,12 @@
 
 <script>
     function printClearance() {
-    const printContent = document.getElementById('printingArea').innerHTML;
-    const originalContent = document.body.innerHTML;
-    document.body.innerHTML = printContent;
-    window.print();
-    document.body.innerHTML = originalContent;
-}
+        const printContent = document.getElementById('PrintingArea').innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
 
 </script>
 @endsection

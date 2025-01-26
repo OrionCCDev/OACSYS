@@ -12,7 +12,7 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        $devices = Device::with(['employee','consultant','clientEmployee','project'])->paginate(10);
+        $devices = Device::with(['employee','consultant','clientEmployee','project'])->paginate(5);
         return view('device.index' , compact('devices'));
     }
 
