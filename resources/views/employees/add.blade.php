@@ -300,6 +300,7 @@
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary mb-2">Save</button>
                                         </div>
+                                        <a href="{{ url()->previous() }}" type="button" class="btn btn-danger mb-2">Cancel</a>
                                     </div>
                                 </form>
                                 <script>

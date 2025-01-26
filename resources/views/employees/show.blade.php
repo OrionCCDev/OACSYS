@@ -207,7 +207,7 @@
                                     <div class="row mt-30">
                                         <div class="col-auto">
 
-                                            <a href="{{ url()->previous() }}" style="display: inline-flex;align-items:center;" class="btn  mb-2 btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-left btn-lg">
+                                            <a href="{{ route('employees.index') }}" style="display: inline-flex;align-items:center;" class="btn  mb-2 btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-left btn-lg">
                                                 <i class="icon-logout"></i>
                                                 <span class="btn-text">Back</span>
                                             </a>

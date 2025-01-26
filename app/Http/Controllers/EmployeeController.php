@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Clearance;
 use Log;
 use App\Models\Project;
 use App\Models\SimCard;
 use App\Models\Employee;
+use App\Models\Clearance;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -17,7 +18,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with(['devices','department','position','project','sim_card'])->latest()->paginate(25);
+        $employees = Employee::with(['devices', 'department', 'position', 'project', 'sim_card'])->latest()->paginate(25);
         return view('employees.index', compact('employees'));
     }
 
@@ -27,7 +28,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $lastID = Employee::orderByRaw('CAST(employee_id AS UNSIGNED) DESC')
-                    ->value('employee_id');
+            ->value('employee_id');
 
         $sims = SimCard::where('status', 'available')->get();
 
@@ -108,7 +109,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        $employee = Employee::with(['devices','department','position','project','sim_card','receives','clearance'])->find($employee->id);
+        $employee = Employee::with(['devices', 'department', 'position', 'project', 'sim_card', 'receives', 'clearance'])->find($employee->id);
         $project = $employee->project;
         return view('employees.show', compact('employee', 'project'));
     }
@@ -141,16 +142,13 @@ class EmployeeController extends Controller
         return view('employees.resign', compact('employee', 'clearanceResign'));
     }
 
-    public function finishResign($id , $clr , Request $request)
+    public function finishResign($id, $clr, Request $request)
     {
         $validatedData = $request->validate([
             'signature' => 'required|mimes:png,jpg,jpeg,webp,pdf|max:2048',
         ]);
-        $employee = Employee::with('devices','sim_card')->find($id);
-
-
+        $employee = Employee::with('devices', 'sim_card')->find($id);
         $finalClearance = Clearance::find($clr);
-
         if ($request->hasFile('signature')) {
             $signature = $request->file('signature');
             $signatureName = time() . '.' . $signature->getClientOriginalExtension();
@@ -159,21 +157,37 @@ class EmployeeController extends Controller
                 'clear_image' => $signatureName,
                 'status' => 'resigned',
             ]);
-        }
-        $employee->update([
-            'resign_date' => now(),
-            'projectt_id' => null,
-            'type' => 'resigned',
-        ]);
-        $employee->devices()->update([
-            'employee_id' => null,
-            'status' => 'available',
-        ]);
-        $employee->sim_card()->update([
-            'employee_id' => null,
-            'status' => 'available',
-        ]);
+            foreach ($employee->devices as $device) {
 
+                DB::table('device_and_sim_clearances')->create([
+                    'device_id' => $device->id,
+                    'clearance_id' => $finalClearance->id,
+                ]);
+
+            }
+            foreach ($employee->sim_card() as $sim) {
+
+                DB::table('device_and_sim_clearances')->create([
+                    'sim_card_id' => $sim->id,
+                    'clearance_id' => $finalClearance->id,
+                ]);
+
+            }
+
+            $employee->update([
+                'resign_date' => now(),
+                'projectt_id' => null,
+                'type' => 'resigned',
+            ]);
+            $employee->devices()->update([
+                'employee_id' => null,
+                'status' => 'available',
+            ]);
+            $employee->sim_card()->update([
+                'employee_id' => null,
+                'status' => 'available',
+            ]);
+        }
         return to_route('employees.index');
     }
 
@@ -183,20 +197,20 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $validatedData = $request->validate([
-        'employee_code' => 'required',
-        'employee_name' => 'required',
-        'employee_personal_email' => 'nullable|email|unique:employees,personal_email,'.$employee->id,
-        'employee_personal_mobile' => 'nullable',
-        'employee_orion_email' => 'nullable|email|unique:employees,orion_email,'.$employee->id,
-        'employee_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
-        'department_id' => 'nullable|exists:departments,id',
-        'position_id' => 'nullable|exists:positions,id',
+            'employee_code' => 'required',
+            'employee_name' => 'required',
+            'employee_personal_email' => 'nullable|email|unique:employees,personal_email,' . $employee->id,
+            'employee_personal_mobile' => 'nullable',
+            'employee_orion_email' => 'nullable|email|unique:employees,orion_email,' . $employee->id,
+            'employee_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'department_id' => 'nullable|exists:departments,id',
+            'position_id' => 'nullable|exists:positions,id',
 
-        'type' => 'required|in:manager,employee,owner,labor',
-        'employee_project' => 'nullable',
-        'employee_manager' => 'nullable',
-        'notes' => 'nullable|max:255',
-    ]);
+            'type' => 'required|in:manager,employee,owner,labor',
+            'employee_project' => 'nullable',
+            'employee_manager' => 'nullable',
+            'notes' => 'nullable|max:255',
+        ]);
 
         $employee->update([
             'employee_id' => $request->employee_code,

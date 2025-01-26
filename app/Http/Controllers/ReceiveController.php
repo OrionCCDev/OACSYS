@@ -107,9 +107,11 @@ class ReceiveController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id)
+    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id , $simCards)
     {
+        // dd($simCards);
 
+        $receive = Receive::findOrFail($rcv_id);
         if ($receiver_type == 'employee') {
             $receiver = \App\Models\Employee::with(['project','department'])->findOrFail($receiver_id);
         } elseif ($receiver_type == 'client') {
@@ -119,7 +121,7 @@ class ReceiveController extends Controller
         }
         $devicesData = Device::whereIn('id', explode(',', $devices))->get();
 
-        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id'));
+        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id','receive','simCards'));
     }
 
     /**

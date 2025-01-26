@@ -152,6 +152,7 @@
                                                 <th>Name</th>
                                                 <th>Type</th>
                                                 <th>Model</th>
+                                                <th>SIM Number</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -165,6 +166,15 @@
                                                 <td>
                                                     {{ $device->device_model }}
                                                 </td>
+                                                @if ($simCards)
+
+                                                <td>
+                                                    @foreach ($simCards as $sim )
+                                                        <span>{{ $sim->sim_number }}</span>
+                                                    @endforeach
+                                                </td>
+                                                @endif
+
                                             </tr>
                                             @endforeach
                                         </tbody>

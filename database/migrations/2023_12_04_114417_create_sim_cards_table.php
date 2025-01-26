@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('sim_number')->nullable();
             $table->string('sim_serial')->nullable();
+            $table->string('sim_plan')->default('Business Mobile Plan 50');
+            $table->string('sim_provider')->default('DU');
             $table->enum('status',['available','taken'])->default('available');
             $table->text('notes')->nullable();
             $table->timestamps();
