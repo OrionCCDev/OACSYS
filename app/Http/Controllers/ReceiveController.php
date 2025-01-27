@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Models\Receive;
 use App\Models\SimCard;
 use Illuminate\Http\Request;
+use App\Models\DeviceAndSimReceive;
 
 class ReceiveController extends Controller
 {
@@ -57,7 +58,7 @@ class ReceiveController extends Controller
             $simCards = SimCard::where('consultant_id', $device->consultant_id)->get();
         }
         $newClearance->save();
-        dd($hisDevices);
+
         return view('receive.cancel-receiving', compact('device', 'newClearance' , 'hisDevices' , 'simCards'));
     }
 
@@ -120,8 +121,11 @@ class ReceiveController extends Controller
             $receiver = \App\Models\Consultant::with(['project'])->findOrFail($receiver_id);
         }
         $devicesData = Device::whereIn('id', explode(',', $devices))->get();
-
-        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id','receive','simCards'));
+        $simCardIds = $simCards !== 'none'
+        ? explode(',', $simCards)
+        : [];
+        $simCardsData = SimCard::whereIn('id', $simCardIds)->get();
+        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id','receive','simCardsData'));
     }
 
     /**
@@ -129,8 +133,8 @@ class ReceiveController extends Controller
      */
     public function show(Receive $receive)
     {
-
-        $devicesData = Device::where('receive_id', $receive->id)->get();
+// simCardsData && devicesData
+        // $devicesData = Device::where('receive_id', $receive->id)->get();
         $rcv_id =  $receive->id;
         $receive_id =  $receive->code;
         if ($receive->employee_id != null) {
@@ -147,7 +151,15 @@ class ReceiveController extends Controller
         } elseif ($receiver_type == 'consultant') {
             $receiver = \App\Models\Consultant::with(['project'])->findOrFail($receive->consultant_id);
         }
-        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'receive_id', 'receiver_type', 'devicesData'));
+
+        $records = DeviceAndSimReceive::where('receive_id', $receive->id)->get();
+
+        // Retrieve devices and sim cards data
+        $devicesData = Device::whereIn('id', $records->pluck('device_id'))->get();
+        $simCardsData = SimCard::whereIn('id', $records->pluck('sim_card_id'))->get();
+
+
+        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData'));
     }
 
     /**
@@ -191,12 +203,36 @@ class ReceiveController extends Controller
      */
     public function destroy(Receive $receive)
     {
-        // Update all devices linked to this receive
-        Device::where('receive_id', $receive->id)
-            ->update([
-                'status' => 'available',
-                'receive_id' => null
-            ]);
+        // Get all records from device_and_sim_receives with the same receive_id
+        $records = DeviceAndSimReceive::where('receive_id', $receive->id)->get();
+
+        foreach ($records as $record) {
+            // Update device if device_id is present
+            if ($record->device_id) {
+                Device::where('id', $record->device_id)
+                    ->update([
+                        'status' => 'available',
+                        'client_id' => null,
+                        'consultant_id' => null,
+                        'employee_id' => null,
+                        'receive_id' => null
+                    ]);
+            }
+
+            // Update sim card if sim_card_id is present
+            if ($record->sim_card_id) {
+                SimCard::where('id', $record->sim_card_id)
+                    ->update([
+                        'status' => 'available',
+                        'client_employee_id' => null,
+                        'consultant_id' => null,
+                        'employee_id' => null
+                    ]);
+            }
+        }
+
+        // Delete all records from device_and_sim_receives with the same receive_id
+        DeviceAndSimReceive::where('receive_id', $receive->id)->delete();
 
         // Delete the receive record
         $receive->delete();

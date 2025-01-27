@@ -56,7 +56,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach(collect($personDevices)->where('status', '!=', 'taken') as $device)
+                                                @foreach(collect($personDevices)->where('status', '!=', 'taken') as
+                                                $device)
                                                 @if ($device->receive->status != 'pending')
 
 
