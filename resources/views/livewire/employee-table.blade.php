@@ -46,8 +46,12 @@
                                                         <th>Department</th>
                                                         <th>Position</th>
                                                         <th>Manage</th>
+
+                                                        @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
+
                                                         <th>Rcv & Clr</th>
                                                         <th>Resign</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -82,6 +86,8 @@
                                                                     </button>
                                                                 </div>
                                                             </td>
+                                                        @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
+
                                                             <td class="text-center">
                                                                 <div class="btn-group btn-group-rounded mr-25" role="group" aria-label="First group">
                                                                     <button type="button" class="btn btn-outline-info"><i class="icon-layers"></i></button>
@@ -111,6 +117,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        @endif
                                                     </tr>
 
                                                     @endforeach
