@@ -14,85 +14,28 @@
 
         <div class="col-12 col-md-6 form-group">
             <h6>Select Receiver</h6>
-            <div class="input-group mb-2 w-100">
-                <select wire:model.live='selectedPerson' name="receiver_id"
-                    class="form-control custom-select form-control custom-select-md mt-15">
+            <div class="input-group mb-2 w-100 d-flex flex-column">
+                @if($selectedType === 'employee')
+                    <input type="text"
+                           wire:model.live="searchEmployeeId"
+                           wire:change="selectEmployeeBySearch"
+                           class="form-control w-100"
+                           placeholder="Search by Employee ID"
+                           value="{{ $selectedPerson ? $this->getSelectedEmployeeId() : '' }}">
+                @endif
+                <select wire:model.live='selectedPerson'
+                        wire:change="updateSearchInput"
+                        name="receiver_id"
+                        class="form-control w-100 custom-select form-control custom-select-md mt-15">
                     <option value="" selected>Select {{ ucfirst($selectedType) }}</option>
                     @foreach($receivers as $receiver)
-                    <option value="{{ $receiver->id }}">{{ $receiver->name }}</option>
+                    <option value="{{ $receiver->id }}">{{ $receiver->employee_id }} - {{ $receiver->name }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
     </div>
-    <section class="hk-sec-wrapper">
-        <h5 class="hk-sec-title">Already Own Devices</h5>
-        <p class="mb-25">Active Devices Currently Assigned To Selected Person</p>
-        <div class="row">
-            <div class="col-sm">
-                <div class="accordion" id="accordion_1">
-                    <div class="card">
-                        @if(count(collect($personDevices)->where('status', '==', 'taken')) > 0)
 
-                        <div class="card-header d-flex justify-content-between">
-                            <a role="button" data-toggle="collapse" href="#collapse_1" aria-expanded="false"
-                                class="collapsed">Active Devices</a>
-                            <span class="collapse-icon"></span>
-                        </div>
-                        <div id="collapse_1" class="collapse" data-parent="#accordion_1" role="tabpanel">
-                            <div class="card">
-                                <div class="table-wrap">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0 mt-2">
-                                            <thead>
-                                                <tr>
-                                                    <th>Img</th>
-                                                    <th>Name</th>
-                                                    <th>Type</th>
-                                                    <th>Code</th>
-                                                    <th>Status</th>
-                                                    <th>Received At</th>
-                                                    <th>Manage</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach(collect($personDevices)->where('status', '!=', 'taken') as $device)
-                                                @if ($device->receive->status != 'pending')
-
-
-                                                <tr>
-                                                    <td><img class="img-fluid rounded" width="75"
-                                                            src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}"
-                                                            alt="icon"></td>
-                                                    <td>{{ $device->device_name }}</td>
-                                                    <td>{{ $device->device_type }}</td>
-                                                    <td><span class="badge badge-primary">{{ $device->device_code
-                                                            }}</span></td>
-                                                    <td><span class="badge badge-success">{{ $device->status }}</span>
-                                                    </td>
-                                                    <td>{{ $device->received_at }}</td>
-                                                    <td>
-                                                        <button
-                                                            class="btn btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                            <span><i class="fa fa-exclamation-triangle"></i></span>
-                                                            <span class="btn-text">Clearance</span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                @endif
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="hk-sec-wrapper">
         <h5 class="hk-sec-title">All Receives</h5>
         <p class="mb-25">Receives</p>

@@ -29,6 +29,7 @@ class ReceiverTypeSelect extends Component
     public $selectedSimcards = [];
     public $selectedSimcardsDetails = [];
     public $searchOfSim = '';
+    public $searchEmployeeId = '';
     public function mount()
     {
         $this->selectedType = request()->query('type', 'employee');
@@ -73,7 +74,25 @@ class ReceiverTypeSelect extends Component
             })
             ->paginate(10, ['*'], 'simcardsPage', $this->simcardsPage);
     }
+    public function selectEmployeeBySearch()
+    {
+        $employee = Employee::where('employee_id', $this->searchEmployeeId)->first();
+        if ($employee) {
+            $this->selectedPerson = $employee->id;
+        }
+    }
+    public function updateSearchInput()
+{
+    if ($this->selectedPerson) {
+        $employee = Employee::find($this->selectedPerson);
+        $this->searchEmployeeId = $employee->employee_id;
+    }
+}
 
+public function getSelectedEmployeeId()
+{
+    return Employee::find($this->selectedPerson)?->employee_id;
+}
     public function loadSimcards()
     {
         $this->simcards = Simcard::where('status', 'available')
@@ -284,21 +303,19 @@ class ReceiverTypeSelect extends Component
     }
     public function updatedSelectedPerson()
     {
-        $this->selectedDevices = []; // Add this line at the beginning
+                // Clear all selections when changing receiver
+        $this->selectedDevices = [];
+        $this->selectedSimcards = [];
+        $this->selectedSimcardsDetails = [];
+
         $this->updateUrlParameters();
-        $selectedReceiver = $this->personDevices = collect($this->receivers)
-            ->where('id', $this->selectedPerson)
-            ->first();
+
+        $selectedReceiver = $this->receivers->where('id', $this->selectedPerson)->first();
         $this->personDevices = $selectedReceiver?->devices ?? [];
         $this->selectedPersonName = $selectedReceiver?->name;
 
-        if ($selectedReceiver) {
-            $pendingDevices = $selectedReceiver->devices()
-                ->where('status', 'pending-receiving')
-                ->pluck('id')
-                ->toArray();
-            $this->selectedDevices = array_merge($this->selectedDevices, $pendingDevices);
-        }
+        // Reset simcards list to show only available ones
+        $this->loadSimcards();
     }
 
     public function updateReceivers()
@@ -355,7 +372,7 @@ class ReceiverTypeSelect extends Component
         // dd($this->selectedSimcards);
         if (is_array($this->selectedSimcards) && !empty($this->selectedSimcards)) {
             foreach ($this->selectedSimcards as $simId) {
-                $updateData = ['status' => 'taken'];
+                $updateData = ['status' => 'pending-receive'];
 
                 switch ($this->selectedType) {
                     case 'employee':
