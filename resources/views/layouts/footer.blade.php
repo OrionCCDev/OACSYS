@@ -43,7 +43,6 @@
 
 <script src="{{ asset('X-Files/Dash/vendors/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('X-Files/Dash/dist/js/select2-data.js') }}"></script>
-
 <!-- Owl JavaScript -->
 <script src="{{ asset('X-Files/Dash/vendors/owl.carousel/dist/owl.carousel.min.js') }}"></script>
 

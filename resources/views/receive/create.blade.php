@@ -18,7 +18,7 @@
                         <h5 class="hk-sec-title">Receiving</h5>
                         <div class="row">
                             <div class="col-sm">
-                                <form method="post" enctype="multipart/form-data" action="{{ route('receive.store') }}"
+                                <form method="post" enctype="multipart/form-data" action=""
                                     class="form-inline">
                                     @csrf
                                     <div class="row w-100">
@@ -30,11 +30,11 @@
                                         {{-- // END employee Orion Image --}}
                                         {{-- ----------------------- --}}
                                     </div>
-                                    <div class="row mt-30">
+                                    {{-- <div class="row mt-30">
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary mb-2">Save</button>
                                         </div>
-                                    </div>
+                                    </div> --}}
                             </div>
                             </form>
                             <script>

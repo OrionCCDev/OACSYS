@@ -35,6 +35,17 @@
     }
 }
 </style>
+
+<script>
+        function printReceiving() {
+        const printContent = document.getElementById('PrintingArea').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+</script>
     @if($devices && count($devices) > 0)
     <div class="table-responsive mt-4">
         <h5 class="hk-sec-title">Devices</h5>
@@ -79,16 +90,18 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Serial</th>
                     <th>Number</th>
-                    <th>Status</th>
+                    <th>Provider</th>
+                    <th>Plan</th>
+                    <th>Add</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($simCards as $sim)
                 <tr>
-                    <td>{{ $sim->sim_serial }}</td>
                     <td>{{ $sim->sim_number }}</td>
+                    <td>{{ $sim->sim_provider }}</td>
+                    <td>{{ $sim->sim_plan }}</td>
                     <td>
                         <button wire:click="addToClearance('simcard', {{ $sim->id }})"
                             class="btn btn-primary btn-rounded" @if(in_array($sim->id, $selectedItems['simcard'] ?? []))
@@ -116,7 +129,7 @@
         <button wire:click="cancelClearance" class="btn btn-danger">
             Cancel Clearance
         </button>
-        <button onclick="window.print()" class="btn btn-info">
+        <button onclick="printReceiving()" class="btn btn-info">
             Print Clearance
         </button>
         @endif
@@ -220,16 +233,18 @@
                             <table class="table table-striped mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Serial</th>
                                         <th>Number</th>
+                                        <th>Provider</th>
+                                        <th>Plan</th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($selectedSimCards as $sim)
                                     <tr>
-                                        <td>{{ $sim->sim_serial }}</td>
                                         <td>{{ $sim->sim_number }}</td>
+                                        <td>{{ $sim->sim_provider }}</td>
+                                        <td>{{ $sim->sim_plan }}</td>
 
                                     </tr>
                                     @endforeach

@@ -90,6 +90,7 @@ class ClearanceDeviceSelector extends Component
 
         }
 
+
         $this->clearanceId = $clearance->id;
         $this->clearanceCode = $clearance->clear_code;
 
@@ -102,7 +103,13 @@ class ClearanceDeviceSelector extends Component
         }
 
         $this->showPrintArea = true;
-
+        // Update the status of all devices to 'pending-cancel'
+        $lastclearance = Clearance::with('devices')->find($clearance->id);
+        $devices = $lastclearance->devices;
+    
+        foreach ($devices as $device) {
+            $device->update(['status' => 'pending-cancel']);
+        }
         // Store clearance data in session
         session(['clearance_in_progress' => [
             'id' => $this->clearanceId,
@@ -115,8 +122,12 @@ class ClearanceDeviceSelector extends Component
 
     public function cancelClearance()
     {
+
         if ($this->clearanceId) {
             $clearance = Clearance::find($this->clearanceId);
+            foreach ($clearance->devices as $device) {
+                $device->update(['status' => 'taken']);
+            }
             // Detach all devices and sim cards first
             $clearance->devices()->detach();
             $clearance->simCards()->detach();
