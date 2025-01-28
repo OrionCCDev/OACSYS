@@ -56,8 +56,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach(collect($personDevices)->where('status', '!=', 'taken') as
-                                                $device)
+                                                @foreach(collect($personDevices)->where('status', '!=', 'taken') as $device)
                                                 @if ($device->receive->status != 'pending')
 
 
@@ -141,6 +140,10 @@
                                                                 class="icon-label"><i class="fa fa-angle-right"></i>
                                                             </span>
                                                         </button>
+                                                        <a href="{{ route('receive.show' , ['receive' => $receive->id]) }}"
+                                                            class="btn btn-success btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
+                                                                class="btn-text">Show</span><span class="icon-label"><i
+                                                                    class="fa fa-angle-right"></i> </span></a>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -219,7 +222,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                    </div>
+
                     </tbody>
                     </table>
                     <div class="row mt-30">
@@ -325,6 +328,8 @@
                         <thead>
                             <tr>
                                 <th>SIM Number</th>
+                                <th>SIM Provider</th>
+                                <th>SIM Plan</th>
                                 <th>Status</th>
                                 <th>Manage</th>
                             </tr>
@@ -333,6 +338,8 @@
                             @foreach($this->getSimCards() as $sim)
                             <tr>
                                 <td><span class="badge badge-primary ">{{ $sim->sim_number }}</span></td>
+                                <td><span class="badge badge-primary ">{{ $sim->sim_provider }}</span></td>
+                                <td><span class="badge badge-primary ">{{ $sim->sim_plan }}</span></td>
 
                                 <td><span class="badge badge-success">{{ $sim->status }}</span></td>
 

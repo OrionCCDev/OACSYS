@@ -7,6 +7,7 @@ use App\Models\Receive;
 use App\Models\SimCard;
 use Illuminate\Http\Request;
 use App\Models\DeviceAndSimReceive;
+use Illuminate\Support\Facades\Storage;
 
 class ReceiveController extends Controller
 {
@@ -16,8 +17,8 @@ class ReceiveController extends Controller
     public function index()
     {
         $data = Receive::with(['clientEmployee', 'consultant', 'employee'])
-        ->orderBy('updated_at', 'desc')
-        ->paginate(10);
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
         return view('receive.index', compact('data'));
     }
 
@@ -38,7 +39,7 @@ class ReceiveController extends Controller
     }
     public function cancel($id)
     {
-        $device = Device::with(['employee.department','consultant','clientEmployee','project'])->findOrFail($id);
+        $device = Device::with(['employee.department', 'consultant', 'clientEmployee', 'project'])->findOrFail($id);
         $device->status = 'pending-cancel';
         $device->save();
 
@@ -59,35 +60,32 @@ class ReceiveController extends Controller
         }
         $newClearance->save();
 
-        return view('receive.cancel-receiving', compact('device', 'newClearance' , 'hisDevices' , 'simCards'));
+        return view('receive.cancel-receiving', compact('device', 'newClearance', 'hisDevices', 'simCards'));
     }
 
     public function pendingCancel($id)
     {
-        $device = Device::with(['employee.department','consultant','clientEmployee','project'])->findOrFail($id);
+        $device = Device::with(['employee.department', 'consultant', 'clientEmployee', 'project'])->findOrFail($id);
         $newClearance = \App\Models\Clearance::where('device_id', $device->id)->latest('updated_at')->first();
         if ($device->employee_id != null) {
 
             $simCards = SimCard::where('employee_id', $device->employee_id)->get();
             $hisDevices  = Device::where('employee_id', $device->employee_id)->get();
-
         } elseif ($device->client_id != null) {
             $simCards = SimCard::where('client_employee_id', $device->client_employee_id)->get();
             $hisDevices = Device::where('client_id', $device->client_id)->get();
-
         } elseif ($device->consultant_id != null) {
             $simCards = SimCard::where('consultant_id', $device->consultant_id)->get();
             $hisDevices = Device::where('consultant_id', $device->consultant_id)->get();
-
         }
 
-        return view('receive.cancel-receiving', compact('device', 'newClearance' , 'hisDevices' , 'simCards'));
+        return view('receive.cancel-receiving', compact('device', 'newClearance', 'hisDevices', 'simCards'));
     }
 
     public function clear($id, $clearId, Request $request)
     {
         $clr = \App\Models\Clearance::findOrFail($clearId);
-        $device = Device::with(['employee.department','consultant','clientEmployee','project'])->findOrFail($id);
+        $device = Device::with(['employee.department', 'consultant', 'clientEmployee', 'project'])->findOrFail($id);
         $device->status = 'available';
         $device->client_id  = null;
         $device->consultant_id  = null;
@@ -99,22 +97,22 @@ class ReceiveController extends Controller
             'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
         $imageName = time() . '.' . $request->clearing_signature->extension();
-        $request->receiving_signature->storeAs('public/X-Files/Dash/imgs/clearance', $imageName);
+        $destinationPath = public_path('X-Files/Dash/imgs/clearance');
+        $request->receiving_signature->move($destinationPath, $imageName);
         $clr->clear_image = $imageName;
         $clr->status = 'finished';
         $clr->save();
-
     }
     /**
      * Store a newly created resource in storage.
      */
-    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id , $simCards)
+    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards)
     {
         // dd($simCards);
 
         $receive = Receive::findOrFail($rcv_id);
         if ($receiver_type == 'employee') {
-            $receiver = \App\Models\Employee::with(['project','department'])->findOrFail($receiver_id);
+            $receiver = \App\Models\Employee::with(['project', 'department'])->findOrFail($receiver_id);
         } elseif ($receiver_type == 'client') {
             $receiver = \App\Models\ClientEmployee::with(['project'])->findOrFail($receiver_id);
         } elseif ($receiver_type == 'consultant') {
@@ -122,10 +120,10 @@ class ReceiveController extends Controller
         }
         $devicesData = Device::whereIn('id', explode(',', $devices))->get();
         $simCardIds = $simCards !== 'none'
-        ? explode(',', $simCards)
-        : [];
+            ? explode(',', $simCards)
+            : [];
         $simCardsData = SimCard::whereIn('id', $simCardIds)->get();
-        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id','receive','simCardsData'));
+        return view('receive.make-receiving', compact('devicesData', 'receiver', 'receiver_type', 'receive_id', 'rcv_id', 'receive', 'simCardsData'));
     }
 
     /**
@@ -133,7 +131,7 @@ class ReceiveController extends Controller
      */
     public function show(Receive $receive)
     {
-// simCardsData && devicesData
+        // simCardsData && devicesData
         // $devicesData = Device::where('receive_id', $receive->id)->get();
         $rcv_id =  $receive->id;
         $receive_id =  $receive->code;
@@ -145,7 +143,7 @@ class ReceiveController extends Controller
             $receiver_type = 'consultant';
         }
         if ($receiver_type == 'employee') {
-            $receiver = \App\Models\Employee::with(['project','department'])->findOrFail($receive->employee_id);
+            $receiver = \App\Models\Employee::with(['project', 'department'])->findOrFail($receive->employee_id);
         } elseif ($receiver_type == 'client') {
             $receiver = \App\Models\ClientEmployee::with(['project'])->findOrFail($receive->client_employee_id);
         } elseif ($receiver_type == 'consultant') {
@@ -167,16 +165,26 @@ class ReceiveController extends Controller
      */
     public function finish($receive, Request $request)
     {
-        $rcv = Receive::findOrFail($receive);
-        $devices = json_decode($request->devices);
-        foreach ($devices as $device) {
-            $device->stored_at = 'delivered';
-        }
         $request->validate([
             'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
+        $rcv = Receive::findOrFail($receive);
+        $devices = json_decode($request->devices);
+
+        // Retrieve all devices associated with this receive
+        $deviceRecords = DeviceAndSimReceive::where('receive_id', $rcv->id)->get();
+
+        // Loop through each device and update its status to 'taken'
+        foreach ($deviceRecords as $record) {
+            if ($record->device_id) {
+                Device::where('id', $record->device_id)
+                    ->update(['status' => 'taken']);
+            }
+        }
+
         $imageName = time() . '.' . $request->receiving_signature->extension();
-        $request->receiving_signature->storeAs('public/X-Files/Dash/imgs/receives', $imageName);
+        $destinationPath = public_path('X-Files/Dash/imgs/receives');
+        $request->receiving_signature->move($destinationPath, $imageName);
         $rcv->receive_image = $imageName;
         $rcv->status = 'received';
         $rcv->save();

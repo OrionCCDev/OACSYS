@@ -37,6 +37,7 @@
                         aria-labelledby="exampleModalForms" aria-hidden="true" style="display: none;">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
+
                                 <div class="modal-header">
                                     <h5 class="modal-title">Upload Receiving</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -44,7 +45,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{ route( 'receive.finish' , [ 'id' =>$rcv_id ])}}" method="post"
+                                    <form id="uploadForm" action="{{ route('receive.finish', ['id' => $rcv_id]) }}" method="post"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <input type="hidden" name="devices" value="{{ json_encode($devicesData) }}">
@@ -61,28 +62,58 @@
                                                     <span class="btn btn-primary btn-file">
                                                         <span class="fileinput-new">Select file</span>
                                                         <span class="fileinput-exists">Change</span>
-                                                        <input type="file" name="receiving_signature" id="imageInput"
-                                                            accept="image/*">
+                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*">
                                                     </span>
                                                 </span>
-                                                <a href="#" class="btn btn-secondary fileinput-exists"
-                                                    data-dismiss="fileinput">Remove</a>
+                                                <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>
                                             </div>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src="#" alt="Preview"
-                                                    style="max-width: 200px; display: none;">
+                                                <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
                                             </div>
+                                            <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div>
                                         </div>
 
                                         <script>
                                             document.getElementById('imageInput').onchange = function(evt) {
-                                        const [file] = this.files;
-                                        if (file) {
-                                            const preview = document.getElementById('imagePreview');
-                                            preview.src = URL.createObjectURL(file);
-                                            preview.style.display = 'block';
-                                        }
-                                    };
+                                                const [file] = this.files;
+                                                const validationMessage = document.getElementById('validationMessage');
+                                                validationMessage.style.display = 'none';
+                                                validationMessage.innerText = '';
+
+                                                if (file) {
+                                                    const preview = document.getElementById('imagePreview');
+                                                    preview.src = URL.createObjectURL(file);
+                                                    preview.style.display = 'block';
+
+                                                    // Validate file type
+                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml'];
+                                                    if (!validTypes.includes(file.type)) {
+                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, and SVG are allowed.';
+                                                        validationMessage.style.display = 'block';
+                                                        preview.style.display = 'none';
+                                                        return;
+                                                    }
+
+                                                    // Validate file size (max 2MB)
+                                                    const maxSize = 2 * 1024 * 1024; // 2MB
+                                                    if (file.size > maxSize) {
+                                                        validationMessage.innerText = 'File size exceeds 2MB.';
+                                                        validationMessage.style.display = 'block';
+                                                        preview.style.display = 'none';
+                                                        return;
+                                                    }
+                                                }
+                                            };
+
+                                            document.getElementById('uploadForm').onsubmit = function(evt) {
+                                                const fileInput = document.getElementById('imageInput');
+                                                const validationMessage = document.getElementById('validationMessage');
+                                                if (!fileInput.files.length) {
+                                                    validationMessage.innerText = 'Please select a file to upload.';
+                                                    validationMessage.style.display = 'block';
+                                                    evt.preventDefault();
+                                                }
+                                            };
                                         </script>
                                         <button type="submit" class="btn btn-primary">Upload</button>
                                         <button data-dismiss="modal" class="btn btn-danger">Cancel</button>
@@ -99,6 +130,11 @@
                         </button>
                     </form>
                     @endif
+                <!-- Add the buttons -->
+
+                    <button type="button" class="btn btn-success btn-rounded mx-10" onclick="window.history.back();">Go Back</button>
+
+
 
                     <a href="{{ route('device.index') }}" style="margin-right: 15px"
                         class="btn btn-primary btn-rounded ">Back To Devices List</a>
@@ -120,6 +156,7 @@
 
             <!-- Row -->
             <div class="row" id="PrintingArea">
+                @if ($receive->status != 'received')
                 <div class="col-xl-12">
                     <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                         <div class="invoice-from-wrap">
@@ -265,11 +302,17 @@
                         </ul>
                     </section>
                 </div>
+                @else
+                <div class="col-xl-12">
+                    <img src="{{ asset('X-Files/Dash/imgs/receives/' . $receive->receive_image ) }}" width="100%" height="100%" alt="">
+                </div>
+                @endif
             </div>
             <!-- /Row -->
         </div>
     </div>
 </div>
+
 <script>
     function printReceiving() {
         const printContent = document.getElementById('PrintingArea').innerHTML;
@@ -279,5 +322,16 @@
         window.print();
         document.body.innerHTML = originalContent;
     }
+
+    function downloadImage() {
+        const element = document.getElementById('PrintingArea');
+        html2canvas(element).then(canvas => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'PrintingArea.png';
+            link.click();
+        });
+    }
 </script>
+
 @endsection

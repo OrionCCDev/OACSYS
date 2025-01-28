@@ -1,6 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @media print {
+    body * {
+        visibility: hidden;
+    }
+    #PrintingArea, #PrintingArea * {
+        visibility: visible;
+    }
+    #PrintingArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+</style>
 <div class="hk-pg-wrapper">
     <div class="container mt-xl-50 mt-sm-30 mt-15">
         <div class="hk-pg-header">
@@ -60,7 +77,7 @@
                 </div>
             </div>
             @endif
-            <button onclick="window.print()" class="btn btn-info mr-3">
+            <button onclick="printClearance()" class="btn btn-info mr-3">
                 Print Clearance
             </button>
             <a href="{{ route('clearance.index') }}" class="btn btn-sky mr-3">
@@ -152,15 +169,17 @@
                                 <table class="table table-striped mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Serial</th>
                                             <th>Number</th>
+                                            <th>Provider</th>
+                                            <th>Plan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($data['simCards'] as $sim)
                                         <tr>
-                                            <td>{{ $sim->sim_serial }}</td>
                                             <td>{{ $sim->sim_number }}</td>
+                                            <td>{{ $sim->sim_provider }}</td>
+                                            <td>{{ $sim->sim_plan }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -207,11 +226,12 @@
 
 <script>
     function printClearance() {
-    const printContent = document.getElementById('printingArea').innerHTML;
-    const originalContent = document.body.innerHTML;
-    document.body.innerHTML = printContent;
-    window.print();
-    document.body.innerHTML = originalContent;
+        const printContent = document.getElementById('PrintingArea').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
 }
 
 function cancelClearance() {
