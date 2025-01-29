@@ -1,4 +1,4 @@
-<div class="col-12">
+{{-- <div class="col-12">
     <div class="row">
         <div class="col-md-6">
             <select wire:model.live="selectedType" class="form-control">
@@ -18,7 +18,7 @@
             </select>
         </div>
     </div>
-<style>
+{{-- <style>
     @media print {
     body * {
         visibility: hidden;
@@ -34,9 +34,9 @@
         bottom: 0;
     }
 }
-</style>
+</style> --}}
 
-<script>
+{{-- <script>
         function printReceiving() {
         const printContent = document.getElementById('PrintingArea').innerHTML;
         const originalContent = document.body.innerHTML;
@@ -45,8 +45,8 @@
         window.print();
         document.body.innerHTML = originalContent;
     }
-</script>
-    @if($devices && count($devices) > 0)
+</script> --}}
+    {{-- @if($devices && count($devices) > 0)
     <div class="table-responsive mt-4">
         <h5 class="hk-sec-title">Devices</h5>
         <table class="table table-hover mb-0">
@@ -283,5 +283,125 @@
             </section>
         </div>
     </div>
-    @endif
-</div>
+    @endif --}}
+    <div class="col-12">
+        <div class="row">
+            <!-- Type Selector -->
+            <div class="col-md-4">
+                <select wire:model.live="selectedType" class="form-control">
+                    <option value="">Select Type</option>
+                    <option value="employee">Employee</option>
+                    <option value="client">Client Employee</option>
+                    <option value="consultant">Consultant</option>
+                </select>
+            </div>
+
+            <!-- Search Input -->
+            <div class="col-md-4">
+                <input type="text"
+                       wire:model.live="search"
+                       class="form-control"
+                       placeholder="Search by {{ $selectedType == 'employee' ? 'name or ID' : 'name' }}">
+            </div>
+
+            <!-- Employee Selector -->
+            <div class="col-md-4">
+                <select wire:model.live="selectedEmployee" class="form-control" @if(!$selectedType) disabled @endif>
+                    <option value="">Select Employee</option>
+                    @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}">
+                        {{ $selectedType == 'employee' ? "($employee->employee_id) " : '' }}{{ $employee->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <!-- Redirect Button -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <button wire:click="redirectToDevicesView"
+                        class="btn btn-primary float-right"
+                        >
+                    View Available Devices & SIM Cards
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Pending Receives Table -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5>Pending Receives</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Receive ID</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th> <!-- New column for actions -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pendingReceives as $receive)
+                            <tr>
+                                <td>{{ $receive->code }}</td>
+                                <td>{{ $receive->status }}</td>
+                                <td>{{ $receive->created_at }}</td>
+                                <td>{{ $receive->updated_at }}</td>
+                                <td>
+                                    <button wire:click="showReceiveData({{ $receive->id }})" class="btn btn-info btn-sm">
+                                        Show Data
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No pending receives found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pending Cancel Receives Table -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5>Pending Clearances</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Clearance ID</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($pendingCancelReceives as $cleearance)
+                            <tr>
+                                <td>{{ $cleearance->clear_code }}</td>
+                                <td>{{ $cleearance->status }}</td>
+                                <td>{{ $cleearance->created_at }}</td>
+                                <td>{{ $cleearance->updated_at }}</td>
+                                <td>
+                                    <button wire:click="showClearData({{ $cleearance->id }})" class="btn btn-info btn-sm">
+                                        Show Data
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No pending cancel receives found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+

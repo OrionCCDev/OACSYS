@@ -71,6 +71,8 @@ Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
     ->name('clearance.upload-signature');
     Route::get('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');
+    Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
+    Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');
 });
 Route::middleware(['auth' , 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     // Route::resource('department' , DepartmentController::class );

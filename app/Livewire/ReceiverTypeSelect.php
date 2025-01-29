@@ -207,11 +207,13 @@ public function getSelectedEmployeeId()
     }
     public function addDeviceToSelection($deviceId)
     {
+
         if (!$this->selectedPerson) {
             return;
         }
 
         if (!in_array($deviceId, $this->selectedDevices)) {
+
             $this->selectedDevices[] = $deviceId;
             $device = Device::find($deviceId);
             $device->status = 'pending-receiving';
