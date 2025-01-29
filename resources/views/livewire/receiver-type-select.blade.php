@@ -122,7 +122,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($this->selectedDevicesDetails as $selectedDevice)
+                                @foreach($this->selectedDevices as $device)
+                                @php
+                                $selectedDevice = \App\Models\Device::find($device);
+                                @endphp
                                 <tr>
                                     <td>
                                         <span class="badge badge-primary">{{ $selectedDevice->device_code }}</span>
@@ -150,7 +153,7 @@
                                 @foreach($this->selectedSimCards as $selectedSim)
                                 <tr>
                                     <td colspan="2">
-                                        <span class="badge badge-primary">{{ $selectedSim->sim_serial }}</span>
+                                        <span class="badge badge-primary">{{ $selectedSim->sim_plan }}</span>
                                     </td>
                                     <td colspan="2">
                                         {{ $selectedSim->sim_number }}
@@ -170,9 +173,11 @@
                     </table>
                     <div class="row mt-30">
                         <div class="col-auto">
-                            <button type="button" wire:click="makeReceiving" {{ empty($this->selectedDevices) ||
-                                empty($this->selectedPerson) ? 'disabled' : '' }} class="btn btn-gradient-space
-                                mb-2">Make Receiving</button>
+                            <button type="button" wire:click="makeReceiving"
+                            {{ empty($selectedPerson) || (empty($selectedDevices) && empty($selectedSimcards)) ? 'disabled' : '' }}
+                            class="btn btn-gradient-space mb-2">
+                            Make Receiving
+                        </button>
                         </div>
                     </div>
                 </div>

@@ -28,12 +28,12 @@ class Clearance extends Model
 
     public function devices()
     {
-        return $this->belongsToMany(Device::class , 'device_and_sim_clearances' , 'clearance_id' , 'device_id');
+        return $this->belongsToMany(Device::class , 'device_and_sim_clearances' , 'clearance_id' , 'device_id', 'id' , 'id');
     }
 
     public function simCards()
     {
-        return $this->belongsToMany(SimCard::class , 'device_and_sim_clearances' , 'clearance_id' , 'sim_card_id');
+        return $this->belongsToMany(SimCard::class , 'device_and_sim_clearances' , 'clearance_id' , 'sim_card_id', 'id' , 'id');
     }
 
     public function clientEmployee(){

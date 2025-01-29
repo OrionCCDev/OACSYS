@@ -53,6 +53,21 @@
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
+                                            <span>Deleivered To: </span></span>
+                                            <span class="ml-5 text-dark">
+                                                @if($device->employee)
+                                                    {{ $device->employee->name }} (Employee)
+                                                @elseif($device->client)
+                                                    {{ $device->client->name }} (Client)
+                                                @elseif($device->consultant)
+                                                    {{ $device->consultant->name }} (Consultant)
+                                                @else
+                                                    No receiver assigned
+                                                @endif
+                                            </span>
+                                    </li>
+                                    <li class="list-group-item" style="font-size: 35px">
+                                        <span>
                                             <span>Model: </span></span>
                                             <span class="ml-5 text-dark">{{ $device->device_model ?? 'No model Assigned' }} </span>
                                     </li>
@@ -106,8 +121,8 @@
                     </div>
                     <div class="row mt-30">
                         <div class="col-auto">
-                            <a href="{{ url()->previous() }}" class="btn btn-danger mb-2">Back</a>
-                            <a href="{{ route('device.edit' , $device->id) }}" class="btn mb-2 btn-gradient-bunting btn-wth-icon icon-wthot-bg btn-rounded icon-right btn-lg">
+                            <a href="{{ url()->previous() }}" class="btn btn-danger btn-lg mb-2">Back</a>
+                            <a href="{{ route('device.edit' , $device->id) }}" class="btn mb-2 btn-info btn-wth-icon icon-wthot-bg  icon-right btn-lg">
                                 <span class="btn-text">Edit</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span> </span>
                             </a>
                         </div>

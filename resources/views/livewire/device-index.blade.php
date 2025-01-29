@@ -35,7 +35,7 @@
                                                 <th>Stored In</th>
                                                 <th>Status</th>
                                                 <th class="text-center">Manage</th>
-                                                <th class="text-center">Clear OR Receive</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -139,80 +139,7 @@
                                                         </button> --}}
                                                     </div>
                                                 </td>
-                                                <td class="text-center">
-                                                    @if ($device->status == 'available')
-                                                    <a href="{{ route('receive.create' ,['makeReceiveDeviceId' => $device->id , 'deviceCode' => $device->device_code]) }}"
-                                                        class="btn btn-success btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                        <span class="btn-text">Make Receive</span><span
-                                                            class="icon-label"><i class="fa fa-angle-right"></i>
-                                                        </span>
-                                                    </a>
-                                                    @elseif ($device->status == 'taken')
-                                                    @if ($device->receive && $device->receive->status == 'pending')
-                                                    <a href="{{ route('receive.show' , ['receive'=> $device->receive->id]) }}"
-                                                        class="btn btn-warning btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                        <span class="btn-text">Up-Signature</span>
-                                                        <span class="icon-label"><i
-                                                                class="fa fa-angle-right"></i></span>
-                                                    </a>
-                                                    @else
-                                                    <a href="{{ route('receive.cancel' , ['id'=> $device->id]) }}"
-                                                        class="btn btn-danger btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                        <span class="btn-text">Clearance</span>
-                                                        <span class="icon-label"><i
-                                                                class="fa fa-angle-right"></i></span>
-                                                    </a>
-                                                    @endif
 
-                                                    @elseif ($device->status == 'pending-receiving')
-                                                    <a href="{{ route('receive.create' ,['continueReceiveDeviceId' => $device->id]) }}"
-                                                        class="btn btn-gradient-info  btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                        <span class="btn-text">Comp-Receive</span><span
-                                                            class="icon-label"><i class="fa fa-angle-right"></i>
-                                                        </span>
-                                                    </a>
-
-                                                    @elseif ($device->status == 'pending-cancel')
-                                                    <a href="{{ route('comp.clear' ,['id' => $device->id]) }}"
-                                                        class="btn btn-gradient-info  btn-wth-icon icon-wthot-bg btn-rounded icon-right">
-                                                        <span class="btn-text">Comp-Clear</span><span
-                                                            class="icon-label"><i class="fa fa-angle-right"></i>
-                                                        </span>
-                                                    </a>
-                                                    @endif
-                                                </td>
-                                                {{-- <div class="modal fade" id="exampleModalCenter{{ $employee->id }}"
-                                                    tabindex="-1" role="dialog"
-                                                    aria-labelledby="exampleModalCenter{{ $employee->id }}"
-                                                    aria-hidden="true" style="display: none;">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content  alert alert-warning ">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Deleteing
-                                                                    Employee</h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>Are You sure You want to DELETE This
-                                                                    Client Employee <span
-                                                                        class="badge badge-soft-danger"></span>
-                                                                    with Code <span
-                                                                        class="badge badge-soft-danger"></span>
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
-                                                                <button type="button" data-dismiss="modal"
-                                                                    wire:click='del({{ $employee->id }})'
-                                                                    class="btn btn-danger">Delete</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div> --}}
                                             </tr>
                                             @endforeach
                                         </tbody>

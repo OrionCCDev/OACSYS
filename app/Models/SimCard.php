@@ -17,7 +17,7 @@ class SimCard extends Model
     }
     public function clearances()
     {
-        return $this->belongsToMany(Clearance::class , 'device_and_sim_clearances' , 'clearance_id' , 'sim_card_id');
+        return $this->belongsToMany(Clearance::class , 'device_and_sim_clearances' , 'sim_card_id' ,'clearance_id' ,'id' ,'id' );
     }
     public function receives()
     {

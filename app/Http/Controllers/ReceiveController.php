@@ -174,10 +174,14 @@ class ReceiveController extends Controller
         // Retrieve all devices associated with this receive
         $deviceRecords = DeviceAndSimReceive::where('receive_id', $rcv->id)->get();
 
+        dd($deviceRecords);
         // Loop through each device and update its status to 'taken'
         foreach ($deviceRecords as $record) {
             if ($record->device_id) {
                 Device::where('id', $record->device_id)
+                    ->update(['status' => 'taken']);
+            }elseif($record->sim_card_id){
+                SimCard::where('id', $record->sim_card_id)
                     ->update(['status' => 'taken']);
             }
         }
