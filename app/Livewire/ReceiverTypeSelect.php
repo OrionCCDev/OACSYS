@@ -110,6 +110,16 @@ public function getSelectedEmployeeId()
     }
     public function removeSimFromSelection($simId)
     {
+        // $sim = SimCard::find($simId);
+        // if ($sim) {
+        //     $sim->update([
+        //         'employee_id' => null,
+        //         'client_employee_id' => null,
+        //         'consultant_id' => null,
+        //         'status' => 'available'
+        //     ]);
+        //     $this->loadSimcards();
+        // }
         $sim = SimCard::find($simId);
         if ($sim) {
             $sim->update([
@@ -123,22 +133,40 @@ public function getSelectedEmployeeId()
     }
     public function getSelectedSimCardsProperty()
     {
+// old code start
+        // if (!$this->selectedPerson) {
+        //     return collect();
+        // }
+        // if ($this->selectedType === 'employee') {
+        //     return SimCard::where('employee_id', $this->selectedPerson)
+        //         ->where('status', 'taken')
+        //         ->get();
+        // } elseif ($this->selectedType === 'client') {
+        //     return SimCard::where('client_employee_id', $this->selectedPerson)
+        //         ->where('status', 'taken')
+        //         ->get();
+        // } elseif ($this->selectedType === 'consultant') {
+        //     return SimCard::where('consultant_id', $this->selectedPerson)
+        //         ->where('status', 'taken')
+        //         ->get();
+        // }
+// old code end
+
         if (!$this->selectedPerson) {
             return collect();
         }
+
+        $query = SimCard::query();
+
         if ($this->selectedType === 'employee') {
-            return SimCard::where('employee_id', $this->selectedPerson)
-                ->where('status', 'taken')
-                ->get();
+            $query->where('employee_id', $this->selectedPerson);
         } elseif ($this->selectedType === 'client') {
-            return SimCard::where('client_employee_id', $this->selectedPerson)
-                ->where('status', 'taken')
-                ->get();
+            $query->where('client_employee_id', $this->selectedPerson);
         } elseif ($this->selectedType === 'consultant') {
-            return SimCard::where('consultant_id', $this->selectedPerson)
-                ->where('status', 'taken')
-                ->get();
+            $query->where('consultant_id', $this->selectedPerson);
         }
+
+        return $query->where('status', '!=', 'taken')->get();
     }
     public function addSimToSelection($simId)
     {
@@ -173,7 +201,7 @@ public function getSelectedEmployeeId()
 
             // Update sim status based on receiver type
             $updateData = [
-                'status' => 'taken'
+                'status' => 'pending-receive'
             ];
 
             switch ($this->selectedType) {

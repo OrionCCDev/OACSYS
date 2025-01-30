@@ -1,6 +1,19 @@
 @extends('layouts.app')
-
+@section('custom_css')
+<style>
+    .customize-thumbnails-gallery {
+    display: flex;
+    justify-content: space-between;
+    }
+    .customize-thumbnails-gallery a img{
+    width: 250px;
+    height: 250px;
+    }
+</style>
+@endsection
 @section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/css/lightgallery.min.css" integrity="sha512-QMCloGTsG2vNSnHcsxYTapI6pFQNnUP6yNizuLL5Wh3ha6AraI6HrJ3ABBaw6SIUHqlSTPQDs/SydiR98oTeaQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <div class="hk-pg-wrapper">
     <div class="container-fluid">
         <div class="row">
@@ -57,7 +70,7 @@
                                             <div
                                                 class="d-flex align-items-center justify-content-between position-relative">
                                                 <div>
-                                                    <span class="d-block display-5 font-weight-400 text-dark">{{ $project?->receives?->count() ?? 0 }}</span>
+                                                    <span class="d-block display-5 font-weight-400 text-dark">{{ $employee?->receives?->count() ?? 0 }}</span>
                                                 </div>
                                                 <div class="position-absolute r-0">
                                                     {{-- عدد الموظقيين في المشروع --}}
@@ -82,7 +95,7 @@
                                                     <span class="d-block">
                                                         <span class="display-5 font-weight-400 text-dark"><span
                                                                 class="counter-anim">{{
-                                                                $project?->clearance?->count() ?? 0 }}
+                                                                $employee?->clearance?->count() ?? 0 }}
                                                             </span></span>
                                                     </span>
                                                 </div>
@@ -107,7 +120,7 @@
                                                 <div>
                                                     <span class="d-block">
                                                         <span class="display-5 font-weight-400 text-dark">{{
-                                                            $project?->devices?->count() ?? 0 }}</span>
+                                                            $employee?->devices?->count() ?? 0 }}</span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -178,16 +191,15 @@
                                              </div>
                                         </div>
                                     </div>
-                                    <div class="row hk-gallery">
+
+                                    <div class="row hk-gallery mt-20">
+                                        <h3 class="mb-15">His Devices Gallary</h3>
                                         <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
-                                            @foreach ($employee->devices as $device)
-
-                                                <a href="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}"
-                                                data-lg-id="b6aa5d6b-5241-44c2-acb0-cfe18914596f">
-                                                    <img class="img-fluid img-thumbnail" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}">
-                                                </a>
+                                            @foreach ($employee->devices as $device )
+                                            <a href="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}">
+                                                <img class="img-fluid img-thumbnail" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" />
+                                            </a>
                                             @endforeach
-
                                         </div>
                                         <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/lightgallery.min.js" integrity="sha512-n82wdm8yNoOCDS7jsP6OEe12S0GHQV7jGSwj5V2tcNY/KM3z+oSDraUN3Hjf3EgOS9HWa4s3DmSSM2Z9anVVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                                         <script>
@@ -204,6 +216,32 @@
                                             });
                                         </script>
                                     </div>
+
+<div class="row mt-20">
+    <h3 class="mb-15">Devices Details</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Device Name</th>
+                <th>Device Type</th>
+                <th>Serial Model</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($employee->devices as $device)
+            <tr>
+                <td>{{ $device->device_name }}</td>
+                <td>{{ $device->device_type }}</td>
+                <td>{{ $device->device_model }}</td>
+                <td>
+                    <a href="{{ route('device.show', $device->id) }}" class="btn btn-info btn-sm">Show Details</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
                                     <div class="row mt-30">
                                         <div class="col-auto">
 

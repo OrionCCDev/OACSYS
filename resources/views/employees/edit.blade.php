@@ -171,7 +171,7 @@
                                         {{-- -------------------- --}}
                                         {{-- employee Orion Email --}}
                                         {{-- -------------------- --}}
-                                        <div class="col-12 form-group">
+                                        <div class="col-6 form-group">
                                             <label class="sr-only" for="AddNewEmployeeOrionEmail">Orion
                                                 Email</label>
                                             <div class="input-group mb-2 w-100">
@@ -183,6 +183,33 @@
                                                     placeholder="Orion Email">
                                             </div>
                                             @error('employee_orion_email')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        {{-- ----------------------- --}}
+                                        {{-- // END employee Orion Email --}}
+                                        {{-- ----------------------- --}}
+                                        <div class="col-6 form-group">
+                                            @php
+                                                $hireDate = $employee->hire_date ? \Carbon\Carbon::parse($employee->hire_date)->format('Y-m-d') : now()->format('Y-m-d');
+                                            @endphp
+
+                                            <label class="sr-only" for="AddNewEmployeeHireDate">Hire Date</label>
+                                            <div class="input-group mb-2 w-100">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">Hire Date</div>
+                                                </div>
+                                                <input type="date" name="hire_date" value="{{ $employee->hire_date }}" class="form-control"
+                                                    id="AddNewEmployeeHireDate" placeholder="Hire Date">
+                                            </div>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    var hireDateInput = document.getElementById('AddNewEmployeeHireDate');
+                                                    var hireDate = "{{ $hireDate }}";
+                                                    hireDateInput.value = hireDate;
+                                                });
+                                            </script>
+                                            @error('hire_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -257,7 +284,7 @@
                                         {{-- ---------------- --}}
                                         <div class="col-12 col-md-6 form-group">
                                             <h6 class="" for="AddNewEmployeeOrionEmail">
-                                                Manager</h6>
+                                                Direct Manager</h6>
                                             <div class="input-group mb-2 w-100">
                                                 <select name="employee_manager"
                                                     class="form-control custom-select form-control custom-select-lg mt-15">

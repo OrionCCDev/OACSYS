@@ -127,7 +127,7 @@ class ClearanceController extends Controller
             $imageName = time() . '.' . $request->signature->extension();
 
             $destinationPath = public_path('X-Files/Dash/imgs/clearance');
-            $request->receiving_signature->move($destinationPath, $imageName);
+            $request->signature->move($destinationPath, $imageName);
 
             // Update clearance with signature path
             $clearance->clear_image = $imageName;

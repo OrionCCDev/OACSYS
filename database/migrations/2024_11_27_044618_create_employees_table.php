@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->string('personal_email')->nullable();
             $table->enum('type' , ['owner' , 'manager' , 'employee' , 'labor' , 'resigned'])->default('employee');
             $table->text('notes')->nullable();
-            $table->timestamp('hire_date')->nullable();
+            $table->timestamp('hire_date')->useCurrent()->nullable();
             $table->timestamp('resign_date')->nullable();
             $table->timestamps();
         });

@@ -31,6 +31,7 @@ class Device extends Model implements HasMedia
     {
         return $this->belongsToMany(Clearance::class , 'device_and_sim_clearances' , 'device_id' ,'clearance_id' , 'id' , 'id');
     }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('Device_image');
