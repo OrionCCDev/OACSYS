@@ -106,7 +106,7 @@ class ReceiveController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards)
+    public function make($devices = null, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards = null)
     {
     
 
