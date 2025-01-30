@@ -33,6 +33,14 @@
     @yield('custom_css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @livewireStyles()
+    <style>
+        .hk-wrapper .hk-navbar.navbar-dark {
+            background-color: #0f5874 !important;
+        }
+        .hk-wrapper.hk-vertical-nav .hk-nav.hk-nav-dark {
+            background-color: #114e67 !important;
+        }
+    </style>
 </head>
 
 <body>
