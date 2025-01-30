@@ -22,6 +22,19 @@ class EmployeeController extends Controller
         return view('employees.index', compact('employees'));
     }
 
+    public function showReceives($id)
+    {
+        $employee = Employee::with('receives')->find($id);
+        // Logic to display all employee receives
+        return view('employees.receives' , compact('employee'));
+    }
+
+    public function showClearances($id)
+    {
+        $employee = Employee::with('clearance')->find($id);
+        // Logic to display all employee clearances
+        return view('employees.clearances' , compact('employee'));
+    }
     /**
      * Show the form for creating a new resource.
      */
