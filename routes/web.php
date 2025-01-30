@@ -70,6 +70,8 @@ Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
     Route::post('/resign/employee/{id}/clearance/{clr}' , [EmployeeController::class , 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
     ->name('clearance.upload-signature');
+    Route::get('/employee/receives/{id}', [EmployeeController::class, 'showReceives'])->name('employee.receives');
+    Route::get('/employee/clearances/{id}', [EmployeeController::class, 'showClearances'])->name('employee.clearances');
     Route::get('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');
     Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
     Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');
