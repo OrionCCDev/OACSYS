@@ -88,7 +88,7 @@
                                                 <tbody>
                                                     @foreach($employee->clearance->where('status', 'pending') as $clr)
                                                     <tr>
-                                                        <td>{{ $clr->code }}</td>
+                                                        <td>{{ $clr->clear_code }}</td>
                                                         <td>{{ $clr->status }}</td>
                                                         <td>{{ $clr->created_at }}</td>
                                                         <td><a href="{{ route('employee.clearance.detail', ['id' => $clr->id]) }}"
@@ -138,7 +138,7 @@
                                                 <tbody>
                                                     @foreach($employee->clearance->whereIn('status', ['pending_resign', 'resigned']) as $clr)
                                                     <tr>
-                                                        <td>{{ $clr->code }}</td>
+                                                        <td>{{ $clr->clear_code }}</td>
                                                         <td>{{ $clr->status }}</td>
                                                         <td>{{ $clr->created_at }}</td>
                                                         <td><a href="{{ route('employee.clearance.detail', ['id' => $clr->id]) }}"
