@@ -235,7 +235,7 @@
         <!-- /Top Navbar -->
 
         <!-- Vertical Nav -->
-        <nav class="hk-nav hk-nav-light">
+        <nav class="hk-nav hk-nav-dark">
             <a href="javascript:void(0);" id="hk_nav_close" class="hk-nav-close"><span class="feather-icon"><i
                         data-feather="x"></i></span></a>
             <div class="nicescroll-bar">
@@ -247,8 +247,8 @@
 
                         <li class="nav-item {{ Request::is('employees*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('employees.index') }}">
-                                <span class="feather-icon"><i data-feather="activity"></i></span>
-                                <span class="nav-link-text">Employees</span>
+                                <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/009-division.png') }}" alt="" srcset=""></span>
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Employees</span>
                             </a>
                         </li>
 
@@ -258,22 +258,27 @@
 
                         <li class="nav-item {{ Request::is('device*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('device.index') }}">
-                                <span class="feather-icon"><i data-feather="activity"></i></span>
-                                <span class="nav-link-text">Devices</span>
+                                                                <span class="feather-icon">
+                                                                    <img width="50" src="{{ asset('X-Files/Dash/imgs/icons/008-device.png') }}" alt="" srcset=""></span>
+
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Devices</span>
                             </a>
                         </li>
                         <hr class="nav-separator">
                         <li class="nav-item {{ Request::is('clearance*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('clearance.index') }}">
-                                <span class="feather-icon"><i data-feather="activity"></i></span>
-                                <span class="nav-link-text">Clearances</span>
+                                                                <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/007-customs-clearance.png') }}" alt="" srcset=""></span>
+
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Clearances</span>
                             </a>
                         </li>
                         <hr class="nav-separator">
                         <li class="nav-item {{ Request::is('receive*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('receive.index') }}">
-                                <span class="feather-icon"><i data-feather="activity"></i></span>
-                                <span class="nav-link-text">Receives</span>
+                                                                <span class="feather-icon">
+                                                                    <img width="50" src="{{ asset('X-Files/Dash/imgs/icons/006-received.png') }}" alt="" srcset=""></span>
+
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Receives</span>
                             </a>
                         </li>
                         @endif
@@ -281,8 +286,8 @@
                         <hr class="nav-separator">
                         <li class="nav-item">
                             <a class="nav-link link-with-badge">
-                                <span class="feather-icon"><i data-feather="package"></i></span>
-                                <span class="nav-link-text">Control SyS</span>
+                                <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/005-security.png') }}" alt="" srcset=""></span>
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Control SyS</span>
 
                             </a>
                             <ul class="nav flex-column  collapse-level-1">
@@ -291,34 +296,33 @@
                                         @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin')
                                         )
 
-                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
+                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('department.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/003-department.png') }}" alt="" srcset="">Departments</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('position.index') }}">Positions</a>
+                                        <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('position.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/004-networking.png') }}" alt="" srcset="">Positions</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('sim.index') }}">Sim Cards</a>
+                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('sim.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/001-dual.png') }}" alt="" srcset="">Sim Cards</a>
                                         </li>
 
-                                        <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('project.index') }}">Projects</a>
+                                        <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('project.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Projects</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('consultant*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="file-manager.html">Consultants</a>
+                                        <li class="nav-item {{ Request::is('consultant*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="file-manager.html"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/011-consultant.png') }}" alt="" srcset="">Consultants</a>
                                         </li>
                                         @elseif (Auth::user()->hasRole('o-hr') )
 
-                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
+                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('department.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/003-department.png') }}" alt="" srcset="">Departments</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('position.index') }}">Positions</a>
+                                        <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('position.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/004-networking.png') }}" alt="" srcset="">Positions</a>
                                         </li>
-                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('sim.index') }}">Sim Cards</a>
+                                        <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('sim.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/001-dual.png') }}" alt="" srcset="">Sim Cards</a>
                                         </li>
-
                                         @endif
                                     </ul>
                                 </li>
@@ -331,24 +335,17 @@
                             <li class="nav-item">
                                 <a class="nav-link collapsed " href="javascript:void(0);" data-toggle="collapse"
                                     data-target="#Components_drp" aria-expanded="false">
-                                    <span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="feather feather-layout">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                            <line x1="3" y1="9" x2="21" y2="9"></line>
-                                            <line x1="9" y1="21" x2="9" y2="9"></line>
-                                        </svg></span>
-                                    <span class="nav-link-text">Client</span>
+                                    <span class="feather-icon"><img width="50" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/013-customer-review.png') }}" alt="" srcset=""></span>
+                                    <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Client</span>
                                 </a>
                                 <ul id="Components_drp" class="nav flex-column collapse-level-1 collapse" style="">
                                     <li class="nav-item">
                                         <ul class="nav flex-column">
                                             <li class="nav-item {{ Request::is('client*') ? 'active' : '' }}">
-                                                <a class="nav-link " href="{{ route('client.index') }}">Clients</a>
+                                                <a class="nav-link " style="font-size: 20px" href="{{ route('client.index') }}">Clients</a>
                                             </li>
                                             <li class="nav-item {{ Request::is('clientEmployee*') ? 'active' : '' }}">
-                                                <a class="nav-link " href="{{ route('clientEmployee.index') }}">Client
+                                                <a class="nav-link " style="font-size: 20px"  href="{{ route('clientEmployee.index') }}">Client
                                                     Employees</a>
                                             </li>
 
