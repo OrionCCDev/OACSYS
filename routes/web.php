@@ -58,7 +58,7 @@ Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/receive' , ReceiveController::class);
     Route::resource('/device' , DeviceController::class);
     // Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}', [ReceiveController::class, 'make'])->name('receive.make');
-    Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards}', [ReceiveController::class, 'make'])->name('receive.make');
+    Route::get('/receive/make/{devices?}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
     Route::post('/up/receive/image/{id}' , [ReceiveController::class , 'finish'])->name('receive.finish');
     Route::get('/project/{id}/details' , [ProjectController::class , 'show'])->name('project.details');
     Route::put('/transfer/employee' , [ProjectController::class , 'transfer'])->name('employee.transfer');
