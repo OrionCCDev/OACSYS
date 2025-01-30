@@ -48,4 +48,12 @@ class Receive extends Model implements HasMedia
     {
         return $this->hasMany(SimCard::class);
     }
+    // public function receivesSimCards()
+    // {
+    //     return $this->belongsToMany(SimCard::class , 'device_and_sim_receives' , 'sim_card_id' ,'receive_id' );
+    // }
+    // public function receivesDevices()
+    // {
+    //     return $this->belongsToMany(Device::class , 'device_and_sim_receives' , 'device_id' ,'receive_id' );
+    // }
 }

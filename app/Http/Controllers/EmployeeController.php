@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Log;
+use App\Models\Device;
 use App\Models\Project;
+use App\Models\Receive;
 use App\Models\SimCard;
 use App\Models\Employee;
 use App\Models\Clearance;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\DeviceAndSimClearance;
 
 class EmployeeController extends Controller
 {
@@ -18,7 +21,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with(['devices', 'department', 'position', 'project', 'sim_card'])->latest()->paginate(25);
+        $employees = Employee::with(['devices', 'department', 'position', 'project', 'sim_card'])->orderBy('created_at', 'DESC')->paginate(25);
         return view('employees.index', compact('employees'));
     }
 
@@ -26,15 +29,60 @@ class EmployeeController extends Controller
     {
         $employee = Employee::with('receives')->find($id);
         // Logic to display all employee receives
-        return view('employees.receives' , compact('employee'));
+        return view('employees.receives', compact('employee'));
     }
+    public function showReceiveDetails($id)
+    {
+        $receive = Receive::find($id);
+        $deviceIds = DB::table('device_and_sim_receives')
+                        ->where('receive_id', $id)
+                        ->whereNotNull('device_id')
+                        ->pluck('device_id')
+                        ->toArray();
+        $simCardsIds = DB::table('device_and_sim_receives')
+                        ->where('receive_id', $id)
+                        ->whereNotNull('sim_card_id')
+                        ->pluck('sim_card_id')
+                        ->toArray();
+
+        $Devices = Device::whereIn('id', $deviceIds)->get();
+        $SimCards = SimCard::whereIn('id', $simCardsIds)->get();
+
+        // Logic to display all employee receives
+        return view('receive.receiveDetails', compact('receive' , 'Devices' , 'SimCards'));
+    }
+
 
     public function showClearances($id)
     {
         $employee = Employee::with('clearance')->find($id);
         // Logic to display all employee clearances
-        return view('employees.clearances' , compact('employee'));
+        return view('employees.clearances', compact('employee'));
     }
+    public function showClearanceDetails($id)
+    {
+        $clr = Clearance::find($id);
+        $deviceIds = DB::table('device_and_sim_clearances')
+                        ->where('clearance_id', $id)
+                        ->whereNotNull('device_id')
+                        ->pluck('device_id')
+                        ->toArray();
+        $simCardsIds = DB::table('device_and_sim_clearances')
+                        ->where('clearance_id', $id)
+                        ->whereNotNull('sim_card_id')
+                        ->pluck('sim_card_id')
+                        ->toArray();
+
+        $Devices = Device::whereIn('id', $deviceIds)->get();
+        $SimCards = SimCard::whereIn('id', $simCardsIds)->get();
+
+        // Logic to display all employee receives
+        return view('clearance.clearanceDetails', compact('clr' , 'Devices' , 'SimCards'));
+    }
+
+
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -67,6 +115,7 @@ class EmployeeController extends Controller
             'employee_department' => 'required|exists:departments,id',
             'employee_position' => 'required|exists:positions,id',
             'employee_sim_number' => 'nullable',
+            'hire_date' => 'nullable|date',
             'type' => 'required|in:manager,employee,owner,labor',
             'employee_project' => 'nullable',
             'employee_manager' => 'nullable',
@@ -81,6 +130,7 @@ class EmployeeController extends Controller
             'department_id' => $request->employee_department,
             'position_id' => $request->employee_position,
             'type' => $request->type,
+            'hire_date' => $request->hire_date ?? now(),
             'project_id' => $request->employee_project,
             'manager_id' => $request->employee_manager,
             'notes' => $request->notes,
@@ -150,6 +200,26 @@ class EmployeeController extends Controller
                 'employee_id' => $employee->id,
                 'status' => 'pending_resign',
             ]);
+            // Create a new DeviceAndSimClearance
+            $deviceAndSimClearance = DeviceAndSimClearance::create([
+                'clearance_id' => $clearanceResign->id,
+            ]);
+
+            // Attach all devices assigned to the employee
+            foreach ($employee->devices as $device) {
+                DB::table('device_and_sim_clearances')->insert([
+                    'device_id' => $device->id,
+                    'clearance_id' => $deviceAndSimClearance->id,
+                ]);
+            }
+
+            // Attach all SIM cards assigned to the employee
+            foreach ($employee->simCards as $simCard) {
+                DB::table('device_and_sim_clearances')->insert([
+                    'sim_card_id' => $simCard->id,
+                    'clearance_id' => $deviceAndSimClearance->id,
+                ]);
+            }
         }
 
         return view('employees.resign', compact('employee', 'clearanceResign'));
@@ -176,7 +246,6 @@ class EmployeeController extends Controller
                     'device_id' => $device->id,
                     'clearance_id' => $finalClearance->id,
                 ]);
-
             }
             foreach ($employee->sim_card() as $sim) {
 
@@ -184,7 +253,6 @@ class EmployeeController extends Controller
                     'sim_card_id' => $sim->id,
                     'clearance_id' => $finalClearance->id,
                 ]);
-
             }
 
             $employee->update([
@@ -218,7 +286,7 @@ class EmployeeController extends Controller
             'employee_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
             'department_id' => 'nullable|exists:departments,id',
             'position_id' => 'nullable|exists:positions,id',
-
+            'hire_date' => 'nullable|date',
             'type' => 'required|in:manager,employee,owner,labor',
             'employee_project' => 'nullable',
             'employee_manager' => 'nullable',
@@ -234,6 +302,7 @@ class EmployeeController extends Controller
             'department_id' => $request->department_id,
             'position_id' => $request->position_id,
             'type' => $request->type,
+            'hire_date' => $request->hire_date ?? now(),
             'project_id' => $request->employee_project,
             'manager_id' => $request->employee_manager,
             'notes' => $request->notes,

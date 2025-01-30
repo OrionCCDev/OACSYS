@@ -108,7 +108,7 @@ class ReceiveController extends Controller
      */
     public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards)
     {
-        // dd($simCards);
+    
 
         $receive = Receive::findOrFail($rcv_id);
         if ($receiver_type == 'employee') {
@@ -174,7 +174,7 @@ class ReceiveController extends Controller
         // Retrieve all devices associated with this receive
         $deviceRecords = DeviceAndSimReceive::where('receive_id', $rcv->id)->get();
 
-        dd($deviceRecords);
+
         // Loop through each device and update its status to 'taken'
         foreach ($deviceRecords as $record) {
             if ($record->device_id) {

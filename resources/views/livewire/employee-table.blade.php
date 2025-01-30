@@ -50,7 +50,7 @@
                                                         @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
 
                                                         <th>Rcv & Clr</th>
-                                                        <th>Resign</th>
+                                                        {{-- <th>Resign</th> --}}
                                                         @endif
                                                     </tr>
                                                 </thead>
@@ -84,6 +84,26 @@
                                                                     data-target="#exampleModalCenter{{ $employee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
                                                                     <i class="icon-trash"></i>
                                                                     </button>
+                                                                    <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
+                                                                        aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
+                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                            <div class="modal-content  alert alert-warning ">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title">Deleteing Employee</h5>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">×</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                    <button type="button" data-dismiss="modal" wire:click='del({{ $employee->id }})' class="btn btn-danger">Delete</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </td>
                                                         @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
@@ -94,29 +114,10 @@
                                                                     <a href="{{ route('employee.clearances' , ['id' => $employee->id ]) }}" class="btn btn-outline-danger"><i class="icon-login"></i></button>
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center">
+                                                            {{-- <td class="text-center">
                                                                 <a href="{{ route('employee.preResign' , ['id' => $employee->id]) }}" class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></a>
-                                                            </td>
-                                                            <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
-                                                                aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
-                                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                    <div class="modal-content  alert alert-warning ">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title">Deleteing Employee</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                            <button type="button" data-dismiss="modal" wire:click='del({{ $employee->id }})' class="btn btn-danger">Delete</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            </td> --}}
+
                                                         @endif
                                                     </tr>
 

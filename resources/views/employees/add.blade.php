@@ -28,6 +28,49 @@
                                 <form method="post" enctype="multipart/form-data" action="{{ route('employees.store') }}" class="form-inline">
                                     @csrf
                                     <div class="row w-100">
+                                        <!-- Existing fields -->
+                                        <!-- Hire Date -->
+                                        <div class="col-12 form-group mb-20">
+                                            <label class="sr-only" for="AddNewEmployeeImage">Profile Image</label>
+                                            <div class="fileinput fileinput-new input-group w-100"
+                                                data-provides="fileinput">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Upload</span>
+                                                </div>
+                                                <div class="form-control text-truncate" data-trigger="fileinput"><i
+                                                        class="glyphicon glyphicon-file fileinput-exists"></i> <span
+                                                        class="fileinput-filename"></span></div>
+                                                <span class="input-group-append">
+                                                    <span class=" btn btn-primary btn-file"><span
+                                                            class="fileinput-new">Select file</span><span
+                                                            class="fileinput-exists">Change</span>
+                                                            {{--  -----------------  --}}
+                                                            <input id="AddNewEmployeeImage" onchange="showPreview(event)"
+                                                            type="file" name="employee_image">
+                                                            {{--  -----------------  --}}
+                                                    </span>
+                                                    <a href="#" class="btn btn-secondary fileinput-exists"
+                                                        data-dismiss="fileinput">Remove</a>
+                                                </span>
+
+                                            </div>
+                                            @error('employee_image')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                            <script>
+                                                function showPreview(event) {
+                                                    if (event.target.files.length > 0) {
+                                                        var src = URL.createObjectURL(event.target.files[0]);
+                                                        var preview = document.getElementById("image-preview");
+                                                        preview.src = src;
+                                                        preview.style.display = "block";
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                        <!-- End Hire Date -->
+                                    </div>
+                                    <div class="row w-100">
                                         {{-- ---------------- --}}
                                         {{-- employee CODE ID --}}
                                         {{-- ---------------- --}}
@@ -141,42 +184,21 @@
                                         {{-- employee Orion Image --}}
                                         {{-- ---------------- --}}
                                         <div class="col-6 form-group">
-                                            <label class="sr-only" for="AddNewEmployeeImage">Profile Image</label>
-                                            <div class="fileinput fileinput-new input-group w-100"
-                                                data-provides="fileinput">
+                                            @php
+                                                $currentDateTime = now()->format('Y-m-d\TH:i');
+                                            @endphp
+                                            <label class="sr-only" for="AddNewEmployeeHireDate">Hire Date</label>
+                                            <div class="input-group mb-2 w-100">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text">Upload</span>
+                                                    <div class="input-group-text">Hire Date</div>
                                                 </div>
-                                                <div class="form-control text-truncate" data-trigger="fileinput"><i
-                                                        class="glyphicon glyphicon-file fileinput-exists"></i> <span
-                                                        class="fileinput-filename"></span></div>
-                                                <span class="input-group-append">
-                                                    <span class=" btn btn-primary btn-file"><span
-                                                            class="fileinput-new">Select file</span><span
-                                                            class="fileinput-exists">Change</span>
-                                                            {{--  -----------------  --}}
-                                                            <input id="AddNewEmployeeImage" onchange="showPreview(event)"
-                                                            type="file" name="employee_image">
-                                                            {{--  -----------------  --}}
-                                                    </span>
-                                                    <a href="#" class="btn btn-secondary fileinput-exists"
-                                                        data-dismiss="fileinput">Remove</a>
-                                                </span>
-
+                                                <input type="date" name="hire_date" value="{{ $currentDateTime }}" class="form-control"
+                                                    id="AddNewEmployeeHireDate" placeholder="Hire Date">
                                             </div>
-                                            @error('employee_image')
+                                            @error('hire_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
-                                            <script>
-                                                function showPreview(event) {
-                                                    if (event.target.files.length > 0) {
-                                                        var src = URL.createObjectURL(event.target.files[0]);
-                                                        var preview = document.getElementById("image-preview");
-                                                        preview.src = src;
-                                                        preview.style.display = "block";
-                                                    }
-                                                }
-                                            </script>
+
                                         </div>
                                         {{-- ----------------------- --}}
                                         {{-- // END employee Orion Image --}}
@@ -273,7 +295,7 @@
                                         <div class="col-12 col-md-6 form-group">
 
                                             <h6 class="" for="AddNewEmployeeOrionEmail">
-                                                Manager</h6>
+                                                Direct Manager</h6>
                                             <div class="input-group mb-2 w-100">
                                                 <select name="employee_manager"
                                                     class="form-control custom-select form-control custom-select-lg mt-15">

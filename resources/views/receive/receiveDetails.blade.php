@@ -21,7 +21,7 @@
 <div class="hk-pg-wrapper">
     <div class="container mt-xl-50 mt-sm-30 mt-15">
         <div class="hk-pg-header">
-            <h4 class="hk-pg-title">Clearance Details - {{ $data['clearance']->clear_code }}</h4>
+            <h4 class="hk-pg-title">Receive Details - {{ $receive->code }}</h4>
         </div>
         @if(session('swal'))
         <script>
@@ -34,17 +34,17 @@
         </script>
         @endif
         <div class="mt-4 mb-50 row">
-            @if ($data['clearance']->status == 'pending')
+            @if ($receive->status == 'pending')
 
             <button type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#uploadModal">
-                Upload Signed Clearance
+                Upload Signed Receiving
             </button>
             <form id="clr-dlt-btn-form"
-                action="{{ route('clearance.destroy' , ['clearance' => $data['clearance']->id]) }}" method="post">
+                action="{{ route('receive.destroy' , ['receive' => $receive->id]) }}" method="post">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger mr-3">
-                    Delete Clearance
+                    Cancel Receive
                 </button>
             </form>
 
@@ -53,18 +53,18 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="uploadModalLabel">Upload Signed Clearance</h5>
+                            <h5 class="modal-title" id="uploadModalLabel">Upload Signed Receiving</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="{{ route('clearance.upload-signature', $data['clearance']->id) }}" method="POST"
+                        <form action="{{ route('receive.finish', $receive->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="signature">Signature Image</label>
-                                    <input type="file" class="form-control" id="signature" name="signature"
+                                    <input type="file" class="form-control" id="signature" name="receiving_signature"
                                         accept="image/*" required>
                                 </div>
                             </div>
@@ -76,13 +76,11 @@
                     </div>
                 </div>
             </div>
-            @elseif($data['clearance']->status == 'pending_resign')
-
             @endif
             <button onclick="printClearance()" class="btn btn-info mr-3">
-                Print Clearance
+                Print Receiving
             </button>
-            <a href="{{ route('clearance.index') }}" class="btn btn-sky mr-3">
+            <a href="{{ route('receive.index') }}" class="btn btn-sky mr-3">
                 Back
             </a>
             <!-- Upload Modal -->
@@ -90,9 +88,7 @@
 
         </div>
         <div class="row" id="PrintingArea">
-            @if ( $data['clearance']->status == 'finished')
-                <img src="{{ asset('X-Files/Dash/imgs/clearance/' . $data['clearance']->clear_image ) }}" alt="" srcset="">
-            @else
+
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">
@@ -102,10 +98,10 @@
                                     src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
                             </div>
                             <div class="col-sm-6 mb-20">
-                                <h4 class="mb-35 font-weight-600">Clearance Details Of Orion Devices</h4>
-                                <h4 class="mb-35 font-weight-600">Clearance <span style="color:#174094 "
+                                <h4 class="mb-35 font-weight-600">Receiving Details Of Orion Devices</h4>
+                                <h4 class="mb-35 font-weight-600">Receiving <span style="color:#174094 "
                                         class="d-block font-18 font-weight-600">
-                                        <h4>#{{ $data['clearance']->clear_code }}</h4>
+                                        <h4>#{{ $receive->code }}</h4>
                                     </span></h4>
                             </div>
 
@@ -116,13 +112,10 @@
                         <div class="row">
                             <div class="col-12 mb-30 text-center" style="justify-items: center">
                                 <p><strong>Name:</strong>
-                                    @if ($data['employee'])
-                                    {{ $data['employee']->name }}
-                                    @elseif($data['consultant'])
-                                    {{ $data['consultant']->name }}
-                                    @elseif($data['clientEmployee'])
-                                    {{ $data['clientEmployee']->name }}
-                                    @endif
+                                    {{ $receive->employee->name }}
+                                </p>
+                                <p><strong>ID:</strong>
+                                    {{ $receive->employee->employee_id }}
                                 </p>
                             </div>
                         </div>
@@ -130,14 +123,14 @@
                     <h3 class="text-center px-5" style="color:#174094 ">I, the undersigned,<br> confirm that the
                         mentioned
                         <br>
-                        devices and Items has been returned to the company
+                        devices and items have been received. I will use them properly in accordance with Orion Contracting Company processes and rules.
                     </h3>
                     <h5 class="mt-3" style="color:#174094 ">Items</h5>
                     <hr>
                     <div class="invoice-details" style="min-height:550px">
                         <div class="table-wrap">
                             <div class="table-responsive">
-                                @if(count($data['devices']) > 0)
+                                @if(count($Devices) > 0)
                                 <table class="table table-striped mb-0">
                                     <thead>
                                         <tr>
@@ -148,8 +141,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data['devices'] as $device)
+
+                                        @foreach($Devices as $device)
                                         <tr>
+
                                             <td>{{ $device->device_code }}</td>
                                             <td>{{ $device->device_name }}</td>
                                             <td>{{ $device->device_type }}</td>
@@ -164,9 +159,7 @@
                             </div>
                         </div>
 
-
-
-                        @if(count($data['simCards']) > 0)
+                        @if(count($SimCards) > 0)
                         <div class="table-wrap" style="margin-top: 50px">
                             <div class="table-responsive">
                                 <h5>SIM Cards</h5>
@@ -179,7 +172,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data['simCards'] as $sim)
+                                        @foreach($SimCards as $sim)
                                         <tr>
                                             <td>{{ $sim->sim_number }}</td>
                                             <td>{{ $sim->sim_provider }}</td>
@@ -223,13 +216,13 @@
                     </ul>
                 </section>
             </div>
-            @endif
         </div>
 
     </div>
 </div>
 
 <script>
+
     function printClearance() {
         const printContent = document.getElementById('PrintingArea').innerHTML;
         const originalContent = document.body.innerHTML;
@@ -237,12 +230,13 @@
         document.body.innerHTML = printContent;
         window.print();
         document.body.innerHTML = originalContent;
-}
-
-function cancelClearance() {
-    if(confirm('Are you sure you want to Delete this clearance?')) {
-        window.location.href = "{{ route('clearance.cancel', $data['clearance']->id) }}";
     }
-}
+
+    function cancelClearance() {
+        if(confirm('Are you sure you want to Delete this clearance?')) {
+            window.location.href = "{{ route('clearance.cancel', $receive->id) }}";
+        }
+    }
+
 </script>
 @endsection

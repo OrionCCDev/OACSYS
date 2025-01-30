@@ -44,12 +44,12 @@
 
                                 <td>{{ $clearance->clear_code }}</td>
                                 <td>
-                                    @if ($clearance->employee_id)
-                                    {{ $clearance->employee->name }}
-                                    @elseif($clearance->consultant_id)
-                                    {{ $clearance->consultant->name }}
-                                    @elseif($clearance->client_employee_id)
-                                    {{ $clearance->clientEmployee->name }}
+                                    @if ($clearance->employee_id && $clearance->employee)
+                                        {{ $clearance->employee->name }}
+                                    @elseif($clearance->consultant_id && $clearance->consultant)
+                                        {{ $clearance->consultant->name }}
+                                    @elseif($clearance->client_employee_id && $clearance->clientEmployee)
+                                        {{ $clearance->clientEmployee->name }}
                                     @endif
                                 </td>
                                 <td>

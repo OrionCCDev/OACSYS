@@ -40,9 +40,9 @@ class Clearance extends Model
         return $this->belongsTo(ClientEmployee::class , 'client_employee_id' , 'id');
     }
     public function consultant(){
-        return $this->belongsTo(ClientEmployee::class , 'consultant_id' , 'id');
+        return $this->belongsTo(Consultant::class , 'consultant_id' , 'id');
     }
     public function employee(){
-        return $this->belongsTo(ClientEmployee::class , 'employee_id' , 'id');
+        return $this->belongsTo(Employee::class , 'employee_id' , 'id');
     }
 }
