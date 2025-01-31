@@ -24,7 +24,12 @@ use App\Http\Controllers\ClientEmployeeController;
 
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
-    return view('index' , compact('employees_count'));
+    $project_count = \App\Models\Project::count();
+    $department_count = \App\Models\Department::count();
+    $routers_count = \App\Models\Device::where('device_type', 'Router')->count();
+    $laptop_count = \App\Models\Device::where('device_type', 'Laptop')->count();
+    $camera_count = \App\Models\Device::where('device_type', 'Camera')->count();
+    return view('index' , compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/import-simcards', function() {
