@@ -1,5 +1,118 @@
 @extends('layouts.app')
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+     var _seed = 42;
+    Math.random = function() {
+        _seed = _seed * 16807 % 2147483647;
+        return (_seed - 1) / 2147483646;
+    };
 
+    function createRadialBarChart(elementId, seriesValue, label) {
+        var options = {
+            series: [seriesValue],
+            chart: {
+                height: 350,
+                type: 'radialBar',
+                toolbar: {
+                    show: false
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800,
+                    animateGradually: {
+                        enabled: true,
+                        delay: 2000 // 2 seconds delay
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 350
+                    }
+                }
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 225,
+                    hollow: {
+                        margin: 0,
+                        size: '70%',
+                        background: '#fff',
+                        position: 'front',
+                        dropShadow: {
+                            enabled: true,
+                            top: 3,
+                            left: 0,
+                            blur: 4,
+                            opacity: 0.5
+                        }
+                    },
+                    track: {
+                        background: '#fff',
+                        strokeWidth: '67%',
+                        margin: 0, // margin is in pixels
+                        dropShadow: {
+                            enabled: true,
+                            top: -3,
+                            left: 0,
+                            blur: 4,
+                            opacity: 0.7
+                        }
+                    },
+                    dataLabels: {
+                        show: true,
+                        name: {
+                            offsetY: -10,
+                            show: true,
+                            color: '#888',
+                            fontSize: '17px'
+                        },
+                        value: {
+                            formatter: function(val) {
+                                return parseInt(val);
+                            },
+                            color: '#111',
+                            fontSize: '36px',
+                            show: true,
+                        }
+                    }
+                }
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'dark',
+                    type: 'horizontal',
+                    shadeIntensity: 0.5,
+                    gradientToColors: ['#ABE5A1'],
+                    inverseColors: true,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50]
+                }
+            },
+            stroke: {
+                lineCap: 'round'
+            },
+            labels: [label],
+        };
+
+        var chart = new ApexCharts(document.querySelector("#" + elementId), options);
+        chart.render();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        createRadialBarChart('chart1', {{ $employees_count }}, 'Employees');
+        createRadialBarChart('chart2', {{ $project_count }}, 'Projects');
+        createRadialBarChart('chart3', {{ $department_count }}, 'Departments');
+        createRadialBarChart('chart4', {{ $routers_count }}, 'Routers');
+        createRadialBarChart('chart5', {{ $laptop_count }}, 'Laotops');
+        createRadialBarChart('chart5', {{ $camera_count }}, 'Cameras');
+        // Add more charts as needed
+    });
+</script>
+@endsection
 @section('content')
 <!-- Main Content -->
 <div class="hk-pg-wrapper">
@@ -133,64 +246,41 @@
 
                     @endif
 
+
+
                     <div class="col-sm-12 mt-100">
-                        <div class="card-group hk-dash-type-2" style="border: 2px solid black;border-radius: 10px;">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center mb-5">
-                                        <div>
-                                            <span class="d-block font-35 text-dark font-weight-500">Employees</span>
-                                        </div>
+                        <div class=" row">
+                            <div class="  col-md-3">
 
-                                    </div>
-                                    <div>
-                                        <span class="d-block display-4 text-dark mb-5">{{ $employees_count }}</span>
-                                        {{-- <small class="d-block">172,458 Target Users</small> --}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center mb-5">
-                                        <div>
-                                            <span class="d-block font-35 text-dark font-weight-500">Routers</span>
-                                        </div>
+                                <div id="chart1"></div>
 
-                                    </div>
-                                    <div>
-                                        <span class="d-block display-4 text-dark mb-5">30</span>
-                                        {{-- <small class="d-block">172,458 Target Users</small> --}}
-                                    </div>
-                                </div>
                             </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center mb-5">
-                                        <div>
-                                            <span class="d-block font-35 text-dark font-weight-500">Camera</span>
-                                        </div>
+                            <div class="  col-md-3">
 
-                                    </div>
-                                    <div>
-                                        <span class="d-block display-4 text-dark mb-5">120</span>
-                                        {{-- <small class="d-block">172,458 Target Users</small> --}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center mb-5">
-                                        <div>
-                                            <span class="d-block font-35 text-dark font-weight-500">Projects</span>
-                                        </div>
+                                <div id="chart2"></div>
 
-                                    </div>
-                                    <div>
-                                        <span class="d-block display-4 text-dark mb-5">55</span>
-                                        {{-- <small class="d-block">172,458 Target Users</small> --}}
-                                    </div>
-                                </div>
                             </div>
+                            <div class="  col-md-3">
+
+                                <div id="chart3"></div>
+
+                            </div>
+                            <div class="  col-md-3">
+
+                                <div id="chart4"></div>
+
+                            </div>
+                            <div class="  col-md-3">
+
+                                <div id="chart5"></div>
+
+                            </div>
+                            <div class="  col-md-3">
+
+                                <div id="chart6"></div>
+
+                            </div>
+
                         </div>
                     </div>
 

@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         ]);
         $u3 = User::create([
             'name' => 'hr',
-            'email' => 'hr@orion.com',
+            'email' => 'hr@orioncc.com',
             'password' => bcrypt('hr@123'),
             'image' => 'hr.jpg',
             'orion_role_lvl' => 'o-hr'

@@ -48,7 +48,7 @@
 
 <!-- Toastr JS -->
 <script src="{{ asset('X-Files/Dash/vendors/jquery-toast-plugin/dist/jquery.toast.min.js') }}"></script>
-
+@yield('scripts')
 <!-- Init JavaScript -->
 <script src="{{ asset('X-Files/Dash/dist/js/init.js') }}"></script>
 <script src="{{ asset('X-Files/Dash/dist/js/dashboard-data.js') }}"></script>
