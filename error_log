@@ -1,0 +1,5 @@
+[30-Jan-2025 09:56:41 UTC] PHP Warning:  require(/home/edlb2bdo7yna/public_html/orionacsys.com/vendor/autoload.php): Failed to open stream: No such file or directory in /home/edlb2bdo7yna/public_html/orionacsys.com/artisan on line 9
+[30-Jan-2025 09:56:41 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/edlb2bdo7yna/public_html/orionacsys.com/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/edlb2bdo7yna/public_html/orionacsys.com/artisan:9
+Stack trace:
+#0 {main}
+  thrown in /home/edlb2bdo7yna/public_html/orionacsys.com/artisan on line 9
