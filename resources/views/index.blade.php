@@ -180,6 +180,7 @@
                         <div class="row">
                             <div class="col-12 col-md-4 my-15">
                                 <a href="{{ route('receive.create') }}"
+
                                     style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
                                     class="btn btn-gradient-primary btn-wth-icon btn-lg">
                                     <span class="icon-label"><span class="feather-icon"><svg
