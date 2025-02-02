@@ -76,6 +76,7 @@
                                             <span>Type: </span></span>
                                             <span class="ml-5 text-dark">{{ $device->device_type ?? 'No Device Type' }} </span>
                                     </li>
+
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
                                             <span>Price: </span></span>
