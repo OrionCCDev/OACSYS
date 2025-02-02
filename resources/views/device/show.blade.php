@@ -99,6 +99,7 @@
                              </div>
                         </div>
                     </div>
+                    <img src="{{ asset('media/1/61maJhzoSULACSL1500.jpg') }}" alt="" srcset="">
                     <div class="row hk-gallery">
                         <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
                             @foreach ($device->getMedia('Device_image') as $img )
