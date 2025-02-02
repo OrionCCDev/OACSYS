@@ -97,6 +97,8 @@
                         </div>
                     </div>
                     <div class="row hk-gallery">
+                        <img class="img-fluid img-thumbnail" src="{{ asset('media/1/61maJhzoSULACSL1500.jpg') }}" />
+
                         <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
                             @foreach ($device->getMedia('Device_image') as $img )
                             <a href="{{ $img->getUrl() }}">
