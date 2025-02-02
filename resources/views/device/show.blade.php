@@ -96,15 +96,13 @@
                              </div>
                         </div>
                     </div>
-                    <img src="{{ asset('media/1/61maJhzoSULACSL1500.jpg') }}" alt="" srcset="">g
                     <div class="row hk-gallery">
                         <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
-                             @foreach ($device->getMedia('Device_image') as $img )
+                            @foreach ($device->getMedia('Device_image') as $img )
                             <a href="{{ $img->getUrl() }}">
                                 <img class="img-fluid img-thumbnail" src="{{ $img->getUrl() }}" />
                             </a>
                             @endforeach
-
                         </div>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/lightgallery.min.js" integrity="sha512-n82wdm8yNoOCDS7jsP6OEe12S0GHQV7jGSwj5V2tcNY/KM3z+oSDraUN3Hjf3EgOS9HWa4s3DmSSM2Z9anVVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         <script>
