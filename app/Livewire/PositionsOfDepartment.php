@@ -33,7 +33,7 @@ class PositionsOfDepartment extends Component
     public function update(Position $position)
     {
         $this->validateOnly('editablePositionName', [
-            'editablePositionName' => 'required|min:2|unique:positions,name,'.$position->id
+            'editablePositionName' => 'required|min:2'
         ]);
         $position->update([
             'name' => $this->editablePositionName

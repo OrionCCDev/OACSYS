@@ -18,7 +18,7 @@ class PositionAdder extends Component
     #[Rule('required', message: 'Please select a department')]
     public $selectedDepartment = '';
 
-    #[Rule('required|min:3|max:50|unique:positions,name', message: 'Position name must be unique and between 3-50 characters')]
+    #[Rule('required|min:3|max:50', message: 'Position name must be unique and between 3-50 characters')]
     public $newPosition = '';
 
 
