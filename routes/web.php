@@ -22,6 +22,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
 
 
+
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
     $project_count = \App\Models\Project::count();
