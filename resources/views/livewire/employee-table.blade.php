@@ -67,10 +67,10 @@
                                                             @endforeach
                                                         </td>
                                                         <td>
-                                                            {{ $employee->department->name }}
+                                                            {{ $employee->department?->name ?? 'Not Found' }}
                                                         </td>
                                                         <td>
-                                                            {{ $employee->position->name }}
+                                                            {{ $employee->position?->name ?? 'Not Found' }}
                                                         </td>
                                                             <td class="text-center">
                                                                 <div class="btn-group" role="group">
