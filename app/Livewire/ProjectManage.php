@@ -56,7 +56,7 @@ class ProjectManage extends Component
                 ->latest()
                 ->where('project_name', 'like', "%{$this->search}%")
                 ->paginate(8),
-            'managers' => Employee::whereIn('position_id', [100, 12])->get()
+            'managers' => Employee::where('type', 'manager')->get()
         ]);
     }
 
