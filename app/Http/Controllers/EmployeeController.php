@@ -13,7 +13,8 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\DeviceAndSimClearance;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\EmployeesImport;
 class EmployeeController extends Controller
 {
     /**
@@ -30,6 +31,16 @@ class EmployeeController extends Controller
         $employee = Employee::with('receives')->find($id);
         // Logic to display all employee receives
         return view('employees.receives', compact('employee'));
+    }
+    public function updateEmployees(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new EmployeesImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Employees updated successfully.');
     }
     public function showReceiveDetails($id)
     {
