@@ -56,7 +56,7 @@ class ProjectManage extends Component
                 ->latest()
                 ->where('project_name', 'like', "%{$this->search}%")
                 ->paginate(8),
-            'managers' => Employee::where('type', 'manager')->get()
+            'managers' => Employee::where('type', 'manager')->orderBy('name', 'asc')->get()
         ]);
     }
 
@@ -136,7 +136,6 @@ class ProjectManage extends Component
     {
         $this->edtId = $project->id;
         $this->edtedCode = $project->project_code;
-
         $this->editProjectCode = true;
     }
 }
