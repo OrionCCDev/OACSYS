@@ -62,6 +62,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $data->links() }}
                 </div>
             </section>
             <!-- /Title -->
@@ -71,7 +72,6 @@
             <!-- /Row -->
         </div>
     </div>
-    {{ $data->links() }}
 </div>
 
 @endsection
