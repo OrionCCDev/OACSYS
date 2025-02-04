@@ -71,7 +71,7 @@
             <!-- /Row -->
         </div>
     </div>
-    {{ $data->links('pagination::bootstrap-5') }}
+    {{-- {{ $data->links('pagination::bootstrap-5') }} --}}
 </div>
 
 @endsection
