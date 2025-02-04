@@ -111,31 +111,41 @@ class DeviceController extends Controller
             'device_price' => 'nullable|numeric',
             'supplier_name' => 'nullable|string',
             'serial_number' => 'nullable|string',
-            'stored_at' => 'required|in:office,server,store',
+            'stored_at' => 'required|in:office,server,store,delivered',
             'health' => 'required|in:New,Mediam_use,Bad_use,Scrap,Need_fix',
             'short_description' => 'nullable|string',
             'notes' => 'nullable|string',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'device_gallary.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Handle main image update
         if ($request->hasFile('main_image')) {
-            // Delete old image
-            if ($device->main_image != 'default_device.png') {
+            // Delete old image if it exists and is not the default image
+            if ($device->main_image && $device->main_image != 'default_device.png') {
                 Storage::delete('public/X-Files/Dash/imgs/devices/' . $device->main_image);
             }
 
             // Store new image
-            $imageName = time() . '.' . $request->main_image->extension();
-            $request->main_image->storeAs('public/X-Files/Dash/imgs/devices', $imageName);
-            $validated['main_image'] = $imageName;
+            $mainImage = $request->file('main_image');
+            $mainImageName = time() . '_' . $mainImage->getClientOriginalName();
+            $mainImage->move(public_path('X-Files/Dash/imgs/devices'), $mainImageName);
+            $validated['main_image'] = $mainImageName;
         }
-        if($request->hasFile('device_gallary')) {
-            foreach($request->file('device_gallary') as $image) {
+
+        // Handle device gallery update
+        if ($request->hasFile('device_gallary')) {
+            // Optionally, you can clear the existing gallery images if needed
+            // $device->clearMediaCollection('Device_image');
+
+            foreach ($request->file('device_gallary') as $image) {
                 $device->addMedia($image)
                     ->preservingOriginal()
                     ->toMediaCollection('Device_image');
             }
         }
+
+        // Update the device with validated data
         $device->update($validated);
 
         return redirect()->route('device.index')
