@@ -62,9 +62,9 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data->links('pagination::bootstrap-5') }}
                 </div>
             </section>
+            {{ $data->links('pagination::bootstrap-5') }}
             <!-- /Title -->
 
             <!-- Row -->
