@@ -1,6 +1,6 @@
 <div>
     <div class="row">
-        @foreach($device->getMedia('Device_image') as $img )
+        @foreach( $images as $img )
             <div class="col-md-3 mb-4">
                 <div class="position-relative">
                     <img src="{{ asset('media/' . $img->id . '/' . $img->file_name) }}" class="img-fluid rounded" alt="Device image">

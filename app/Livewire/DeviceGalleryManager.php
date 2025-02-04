@@ -26,7 +26,7 @@ class DeviceGalleryManager extends Component
     public function render()
     {
         return view('livewire.device-gallery-manager', [
-            'images' => $this->device->images
+            'images' => $this->device->getMedia('Device_image')
         ]);
     }
 }
