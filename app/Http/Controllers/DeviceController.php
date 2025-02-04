@@ -74,9 +74,13 @@ class DeviceController extends Controller
         }
         if($request->hasFile('device_gallary')) {
             foreach($request->file('device_gallary') as $image) {
-                $device->addMedia($image)
+                $media = $device->addMedia($image)
                     ->preservingOriginal()
                     ->toMediaCollection('Device_image');
+
+                    $mediaPath = $media->getPath();
+                    chmod($mediaPath, 0777);
+                    chmod(dirname($mediaPath), 0777);
             }
         }
 
