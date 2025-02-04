@@ -19,7 +19,7 @@ class ReceiveController extends Controller
         $data = Receive::with(['clientEmployee', 'consultant', 'employee'])
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
-
+dd($data);
         return view('receive.index', compact('data'));
     }
 

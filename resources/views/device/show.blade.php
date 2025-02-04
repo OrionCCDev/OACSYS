@@ -102,7 +102,7 @@
                     <div class="row hk-gallery">
                         <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
                             @foreach ($device->getMedia('Device_image') as $img )
-                            <a href="{{ asset('media/' . $img->id . '/' . $img->file_name) }}">
+                            <a href="{{ asset('media/' . $img->id . '/' . $img->file_name) }}"> 
                                 <img class="img-fluid img-thumbnail" src="{{ asset('media/' . $img->id . '/' . $img->file_name) }}" />
                             </a>
                             @endforeach
