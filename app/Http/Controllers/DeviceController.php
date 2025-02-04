@@ -116,7 +116,7 @@ class DeviceController extends Controller
             'short_description' => 'nullable|string',
             'notes' => 'nullable|string',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'device_gallary.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
         ]);
 
         // Handle main image update
