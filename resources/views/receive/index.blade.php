@@ -25,6 +25,7 @@
             </div>
         </div>
         <!-- Title -->
+
         <div class="container">
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
@@ -62,6 +63,7 @@
                             @endforeach
                         </tbody>
                     </table>
+
                     {{ $data->links() }}
                 </div>
             </section>
