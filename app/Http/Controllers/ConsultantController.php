@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Consultant;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class ConsultantController extends Controller
      */
     public function index()
     {
-        //
+        $consultants = Consultant::with('project','devices','sim_card')->paginate(10);
+        return view('consultant.all',compact('consultants'));
     }
 
     /**
@@ -20,7 +22,8 @@ class ConsultantController extends Controller
      */
     public function create()
     {
-        //
+        $allProjects = Project::all('id','project_name','project_code');
+        return view('consultant.add',compact('allProjects'));
     }
 
     /**

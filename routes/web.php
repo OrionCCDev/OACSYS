@@ -20,8 +20,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
-
-
+use App\Http\Controllers\ConsultantController;
 
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
@@ -68,6 +67,7 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/clientEmployee' , ClientEmployeeController::class);
+    Route::resource('/consultant' , ConsultantController::class);
     Route::resource('/clearance' , ClearanceController::class);
     Route::resource('/receive' , ReceiveController::class);
     Route::resource('/device' , DeviceController::class);
