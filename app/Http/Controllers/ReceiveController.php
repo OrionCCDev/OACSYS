@@ -18,7 +18,7 @@ class ReceiveController extends Controller
     {
         $data = Receive::with(['clientEmployee', 'consultant', 'employee'])
             ->orderBy('updated_at', 'desc')
-            ->paginate(10);
+            ->get();
         return view('receive.index', compact('data'));
     }
 
@@ -108,7 +108,7 @@ class ReceiveController extends Controller
      */
     public function make($devices = null, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards = null)
     {
-    
+
 
         $receive = Receive::findOrFail($rcv_id);
         if ($receiver_type == 'employee') {
