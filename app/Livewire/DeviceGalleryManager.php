@@ -19,14 +19,15 @@ class DeviceGalleryManager extends Component
         $image = Media::find($imageId);
         if ($image) {
             $image->delete();
+            // Refresh the device's media collection
+            $this->device->refresh();
         }
-
     }
 
     public function render()
     {
         return view('livewire.device-gallery-manager', [
-            'images' => $this->device
+            'images' => $this->device->getMedia('Device_image'),
         ]);
     }
 }
