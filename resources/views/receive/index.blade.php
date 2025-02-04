@@ -64,7 +64,6 @@
                     </table>
                 </div>
             </section>
-            {{ $data->links('pagination::bootstrap-5') }}
             <!-- /Title -->
 
             <!-- Row -->
@@ -72,6 +71,7 @@
             <!-- /Row -->
         </div>
     </div>
+    {{ $data->links('pagination::bootstrap-5') }}
 </div>
 
 @endsection
