@@ -338,7 +338,7 @@ class EmployeeController extends Controller
             }
         }
 
-        return redirect(url()->previous())->with('success', 'Employee updated successfully');
+        return to_route('employees.index')->with('success', 'Employee updated successfully');
     }
 
     /**
