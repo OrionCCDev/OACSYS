@@ -42,7 +42,7 @@
                         </div>
                         <div class="d-flex mb-0 flex-wrap">
                             <div class="btn-group btn-group-sm btn-group-rounded mb-15 ml-15" role="group">
-                                <button type="button" class="btn btn-primary">Code</button>
+                                <button type="button" class="btn btn-primary">ID : </button>
                                 <button type="button" class="btn btn-outline-primary">{{ $employee->employee_id
                                     }}</button>
                             </div>
@@ -134,114 +134,170 @@
                                 <div class="col-12">
 
                                     <div class="row">
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12 col-md-6 offset-md-3">
                                             <div class="card card-profile-feed">
-                                                <div class="card-body">
+                                                <div class="card-body" style="background-color:#10516a;border-radius: 10px;">
                                                     <div class="card">
                                                         <div class="position-relative">
                                                             <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$employee->profile_image) }}" alt="Card image cap">
-                                                            <a class="btn btn-warning  btn-wth-icon icon-wthot-bg btn-rounded btn-pg-link"><span class="icon-label"><i class="ion ion-md-link"></i></span><span class="btn-text">{{ $employee->employee_id }}</span></a>
                                                         </div>
                                                         <div class="card-body">
-                                                            <h5 class="card-title">{{ $employee->department->name }}</h5>
-                                                            <p class="card-text">{{ $employee->position->name }}</p>
+                                                            <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $employee->department->name }}</h5></span>
+                                                            <span style="font-size: 20px" class="badge badge-soft-warning mt-15 mr-10"><h5>{{ $employee->position->name }}</h5></span>
+
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="card-footer justify-content-between">
 
-                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12">
+
                                             <div class="card card-profile-feed">
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item" style="font-size: 35px">
-                                                        <span>
-                                                            <span>Orion Email: </span></span>
-                                                            <span class="ml-5 text-dark">{{ $employee->orion_email }}</span>
-                                                    </li>
-                                                    <li class="list-group-item" style="font-size: 35px">
-                                                        <span>
-                                                            <span>Personal Email: </span></span>
-                                                            <span class="ml-5 text-dark">{{ $employee->personal_email }}</span>
-                                                    </li>
-                                                    <li class="list-group-item" style="font-size: 35px">
-                                                        <span>
-                                                            <span>Orion Mobile </span></span>
+
+												<div class="row text-center">
+
+													<div class="col-6 border-right px-0">
+														<div class="pa-15">
+															<span class="d-block display-6 text-dark mb-5">Years: {{ $diff->y }}, Months: {{ $diff->m }}, Days: {{ $diff->d }}</span>
+															<span class="d-block text-capitalize font-14">Working For</span>
+														</div>
+													</div>
+													<div class="col-6 pl-0">
+														<div class="pa-15">
+															<span class="d-block display-6 text-dark mb-5">Human Resources</span>
+															<span class="d-block text-capitalize font-14">Department</span>
+														</div>
+													</div>
+												</div>
+												<ul class="list-group list-group-flush">
+                                                    <li class="list-group-item"><span><i class="ion ion-md-calendar font-18 text-light-20 mr-10"></i><span>Hire Date:</span></span><span class="ml-5 text-dark">{{ $hireDate }}</span></li>
+                                                    <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i><span>Branch:</span></span><span class="ml-5 text-dark">Ras AlKhaima</span></li>
+                                                    <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i><span>Orion Mobile:</span></span><span class="ml-5 text-dark">
+                                                        @if ($employee->sim_card->count() > 0)
                                                             @foreach ($employee->sim_card as $sim )
                                                             <span class="badge badge-success mt-15 mr-10">{{ $sim->sim_number }}</span>
                                                             @endforeach
+                                                        @else
+                                                            <span class="badge badge-danger mt-15 mr-10">No Sim Found</span>
+                                                        @endif
+
+                                                    </span></li>
+                                                    <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i>
+                                                        <span>Orion Email:</span></span>
+                                                        @if ($employee->orion_email)
+                                                        <span class="ml-5 text-dark">{{ $employee->orion_email }}</span>
+                                                        @else
+                                                        <span class="ml-5 text-dark">No Email Assigned , Plz Contact IT</span>
+                                                        @endif
                                                     </li>
-                                                    <li class="list-group-item" style="font-size: 35px">
-                                                        <span>
-                                                            <span>Personal Number: </span></span>
-                                                            <span class="ml-5 text-dark">{{ $employee->personal_mobile}}</span>
+                                                    <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i>
+                                                        <span>Personal Mobile:</span></span>
+                                                        @if ($employee->personal_mobile)
+                                                        <span class="ml-5 text-info">{{ $employee->personal_mobile }}</span>
+                                                        @else
+                                                        <span class="ml-5 text-info">Not Found</span>
+                                                        @endif
+                                                    </li>
+                                                    <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i>
+                                                        <span>Personal Email:</span></span>
+                                                        @if ($employee->personal_email)
+                                                        <span class="ml-5 text-warning">{{ $employee->personal_email }}</span>
+                                                        @else
+                                                        <span class="ml-5 text-warning">Not Found</span>
+                                                        @endif
                                                     </li>
                                                     @if ($employee->project)
 
-                                                    <li class="list-group-item" style="font-size: 35px">
-                                                        <span>
-                                                            <span>Project Name: {{ $employee->project->project_name }}</span></span>
-                                                            <span class="ml-5 text-dark">{{ $employee->project->project_code }}</span>
-                                                    </li>
+                                                        <li class="list-group-item"><span><i class="ion ion-md-briefcase font-18 text-light-20 mr-10"></i>
+                                                            <span>Project :</span></span>
+
+                                                            <span class="ml-5 text-info">{{ $employee->project->project_name }} Code {{ $employee->project->project_code }}</span>
+
+                                                        </li>
+
                                                     @endif
-
                                                 </ul>
-                                             </div>
+											 </div>
+
                                         </div>
                                     </div>
+                                    @if ($employee->devices->count() > 0)
+                                        <div class="card card-profile-feed">
+                                            <div class="card-header card-header-action">
+                                                <h6><span>Devices And Items <span class="badge badge-soft-primary ml-5">{{ $employee?->devices?->count() ?? 0 }}</span></span></h6>
 
-                                    <div class="row hk-gallery mt-20">
-                                        <h3 class="mb-15">His Devices Gallary</h3>
-                                        <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
-                                            @foreach ($employee->devices as $device )
-                                            <a href="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}">
-                                                <img class="img-fluid img-thumbnail" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" />
-                                            </a>
-                                            @endforeach
+                                            </div>
+                                            <div class="card-body pb-5">
+                                                <div class="hk-row text-center">
+                                                    <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
+                                                        @foreach ($employee->devices as $device )
+                                                        <div class="col-4 mb-15">
+                                                            <a class="w-100" href="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}">
+                                                                <img class="img-fluid img-thumbnail" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" />
+                                                            </a>
+                                                            <span class="d-block font-14 text-truncate">{{ $device->device_name }}</span>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/lightgallery.min.js" integrity="sha512-n82wdm8yNoOCDS7jsP6OEe12S0GHQV7jGSwj5V2tcNY/KM3z+oSDraUN3Hjf3EgOS9HWa4s3DmSSM2Z9anVVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                                                    <script>
+                                                        lightGallery(document.getElementById('customize-thumbnails-gallery'), {
+                                                            // Add a custom class to apply style only for the particular gallery
+                                                            addClass: 'lg-custom-thumbnails',
+
+                                                            // Remove the starting animations.
+                                                            // This can be done by overriding CSS as well
+                                                            appendThumbnailsTo: '.lg-outer',
+
+                                                            animateThumb: false,
+                                                            allowMediaOverlap: true,
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/lightgallery.min.js" integrity="sha512-n82wdm8yNoOCDS7jsP6OEe12S0GHQV7jGSwj5V2tcNY/KM3z+oSDraUN3Hjf3EgOS9HWa4s3DmSSM2Z9anVVRQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                                        <script>
-                                            lightGallery(document.getElementById('customize-thumbnails-gallery'), {
-                                                // Add a custom class to apply style only for the particular gallery
-                                                addClass: 'lg-custom-thumbnails',
+                                        <div class="card card-profile-feed">
+                                            <div class="card-header card-header-action">
+                                                <div class="media align-items-center">
 
-                                                // Remove the starting animations.
-                                                // This can be done by overriding CSS as well
-                                                appendThumbnailsTo: '.lg-outer',
+                                                    <div class="media-body">
+                                                        <div class="text-capitalize font-weight-500 text-dark">Devices Details</div>
 
-                                                animateThumb: false,
-                                                allowMediaOverlap: true,
-                                            });
-                                        </script>
-                                    </div>
+                                                    </div>
+                                                </div>
 
-<div class="row mt-20">
-    <h3 class="mb-15">Devices Details</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Device Name</th>
-                <th>Device Type</th>
-                <th>Serial Model</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($employee->devices as $device)
-            <tr>
-                <td>{{ $device->device_name }}</td>
-                <td>{{ $device->device_type }}</td>
-                <td>{{ $device->device_model }}</td>
-                <td>
-                    <a href="{{ route('device.show', $device->id) }}" class="btn btn-info btn-sm">Show Details</a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="card">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Device Name</th>
+                                                                <th>Device Type</th>
+                                                                <th>Serial Model</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($employee->devices as $device)
+                                                            <tr>
+                                                                <td>{{ $device->device_name }}</td>
+                                                                <td>{{ $device->device_type }}</td>
+                                                                <td>{{ $device->device_model }}</td>
+                                                                <td>
+                                                                    <a href="{{ route('device.show', $device->id) }}" class="btn btn-info btn-sm">Show Details</a>
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    @endif
+
                                     <div class="row mt-30">
                                         <div class="col-auto">
 

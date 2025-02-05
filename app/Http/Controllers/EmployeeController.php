@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Log;
+use Carbon\Carbon;
 use App\Models\Device;
 use App\Models\Project;
 use App\Models\Receive;
@@ -11,10 +12,11 @@ use App\Models\Employee;
 use App\Models\Clearance;
 use App\Models\Department;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\DeviceAndSimClearance;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EmployeesImport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\DeviceAndSimClearance;
+
 class EmployeeController extends Controller
 {
     /**
@@ -185,7 +187,10 @@ class EmployeeController extends Controller
     {
         $employee = Employee::with(['devices', 'department', 'position', 'project', 'sim_card', 'receives', 'clearance'])->find($employee->id);
         $project = $employee->project;
-        return view('employees.show', compact('employee', 'project'));
+        $hireDate = Carbon::parse($employee->hire_date)->format('Y,M');
+        $now = Carbon::now();
+        $diff = Carbon::parse($employee->hire_date)->diff($now);
+        return view('employees.show', compact('employee', 'project', 'diff' ,'hireDate'));
     }
 
     /**
