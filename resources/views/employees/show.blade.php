@@ -142,7 +142,7 @@
                                                             <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$employee->profile_image) }}" alt="Card image cap">
                                                         </div>
                                                         <div class="card-body">
-                                                            <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $employee->department->name }}</h5></span>
+                                                            <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $employee->department->name }} - </h5></span>
                                                             <span style="font-size: 20px" class="badge badge-soft-warning mt-15 mr-10"><h5>{{ $employee->position->name }}</h5></span>
 
                                                         </div>
@@ -165,7 +165,7 @@
 													</div>
 													<div class="col-6 pl-0">
 														<div class="pa-15">
-															<span class="d-block display-6 text-dark mb-5">Human Resources</span>
+															<span class="d-block display-6 text-dark mb-5">{{ $employee->department->name }}</span>
 															<span class="d-block text-capitalize font-14">Department</span>
 														</div>
 													</div>
