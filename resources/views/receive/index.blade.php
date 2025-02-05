@@ -30,7 +30,7 @@
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
                     <h5 class="hk-sec-title">Receives</h5>
-                    <table class="table table-hover mb-0">
+                    <table class="table table-info table-hover mb-0">
                         <thead>
                             <tr>
                                 <th>Code</th>
@@ -41,7 +41,7 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $recv)
-                            <tr @if ($recv->status !== 'Received')
+                            <tr @if ($recv->status !== 'received')
                                 style='background-color: bisque'
                             @endif>
                                 <td>{{ $recv->code }}</td>
