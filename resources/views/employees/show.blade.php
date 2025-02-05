@@ -228,9 +228,9 @@
                                                 <h6><span>Devices And Items <span class="badge badge-soft-primary ml-5">{{ $employee?->devices?->count() ?? 0 }}</span></span></h6>
 
                                             </div>
-                                            <div class="card-body pb-5">
-                                                <div class="hk-row text-center">
-                                                    <div class="customize-thumbnails-gallery" id="customize-thumbnails-gallery">
+                                            <div class="card-body pb-5 w-100">
+                                                <div class="hk-row text-center w-100">
+                                                    <div class="customize-thumbnails-gallery w-100" id="customize-thumbnails-gallery">
                                                         @foreach ($employee->devices as $device )
                                                         <div class="col-4 mb-15">
                                                             <a class="w-100" href="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}">
