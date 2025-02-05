@@ -317,9 +317,9 @@
                                         <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('project.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Projects</a>
                                         </li>
-                                        {{-- <li class="nav-item {{ Request::is('consultant*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                        <li class="nav-item {{ Request::is('consultant*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('consultant.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/011-consultant.png') }}" alt="" srcset="">Consultants</a>
-                                        </li> --}}
+                                        </li>
                                         @elseif (Auth::user()->hasRole('o-hr') )
 
                                         <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
