@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
 <div class="hk-pg-wrapper">
     <!-- Container -->
@@ -55,7 +54,6 @@
                                                     <a href="#" class="btn btn-secondary fileinput-exists"
                                                         data-dismiss="fileinput">Remove</a>
                                                 </span>
-
                                             </div>
                                             @error('employee_image')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -98,7 +96,6 @@
                                         {{-- employee Name --}}
                                         {{-- ---------------- --}}
                                         <div class="col-6 form-group">
-
                                             <label class="sr-only" for="AddNewEmployeeName">Name</label>
                                             <div class="input-group mb-2 w-100">
                                                 <div class="input-group-prepend">
@@ -115,7 +112,6 @@
                                         {{-- ----------------------- --}}
                                         {{-- // END employee Name --}}
                                         {{-- ----------------------- --}}
-
                                     </div>
 
                                     <div class="row w-100">
@@ -123,7 +119,6 @@
                                         {{-- employee Personal Email --}}
                                         {{-- ---------------- --}}
                                         <div class="col-6 form-group">
-
                                             <label class="sr-only" for="AddNewEmployeePersonalEmail">Personal
                                                 Email</label>
                                             <div class="input-group mb-2 w-100">
@@ -142,7 +137,6 @@
                                         {{-- ----------------------- --}}
                                         {{-- // END employee Personal Email --}}
                                         {{-- ----------------------- --}}
-
                                         {{-- ---------------- --}}
                                         {{-- employee Personal Mobile --}}
                                         {{-- ---------------- --}}
@@ -216,8 +210,6 @@
                                         {{-- ----------------------- --}}
                                         {{-- // END employee Orion Email --}}
                                         {{-- ----------------------- --}}
-
-
                                     </div>
 
                                     <div class="row w-100">
@@ -248,16 +240,11 @@
                                     <br>
                                     <hr>
 
-
-
-
-
                                     <div class="row w-100 mt-2">
                                         {{-- ---------------- --}}
                                         {{-- employee Orion Email --}}
                                         {{-- ---------------- --}}
                                         <div class="col-12 col-md-6 form-group">
-
                                             <h6 class="" for="AddNewEmployeeOrionEmail">Project
                                             </h6>
                                             <div class="input-group mb-2 w-100">
@@ -296,6 +283,9 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            @error('employee_manager')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         {{-- ----------------------- --}}
                                         {{-- // END employee Orion Email --}}
@@ -306,6 +296,9 @@
                                             Notes</h6>
                                         <textarea name="notes" class="form-control mt-15 w-100 " rows="11"
                                             placeholder="Employee Notes">{{ $employee->notes }}</textarea>
+                                        @error('notes')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <br>
                                     <div class="row mt-30">
