@@ -304,7 +304,7 @@
                                     <div class="row mt-30">
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary mb-2">Save</button>
-                                            <a href="{{ url()->previous() }}" type="button" class="btn btn-danger mb-2">Cancel</a>
+                                            <a href="{{ route('employees.index') }}" type="button" class="btn btn-danger mb-2">Cancel</a>
                                         </div>
                                     </div>
                             </div>
