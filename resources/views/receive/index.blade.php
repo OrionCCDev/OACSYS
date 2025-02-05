@@ -41,7 +41,9 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $recv)
-                            <tr>
+                            <tr @if ($recv->status !== 'Received')
+                                style='background-color: bisque'
+                            @endif>
                                 <td>{{ $recv->code }}</td>
                                 <td>
                                     @if ($recv->employee_id)
@@ -52,7 +54,17 @@
                                     {{ $recv->clientEmployee->name }}
                                     @endif
                                 </td>
-                                <td>{{ $recv->status }}</td>
+                                <td>
+                                    @if ($recv->status == 'Received')
+
+                                        <span class="badge badge-success mt-15">{{ $recv->status }}</span>
+
+                                        @else
+
+                                        <span class="badge badge-purple mt-15">{{ $recv->status }}</span>
+                                    @endif
+
+                                </td>
                                 <td>
                                     <a href="{{ route('receive.show' , ['receive' => $recv->id]) }}"
                                         class="btn btn-success btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
@@ -64,7 +76,7 @@
                         </tbody>
                     </table>
 
-                    {{ $data->links() }}
+                    {{ $data->links('pagination::bootstrap-5') }}
                 </div>
             </section>
             <!-- /Title -->
