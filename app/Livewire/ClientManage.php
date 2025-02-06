@@ -43,7 +43,7 @@ class ClientManage extends Component
         $client = Client::create(['name' => $this->client_name]);
         if ($this->client_image) {
             $imageName = time() . '.' . $this->client_image->extension();
-            $this->client_image->move(public_path('X-Files/Dash/imgs/clinets'), $imageName);
+            $this->client_image->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
             $client->update(['image' => $imageName]);
         }
         $this->reset(['client_name', 'client_image']);
@@ -110,11 +110,11 @@ class ClientManage extends Component
         if ($this->client_image) {
             // Delete old image if exists
             if ($client->image) {
-                Storage::delete(public_path('X-Files/Dash/imgs/clinets/' . $client->image));
+                Storage::delete(public_path('X-Files/Dash/imgs/clients/' . $client->image));
             }
 
             $imageName = time() . '.' . $this->client_image->extension();
-            $this->client_image->move(public_path('X-Files/Dash/imgs/clinets'), $imageName);
+            $this->client_image->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
             $client->update(['image' => $imageName]);
         }
 
