@@ -16,11 +16,14 @@ class ClientManage extends Component
     protected $paginationTheme = 'bootstrap';
     #[Rule('required|min:2|string')]
     public $client_name;
-    #[Rule('image|mimes:png,jpg,jpeg,svg')]
+    #[Rule('image|mimes:png,jpg,jpeg,svg,gif|max:2048')]
     public $client_image;
 
     public $search = '';
-
+    protected $messages = [
+        'client_name.required' => 'Client name is required for new clients',
+        'client_image.required' => 'Client image is required when editing',
+    ];
     public $edtId;
     public $edtName;
     public $edtableImage;
@@ -31,19 +34,15 @@ class ClientManage extends Component
         'client_image' => 'image|mimes:png,jpg,jpeg,svg'
     ];
 
-    // Or use custom validation messages
-    protected $messages = [
-        'client_name.required' => 'client name is required for new clients',
-        'client_image.required' => 'client name is required when editing'
-    ];
-
     public function addNewclient()
     {
         $this->validateOnly('client_name');
         $client = Client::create(['name' => $this->client_name]);
         if ($this->client_image) {
+            // dd($this->client_image);
             $imageName = time() . '.' . $this->client_image->extension();
-            $this->client_image->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
+            // $destinationPath = public_path('X-Files/Dash/imgs/clients/' . $imageName);
+            $this->client_image->storeAs('/clients', $imageName , 'public_uploads');
             $client->update(['image' => $imageName]);
         }
         $this->reset(['client_name', 'client_image']);
@@ -61,8 +60,15 @@ class ClientManage extends Component
 
     public function del($id)
     {
-        Client::find($id)->delete();
-        $this->resetPage();
+        $client = Client::findOrFail($id);
+        if ($client->image) {
+            unlink(public_path('X-Files/Dash/imgs/clients/' . $client->image));
+
+        }
+        $client->delete();
+
+        // Maintain the current page after deletion
+        $this->dispatch('clientDeleted');
     }
 
     public function edtImg(Client $client)
@@ -98,23 +104,19 @@ class ClientManage extends Component
 
     public function updateImage(Client $client)
     {
-        $this->validateOnly('edtableImage', [
+        $editableImageNew = $this->validateOnly('edtableImage', [
             'edtableImage' => 'required|image|mimes:png,jpg,jpeg,svg'
         ]);
-        // // Clear existing media from collection first
-        // $client->clearMediaCollection('client_images');
 
-        // // Add new media to collection
-        // $client->addMedia($this->edtableImage)
-        //        ->toMediaCollection('client_images');
-        if ($this->client_image) {
-            // Delete old image if exists
+        if ($this->edtableImage) {
+            // Delete old image if exists $editableImageNew
             if ($client->image) {
-                Storage::delete(public_path('X-Files/Dash/imgs/clients/' . $client->image));
+                // Storage::delete('public/X-Files/Dash/imgs/clients/' . $client->image);
+                unlink(public_path('X-Files/Dash/imgs/clients/' . $client->image));
             }
 
-            $imageName = time() . '.' . $this->client_image->extension();
-            $this->client_image->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
+            $imageName = time() . '.' . $this->edtableImage->extension();
+            $this->edtableImage->storeAs('/clients', $imageName , 'public_uploads');
             $client->update(['image' => $imageName]);
         }
 

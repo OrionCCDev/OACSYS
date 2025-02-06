@@ -209,7 +209,14 @@
                                 </div>
                             </div>
                             {{-- end of content --}}
-
+                            <script>
+                                document.addEventListener('livewire:load', function () {
+                                    Livewire.on('clientDeleted', () => {
+                                        // Maintain the current page after deletion
+                                        Livewire.emit('refreshPage');
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>

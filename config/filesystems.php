@@ -44,6 +44,13 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'public_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('X-Files/Dash/imgs'),
+            'url' => env('APP_URL').'/X-Files/Dash/imgs',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         'media' => [
             'driver' => 'local',
             'root'   => public_path('media'),
