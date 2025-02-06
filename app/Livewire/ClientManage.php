@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Rule;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class ClientManage extends Component
 {
@@ -41,8 +42,9 @@ class ClientManage extends Component
         $this->validateOnly('client_name');
         $client = Client::create(['name' => $this->client_name]);
         if ($this->client_image) {
-            $client->addMedia($this->client_image)
-                   ->toMediaCollection('client_images');
+            $imageName = time() . '.' . $this->client_image->extension();
+            $this->client_image->move(public_path('X-Files/Dash/imgs/clinets'), $imageName);
+            $client->update(['image' => $imageName]);
         }
         $this->reset(['client_name', 'client_image']);
         $this->resetPage();
@@ -99,12 +101,22 @@ class ClientManage extends Component
         $this->validateOnly('edtableImage', [
             'edtableImage' => 'required|image|mimes:png,jpg,jpeg,svg'
         ]);
-        // Clear existing media from collection first
-        $client->clearMediaCollection('client_images');
+        // // Clear existing media from collection first
+        // $client->clearMediaCollection('client_images');
 
-        // Add new media to collection
-        $client->addMedia($this->edtableImage)
-               ->toMediaCollection('client_images');
+        // // Add new media to collection
+        // $client->addMedia($this->edtableImage)
+        //        ->toMediaCollection('client_images');
+        if ($this->client_image) {
+            // Delete old image if exists
+            if ($client->image) {
+                Storage::delete(public_path('X-Files/Dash/imgs/clinets/' . $client->image));
+            }
+
+            $imageName = time() . '.' . $this->client_image->extension();
+            $this->client_image->move(public_path('X-Files/Dash/imgs/clinets'), $imageName);
+            $client->update(['image' => $imageName]);
+        }
 
         $this->reset(['edtId', 'edtName', 'edtableImage', 'editImage']);
 
