@@ -191,8 +191,8 @@
                                     @endif
                                     @endif
                                     @if ($receiver_type != 'employee' && $receiver->project_id != null)
-                                    <h6 class="mb-5">Name : <span style="color:#174094 ">{{ $receiver->name }}</span>
-                                    </h6>
+                                    {{-- <h6 class="mb-5">Name : <span style="color:#174094 ">{{ $receiver->name }}</span>
+                                    </h6> --}}
                                     <h6 class="mb-5">Project : <span style="color:#174094 ">{{
                                             $receiver->project->project_code }}</span></h6>
                                     @endif

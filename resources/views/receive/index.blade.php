@@ -55,21 +55,31 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($recv->status == 'Received')
+                                    @if ($recv->status == 'received')
 
                                         <span class="badge badge-success mt-15">{{ $recv->status }}</span>
 
-                                        @else
+                                    @else
 
                                         <span class="badge badge-purple mt-15">{{ $recv->status }}</span>
                                     @endif
 
                                 </td>
                                 <td>
+                                    @if ($recv->status !== 'received')
+
+                                    <a href="{{ route('receive.show' , ['receive' => $recv->id]) }}"
+                                        class="btn btn-warning btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
+                                            class="btn-text">Continue</span><span class="icon-label"><i
+                                                class="fa fa-angle-right"></i> </span></a>
+                                    @else
+
+
                                     <a href="{{ route('receive.show' , ['receive' => $recv->id]) }}"
                                         class="btn btn-success btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
                                             class="btn-text">Show</span><span class="icon-label"><i
                                                 class="fa fa-angle-right"></i> </span></a>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
