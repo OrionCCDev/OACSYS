@@ -35,7 +35,7 @@
                                                 <th>Stored In</th>
                                                 <th>Status</th>
                                                 <th class="text-center">Manage</th>
-                                                
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -131,12 +131,32 @@
                                                             class="btn btn-sm btn-info" title="Edit">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        {{-- <button data-toggle="modal"
-                                                            data-target="#exampleModalCenter{{ $employee->id }}"
+                                                         <button data-toggle="modal"
+                                                            data-target="#exampleModalCenter{{ $device->id }}"
                                                             type="button" class="btn btn-sm btn-danger"
-                                                            data-toggle="modal" data-target="#exampleModalCenter8">
+                                                            data-toggle="modal">
                                                             <i class="icon-trash"></i>
-                                                        </button> --}}
+                                                        </button>
+                                                        <div class="modal fade" id="exampleModalCenter{{ $device->id }}" tabindex="-1" role="dialog"
+                                                            aria-labelledby="exampleModalCenter{{ $device->id }}" aria-hidden="true" style="display: none;">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content  alert alert-warning ">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Deleteing Device</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">×</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>Are You sure You want to DELETE This  Device <span class="badge badge-soft-danger"></span></p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="button" data-dismiss="modal" wire:click='del({{ $device->id }})' class="btn btn-danger">Delete</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </td>
 
