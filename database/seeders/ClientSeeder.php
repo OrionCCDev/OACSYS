@@ -33,7 +33,7 @@ class ClientSeeder extends Seeder
             ['name' => 'Crown Prince Court' , 'image' => 'CROWN_PRINCE_COURT.jpg' ],
             ['name' => 'Streit Group' , 'image' => 'Streit_Group.jpg' ],
             ['name' => 'RAK Economic Zone' , 'image' => 'rakez.jpg' ],
-            ['name' => 'AG Aluminum' , 'image' => 'AG Aluminum.jpg' ],
+            ['name' => 'AG Aluminum' , 'image' => 'AG_Aluminum.jpg' ],
             ['name' => 'FINE' , 'image' => 'FINE.jpg' ],
             ['name' => 'iPack' , 'image' => 'iPack.jpg' ],
             ['name' => 'Fence International' , 'image' => 'Fence_International.jpg' ],
