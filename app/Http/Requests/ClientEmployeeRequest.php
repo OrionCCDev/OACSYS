@@ -17,12 +17,8 @@ class ClientEmployeeRequest extends FormRequest
             'name' => 'required|string|max:255',
             'client_id' => 'required|exists:clients,id',
             'email' => 'email|unique:client_employees,email',
-            
+            'position' => 'nullable|string|max:255',
             'project_id' => 'exists:projects,id',
-            'client_receives' => 'nullable|array',
-            'client_receives.*' => 'image|mimes:jpeg,png,jpg|max:2048',
-            'client_gallary' => 'nullable|array',
-            'client_gallary.*' => 'image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 

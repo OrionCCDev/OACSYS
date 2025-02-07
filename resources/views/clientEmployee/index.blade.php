@@ -89,11 +89,7 @@
                                 @enderror
                               </div>
 
-                              {{-- orion mobile number via livewire 3 --}}
-                              {{-- ********************************** --}}
-                              <livewire:client-employee-form-for-sim-cards />
-                              {{-- orion mobile number via livewire 3 --}}
-                              {{-- ********************************** --}}
+
 
                               <div class="form-group">
                                 <label for="exampleDropdownFormpersonalmobile">personal
@@ -107,12 +103,22 @@
                                 @enderror
                               </div>
                               <div class="form-group">
+                                <label for="exampleDropdownFormposition">Position</label>
+                                <input type="text" value="{{ old('position') }}" name="position" class="form-control"
+                                  id="exampleDropdownFormposition" placeholder="position">
+                                @error('position')
+                                <div class="alert alert-warning" role="alert">
+                                  {{ $message }}
+                                </div>
+                                @enderror
+                              </div>
+                              <div class="form-group">
                                 <label for="exampleDropdownFormpersonalmobileorion">Project</label>
                                 <select name="project_id" class="form-control custom-select">
                                   <option @selected(old('project_id') == '')>Select</option>
                                   @foreach ( $projects as $project )
                                   <option @selected(old('project_id') == $project->id) value="{{ $project->id }}">{{
-                                    $project->project_name }}</option>
+                                    $project->project_name }} ( {{ $project->project_code }} )</option>
                                   @endforeach
                                 </select>
                                 @error('project_id')
@@ -121,57 +127,6 @@
                                 </div>
                                 @enderror
                               </div>
-                              <div class="form-group">
-                                <div class="fileinput fileinput-new input-group" data-provides="fileinput1">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Upload
-                                      Receiving</span>
-                                  </div>
-                                  <div class="form-control text-truncate" data-trigger="fileinput1"><i
-                                      class="glyphicon glyphicon-file fileinput-exists"></i>
-                                    <span class="fileinput-filename"></span>
-                                  </div>
-                                  <span class="input-group-append">
-                                    <span class=" btn btn-primary btn-file"><span class="fileinput-new">Select
-                                        Receives</span><span class="fileinput-exists">Change</span>
-                                      <input type="file" name="client_receives[]" multiple>
-                                    </span>
-                                    <a href="#" class="btn btn-secondary fileinput-exists"
-                                      data-dismiss="fileinput">Remove</a>
-                                  </span>
-                                </div>
-                                @error('client_receives')
-                                <div class="alert alert-warning" role="alert">
-                                  {{ $message }}
-                                </div>
-                                @enderror
-                              </div>
-                              <div class="form-group">
-                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Upload
-                                      Images</span>
-                                  </div>
-                                  <div class="form-control text-truncate" data-trigger="fileinput"><i
-                                      class="glyphicon glyphicon-file fileinput-exists"></i>
-                                    <span class="fileinput-filename"></span>
-                                  </div>
-                                  <span class="input-group-append">
-                                    <span class=" btn btn-primary btn-file"><span class="fileinput-new">Select
-                                        Gallary</span><span class="fileinput-exists">Change</span>
-                                      <input type="file" name="client_gallary[]" multiple>
-                                    </span>
-                                    <a href="#" class="btn btn-secondary fileinput-exists"
-                                      data-dismiss="fileinput">Remove</a>
-                                  </span>
-                                </div>
-                                @error('client_gallary')
-                                <div class="alert alert-warning" role="alert">
-                                  {{ $message }}
-                                </div>
-                                @enderror
-                              </div>
-
                               <button type="submit" class="btn btn-primary">Save</button>
                             </form>
                           </div>
@@ -221,40 +176,43 @@
                         <th scope="row">{{ $clientEmployee->client->name }}</th>
                         <th scope="row">{{ $clientEmployee->project->project_name }}</th>
                         <td>
-                          <button class="btn btn-success mr-25 " data-toggle="tooltip" data-original-title="Show">
-                            <i class="material-icons"></i>
-                          </button>
-                          <button class="btn btn-info mr-25 " data-toggle="tooltip" data-original-title="Edit">
-                            <i class="icon-pencil"></i>
-                          </button>
-                          <button type="button" class="btn btn-danger"
-                          data-toggle="modal"
-                          data-target="#exampleModalCenter{{ $clientEmployee->id }}">
-                          <i
-                          class="icon-trash txt-danger"></i>
-                          </button>
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('clientEmployee.show' , $clientEmployee->id) }}" class="btn btn-sm btn-success" title="View Details">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ route('clientEmployee.edit' , $clientEmployee->id) }}" class="btn btn-sm btn-info" title="Edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <button  data-toggle="modal"
+                                data-target="#exampleModalCenter{{ $clientEmployee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
+                                <i class="icon-trash"></i>
+                                </button>
+                                <div class="modal fade" id="exampleModalCenter{{ $clientEmployee->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalCenter{{ $clientEmployee->id }}" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content  alert alert-warning ">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Deleteing Employee</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
+                                            </div>
+                                            <div class="modal-footer" style="display: flex; justify-content: space-between;">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <form action="{{ route('clientEmployee.destroy' ,  $clientEmployee->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
 
-                          <div class="modal fade" id="exampleModalCenter{{ $clientEmployee->id }}" tabindex="-1" role="dialog"
-                              aria-labelledby="exampleModalCenter{{ $clientEmployee->id }}" aria-hidden="true" style="display: none;">
-                              <div class="modal-dialog modal-dialog-centered" role="document">
-                                  <div class="modal-content  alert alert-warning ">
-                                      <div class="modal-header">
-                                          <h5 class="modal-title">Deleteing Client Employee</h5>
-                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">×</span>
-                                          </button>
-                                      </div>
-                                      <div class="modal-body">
-                                          <p>Are You sure You want to DELETE This  Client Employee </p>
-                                      </div>
-                                      <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                          <button type="button" data-dismiss="modal" wire:click='del({{ $clientEmployee->id }})' class="btn btn-danger">Delete</button>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                       </tr>
                       @endforeach
