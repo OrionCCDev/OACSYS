@@ -16,7 +16,7 @@ class ClientEmployeeController extends Controller
      */
     public function index()
     {
-        $data = ClientEmployee::with(['client','project','sim_card','devices'])->paginate(10);
+        $data = ClientEmployee::with(['client','project'])->paginate(10);
         $projects = Project::where('status', 'in-progress')->get();
         $Clients = Client::all();
         return view('clientEmployee.index' , compact('data','projects','Clients'));
@@ -41,6 +41,7 @@ class ClientEmployeeController extends Controller
         $clientEmployee = ClientEmployee::create([
             'name' => $request->name,
             'email' => $request->email,
+            'position' => $request->position,
             'client_id' => $request->client_id,
             'project_id' => $request->project_id,
             'mobile_number' => $request->mobile_number,
@@ -51,24 +52,24 @@ class ClientEmployeeController extends Controller
         //         'client_employee_id' => $request->mobile_number,
         //     ]);
         // }
-        if($request->orion_number && $request->orion_number !== 'Select SIM Card'){
-            $sim_card = SimCard::where('id', $request->orion_number)->update([
-                'client_employee_id' => $clientEmployee->id
-            ]);
-        }
-        if($request->hasFile('client_receives')) {
-            foreach($request->file('client_receives') as $receive) {
-                $clientEmployee->addMedia($receive)
-                    ->toMediaCollection('receives');
-            }
-        }
+        // if($request->orion_number && $request->orion_number !== 'Select SIM Card'){
+        //     $sim_card = SimCard::where('id', $request->orion_number)->update([
+        //         'client_employee_id' => $clientEmployee->id
+        //     ]);
+        // }
+        // if($request->hasFile('client_receives')) {
+        //     foreach($request->file('client_receives') as $receive) {
+        //         $clientEmployee->addMedia($receive)
+        //             ->toMediaCollection('receives');
+        //     }
+        // }
 
-        if($request->hasFile('client_gallary')) {
-            foreach($request->file('client_gallary') as $image) {
-                $clientEmployee->addMedia($image)
-                    ->toMediaCollection('gallery');
-            }
-        }
+        // if($request->hasFile('client_gallary')) {
+        //     foreach($request->file('client_gallary') as $image) {
+        //         $clientEmployee->addMedia($image)
+        //             ->toMediaCollection('gallery');
+        //     }
+        // }
 
         return redirect()->route('clientEmployee.index')->with('success', 'Client Employee Created Successfully');
     }
@@ -78,7 +79,7 @@ class ClientEmployeeController extends Controller
      */
     public function show(ClientEmployee $clientEmployee)
     {
-        //
+        return view('clientEmployee.show', compact('clientEmployee'));
     }
 
     /**
@@ -86,7 +87,10 @@ class ClientEmployeeController extends Controller
      */
     public function edit(ClientEmployee $clientEmployee)
     {
-        //
+        $projects = Project::where('status', 'in-progress')->get();
+        $clients = Client::all();
+        return view('clientEmployee.edit', compact('clientEmployee','projects','clients'));
+
     }
 
     /**
@@ -94,7 +98,26 @@ class ClientEmployeeController extends Controller
      */
     public function update(Request $request, ClientEmployee $clientEmployee)
     {
-        //
+        $request->validate([
+            'clientEmployee_name' => 'required|min:2',
+            'client_id' => 'required|exists:clients,id',
+            'clientEmployee_email' => 'required|email',
+            'clientEmployee_mobile' => 'required',
+            'clientEmployee_position' => 'required',
+            'project_id' => 'required|exists:projects,id',
+        ]);
+
+
+        $clientEmployee->update([
+            'name' => $request->clientEmployee_name,
+            'client_id' => $request->client_id,
+            'email' => $request->clientEmployee_email,
+            'mobile_number' => $request->clientEmployee_mobile,
+            'position' => $request->clientEmployee_position,
+            'project_id' => $request->project_id,
+        ]);
+
+        return redirect()->route('clientEmployee.show', $clientEmployee->id)->with('success', 'Client/Employee updated successfully');
     }
 
     /**
@@ -102,6 +125,7 @@ class ClientEmployeeController extends Controller
      */
     public function destroy(ClientEmployee $clientEmployee)
     {
-        //
+        $clientEmployee->delete();
+        return redirect()->route('clientEmployee.index')->with('success', 'Client/Employee deleted successfully');
     }
 }

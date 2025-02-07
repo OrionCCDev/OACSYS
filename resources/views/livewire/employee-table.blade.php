@@ -72,40 +72,40 @@
                                                         <td>
                                                             {{ $employee->position?->name ?? 'Not Found' }}
                                                         </td>
-                                                            <td class="text-center">
-                                                                <div class="btn-group" role="group">
-                                                                    <a href="{{ route('employees.show' , $employee->id) }}" class="btn btn-sm btn-success" title="View Details">
-                                                                        <i class="fa fa-eye"></i>
-                                                                    </a>
-                                                                    <a href="{{ route('employees.edit' , $employee->id) }}" class="btn btn-sm btn-info" title="Edit">
-                                                                        <i class="fa fa-edit"></i>
-                                                                    </a>
-                                                                    <button  data-toggle="modal"
-                                                                    data-target="#exampleModalCenter{{ $employee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
-                                                                    <i class="icon-trash"></i>
-                                                                    </button>
-                                                                    <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
-                                                                        aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
-                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                            <div class="modal-content  alert alert-warning ">
-                                                                                <div class="modal-header">
-                                                                                    <h5 class="modal-title">Deleteing Employee</h5>
-                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                        <span aria-hidden="true">×</span>
-                                                                                    </button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                                    <button type="button" data-dismiss="modal" wire:click='del({{ $employee->id }})' class="btn btn-danger">Delete</button>
-                                                                                </div>
+                                                        <td class="text-center">
+                                                            <div class="btn-group" role="group">
+                                                                <a href="{{ route('employees.show' , $employee->id) }}" class="btn btn-sm btn-success" title="View Details">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </a>
+                                                                <a href="{{ route('employees.edit' , $employee->id) }}" class="btn btn-sm btn-info" title="Edit">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </a>
+                                                                <button  data-toggle="modal"
+                                                                data-target="#exampleModalCenter{{ $employee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
+                                                                <i class="icon-trash"></i>
+                                                                </button>
+                                                                <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
+                                                                    aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
+                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                        <div class="modal-content  alert alert-warning ">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title">Deleteing Employee</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">×</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                <button type="button" data-dismiss="modal" wire:click='del({{ $employee->id }})' class="btn btn-danger">Delete</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </div>
+                                                        </td>
                                                         @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
 
                                                             <td class="text-center">
