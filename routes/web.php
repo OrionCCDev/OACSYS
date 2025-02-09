@@ -82,6 +82,9 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::put('/project/client/{client}/remove', [ProjectController::class, 'removeClient'])->name('project.removeClient');
     Route::put('/project/client/{client}/transfer',  [ProjectController::class, 'transferClient'])->name('project.transferClient');
     Route::post('/project/add/{id}', [ProjectController::class, 'addClient'])->name('project.addClient');
+    Route::put('/project/consultant/{consultant}/remove', [ProjectController::class, 'removeConsultant'])->name('project.removeConsultant');
+    Route::put('/project/consultant/{consultant}/transfer',  [ProjectController::class, 'transferConsultant'])->name('project.transferConsultant');
+    Route::post('/project/add/consultant/{id}', [ProjectController::class, 'addConsultant'])->name('project.addConsultant');
     Route::get('/client', ClientManage::class)->name('client.index');
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::post('/resign/employee/{id}/clearance/{clr}', [EmployeeController::class, 'finishResign'])->name('employee.resign-upload-signature');
