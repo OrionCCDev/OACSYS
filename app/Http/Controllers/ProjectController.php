@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\ClientEmployee;
+use App\Models\Consultant;
 
 class ProjectController extends Controller
 {
@@ -52,7 +53,8 @@ class ProjectController extends Controller
         $clientsCount = $project->clients()->count() ?? '0';
         $consultantsCount = $project->consultants()->count() ?? '0';
         $clientEmployees = ClientEmployee::with('client')->get();
-        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects','clientEmployees'));
+        $consultants = Consultant::all();
+        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects','clientEmployees','consultants'));
     }
     public function addClient(Request $request, $id)
     {
@@ -71,6 +73,26 @@ public function transferClient(Request $request, ClientEmployee $client)
 {
     $client->update(['project_id' => $request->project_id]);
     return redirect()->back()->with('success', 'Client transferred to new project');
+}
+
+
+    public function addConsultant(Request $request, $id)
+    {
+        // $project->clients()->attach($request->client_employee_id);
+        $consultantEmployee = Consultant::find($request->consultantEmployee);
+        $consultantEmployee->update(['project_id' => $id]);
+        return redirect()->back()->with('success', 'Consultant added successfully');
+    }
+    public function removeConsultant(Consultant $consultant)
+{
+    $consultant->update(['project_id' => null]);
+    return redirect()->back()->with('success', 'consultant removed from project');
+}
+
+public function transferConsultant(Request $request, Consultant $consultant)
+{
+    $consultant->update(['project_id' => $request->project_id]);
+    return redirect()->back()->with('success', 'consultant transferred to new project');
 }
     /**
      * Show the form for editing the specified resource.

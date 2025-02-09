@@ -467,29 +467,29 @@
                                             <div class="d-flex align-items-center card-action-wrap">
                                                 <div class="inline-block dropdown">
                                                     <div class="d-flex align-items-center card-action-wrap">
-                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal">
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal12">
                                                             Assign Consultant Employee
                                                         </button>
                                                     </div>
-                                                    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+                                                    <div class="modal fade" id="addClientModal12" tabindex="-1" role="dialog" aria-labelledby="addClientModal12Label" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="addClientModalLabel">Add Consultant to Project</h5>
+                                                                    <h5 class="modal-title" id="addClientModal12Label">Add Consultant to Project</h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
-                                                                <form action="{{ route('project.addClient', $project->id) }}" method="POST">
+                                                                <form action="{{ route('project.addConsultant', $project->id) }}" method="POST">
                                                                     @csrf
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
-                                                                            <label>Select Client</label>
-                                                                            <select name="client_employee_id" class="form-control">
-                                                                                <option value="">Select Client</option>
-                                                                                @foreach($clientEmployees as $clientEmployee)
-                                                                                    <option value="{{ $clientEmployee->id }}">
-                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project->project_name }}</span>    @endif
+                                                                            <label>Select Consultant</label>
+                                                                            <select name="consultantEmployee" class="form-control">
+                                                                                <option value="">Select Consultant</option>
+                                                                                @foreach($consultants as $Ce)
+                                                                                    <option value="{{ $Ce->id }}">
+                                                                                        {{ $Ce->name }} - {{ $Ce->company_name }} @if($Ce->project_id != null) <span style="background-color: yellowgreen"> - {{ $Ce->project->project_name }}</span>    @endif
                                                                                     </option>
                                                                                 @endforeach
                                                                             </select>
@@ -497,7 +497,7 @@
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Add Client</button>
+                                                                        <button type="submit" class="btn btn-primary">Add Consultant</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -527,21 +527,21 @@
                                                         <span class="d-block font-13 text-truncate mw-150p">{{
                                                             $consultant->company_name }}</span>
                                                     </div>
-                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $client->id }}">
+                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $consultant->id }}">
                                                         Transfer
                                                     </button>
 
                                                     <!-- Transfer Modal -->
-                                                    <div class="modal fade" id="transferClientModal{{ $client->id }}" tabindex="-1" role="dialog">
+                                                    <div class="modal fade" id="transferClientModal{{ $consultant->id }}" tabindex="-1" role="dialog">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title">Transfer {{ $client->name }} to Another Project</h5>
+                                                                    <h5 class="modal-title">Transfer {{ $consultant->name }} to Another Project</h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
-                                                                <form action="{{ route('project.transferClient', $client->id) }}" method="POST">
+                                                                <form action="{{ route('project.transferConsultant', $consultant->id) }}" method="POST">
                                                                     @csrf
                                                                     @method('PUT')
                                                                     <div class="modal-body">
@@ -560,7 +560,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <form action="{{ route('project.removeClient', $client->id) }}" method="POST" style="display:inline;">
+                                                    <form action="{{ route('project.removeConsultant', $consultant->id) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('PUT')
                                                         <button type="submit" class="btn btn-danger">Delete</button>
