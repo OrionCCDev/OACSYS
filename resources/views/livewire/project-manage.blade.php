@@ -250,11 +250,11 @@
                                                                title="View Details">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            <button wire:click="editProject({{ $Project->id }})"
+                                                            {{-- <button wire:click="editProject({{ $Project->id }})"
                                                                     class="btn btn-sm btn-info"
                                                                     title="Edit">
                                                                 <i class="fa fa-edit"></i>
-                                                            </button>
+                                                            </button> --}}
                                                             <button type="button" class="btn btn-sm btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#exampleModalCenter{{ $Project->id }}">

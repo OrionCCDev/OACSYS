@@ -66,6 +66,13 @@
                                                 @endif
                                             </span>
                                     </li>
+                                    @if ($device->project_id != null)
+                                    <li class="list-group-item" style="font-size: 35px">
+                                        <span>
+                                            <span>Placed In Project: </span></span>
+                                            <span class="ml-5 text-dark">{{ $device->project->project_name }} </span>
+                                    </li>
+                                    @endif
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
                                             <span>Model: </span></span>
