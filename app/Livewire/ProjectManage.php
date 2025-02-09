@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Project;
 use App\Models\Employee;
+use App\Models\Client;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Rule;
@@ -21,11 +22,14 @@ class ProjectManage extends Component
     public $project_code;
     #[Rule('required|numeric|exists:employees,id')]
     public $project_manager;
+    #[Rule('required|exists:clients,id')]
+    public $client_id;
 
     // Edit States
     public $editProjectManger = false;
     public $editProjectName = false;
     public $editProjectCode = false;
+    public $editProjectClient = false;
 
     // Edit Properties
     public $project_manager_edited;
@@ -33,6 +37,7 @@ class ProjectManage extends Component
     public $edtName;
     public $edtedName;
     public $edtedCode;
+    public $edtedClient;
 
     // Search
     public $search = '';
@@ -43,20 +48,23 @@ class ProjectManage extends Component
         $this->editProjectManger = false;
         $this->editProjectName = false;
         $this->editProjectCode = false;
+        $this->editProjectClient = false;
         $this->edtId = '';
         $this->edtName = '';
         $this->edtedName = '';
         $this->edtedCode = '';
+        $this->edtedClient = '';
     }
 
     public function render()
     {
         return view('livewire.project-manage', [
-            'data' => Project::with('manager')
+            'data' => Project::with('manager', 'client')
                 ->latest()
                 ->where('project_name', 'like', "%{$this->search}%")
                 ->paginate(8),
-            'managers' => Employee::where('type', 'manager')->orderBy('name', 'asc')->get()
+            'managers' => Employee::where('type', 'manager')->orderBy('name', 'asc')->get(),
+            'clients' => Client::orderBy('name', 'asc')->get()
         ]);
     }
 
@@ -68,6 +76,7 @@ class ProjectManage extends Component
             'project_name' => $this->project_name,
             'project_code' => $this->project_code,
             'project_manager_id' => $this->project_manager,
+            'client_id' => $this->client_id,
         ]);
 
         $this->reset();
@@ -77,11 +86,15 @@ class ProjectManage extends Component
     public function update(Project $project)
     {
         $this->validate([
-            'edtedName' => 'required|min:2|max:255|string'
+            'edtedName' => 'required|min:2|max:255|string',
+            'edtedClient' => 'required|exists:clients,id'
         ]);
 
-        $project->update(['project_name' => $this->edtedName]);
-        $this->reset(['project_name', 'project_code', 'project_manager']);
+        $project->update([
+            'project_name' => $this->edtedName,
+            'client_id' => $this->edtedClient
+        ]);
+        $this->reset(['project_name', 'project_code', 'project_manager', 'client_id']);
         $this->resetEditStates();
     }
 
@@ -138,4 +151,23 @@ class ProjectManage extends Component
         $this->edtedCode = $project->project_code;
         $this->editProjectCode = true;
     }
+
+    public function edtProjectClient(Project $project)
+    {
+        $this->edtId = $project->id;
+        $this->edtedClient = $project->client_id;
+        $this->editProjectClient = true;
+    }
+    public function updateProjectClient($projectId)
+{
+    $project = Project::find($projectId);
+    $project->update([
+        'client_id' => $this->edtedClient
+    ]);
+
+    $this->editProjectClient = false;
+    $this->edtId = null;
+
+    $this->dispatch('showToastOfUpdate');
+}
 }

@@ -72,6 +72,19 @@
                                                     @enderror
                                                 </div>
                                                 <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <select wire:model="client_id" class="form-control">
+                                                            <option value="">Select Client</option>
+                                                            @foreach($clients as $client)
+                                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    @error('client_id')
+                                                        <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-auto">
                                                     <button type="submit" class="btn btn-primary mb-2">Save</button>
                                                 </div>
                                             </div>
@@ -138,6 +151,7 @@
                                                 <th>Project Code</th>
                                                 <th>Project Name</th>
                                                 <th>Project Manager</th>
+                                                <th>Project Client</th>
                                                 <th>Handle</th>
                                             </tr>
                                         </thead>
@@ -213,7 +227,22 @@
 
                                                 {{--  manager name  --}}
 
+                                                <td style="position: relative">
+                                                    @if($editProjectClient && $edtId == $Project->id)
+                                                        <select wire:model="edtedClient" class="form-control">
+                                                            @foreach($clients as $client)
+                                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <button wire:click="updateProjectClient({{ $Project->id }})" class="btn btn-success btn-sm">Save</button>
+                                                        <button wire:click="cancel" class="btn btn-danger btn-sm">Cancel</button>
+                                                    @else
+                                                        {{ $Project->client?->name ?? 'N/A' }}
+                                                        <button style="position:absolute;top:5px;right:5px"
+                                                        wire:click="edtProjectClient({{ $Project->id }})" class="btn btn-icon btn-primary  btn-sm"><span class="btn-icon-wrap"><i class="icon-pencil"></i></span></button>
 
+                                                    @endif
+                                                </td>
                                                     <td class="text-center">
                                                         <div class="btn-group" role="group">
                                                             <a href="{{ route('project.details', $Project->id) }}"
