@@ -36,6 +36,7 @@ return new class extends Migration
 
         Schema::table('projects', function (Blueprint $table) {
             $table->foreignId('project_manager_id')->nullable()->constrained('employees' , 'id')->nullOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained('clients' , 'id')->nullOnDelete();
         });
 
         Schema::table('sim_cards', function (Blueprint $table) {

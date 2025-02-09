@@ -14,6 +14,9 @@ class Project extends Model
     public function clients(){
         return $this->hasMany(ClientEmployee::class);
     }
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
     public function devices(){
         return $this->hasMany(Device::class);
     }

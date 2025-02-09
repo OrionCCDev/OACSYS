@@ -15,4 +15,7 @@ class Client extends Model implements HasMedia
     public function client_employees(){
         return $this->hasMany(ClientEmployee::class , 'client_id' , 'id');
     }
+    public function projects(){
+        return $this->hasMany(Project::class);
+    }
 }
