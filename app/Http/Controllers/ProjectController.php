@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
 use App\Models\Project;
 use App\Models\Employee;
+use App\Models\Consultant;
 use Illuminate\Http\Request;
 use App\Models\ClientEmployee;
-use App\Models\Consultant;
 
 class ProjectController extends Controller
 {
@@ -26,6 +27,20 @@ class ProjectController extends Controller
         //
     }
 
+
+    public function addDevices($id)
+    {
+        $project = Project::find($id);
+        $devices = Device::whereNotNull('project_id')->whereNotNull('employee_id')->whereNotNull( 'consultant_id')->whereNotNull('client_id')->get();
+        return view('project.addDevices' , compact('project' , 'devices'));
+    }
+
+
+    public function storeDevices()
+    {
+        //
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -41,21 +56,20 @@ class ProjectController extends Controller
     {
         // First get the project without employees
         $project = Project::with(['consultants', 'clients.client', 'devices', 'manager'])
-        ->find($id);
-
+            ->find($id);
         if (!$project) {
             abort(404, 'Project not found');
         }
-        $projects = Project::where('status' , 'in-progress')->where('id', '!=', $id)->get();
+        $projects = Project::where('status', 'in-progress')->where('id', '!=', $id)->get();
         // Get paginated employees separately
         $project->employees = $project->employees()->with('position')->paginate(10);
-
         $clientsCount = $project->clients()->count() ?? '0';
         $consultantsCount = $project->consultants()->count() ?? '0';
         $clientEmployees = ClientEmployee::with('client')->get();
         $consultants = Consultant::all();
-        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects','clientEmployees','consultants'));
+        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects', 'clientEmployees', 'consultants'));
     }
+
     public function addClient(Request $request, $id)
     {
         // $project->clients()->attach($request->client_employee_id);
@@ -63,18 +77,18 @@ class ProjectController extends Controller
         $clientEmployee->update(['project_id' => $id]);
         return redirect()->back()->with('success', 'Client added successfully');
     }
+
     public function removeClient(ClientEmployee $client)
-{
-    $client->update(['project_id' => null]);
-    return redirect()->back()->with('success', 'Client removed from project');
-}
+    {
+        $client->update(['project_id' => null]);
+        return redirect()->back()->with('success', 'Client removed from project');
+    }
 
-public function transferClient(Request $request, ClientEmployee $client)
-{
-    $client->update(['project_id' => $request->project_id]);
-    return redirect()->back()->with('success', 'Client transferred to new project');
-}
-
+    public function transferClient(Request $request, ClientEmployee $client)
+    {
+        $client->update(['project_id' => $request->project_id]);
+        return redirect()->back()->with('success', 'Client transferred to new project');
+    }
 
     public function addConsultant(Request $request, $id)
     {
@@ -83,17 +97,18 @@ public function transferClient(Request $request, ClientEmployee $client)
         $consultantEmployee->update(['project_id' => $id]);
         return redirect()->back()->with('success', 'Consultant added successfully');
     }
-    public function removeConsultant(Consultant $consultant)
-{
-    $consultant->update(['project_id' => null]);
-    return redirect()->back()->with('success', 'consultant removed from project');
-}
 
-public function transferConsultant(Request $request, Consultant $consultant)
-{
-    $consultant->update(['project_id' => $request->project_id]);
-    return redirect()->back()->with('success', 'consultant transferred to new project');
-}
+    public function removeConsultant(Consultant $consultant)
+    {
+        $consultant->update(['project_id' => null]);
+        return redirect()->back()->with('success', 'consultant removed from project');
+    }
+
+    public function transferConsultant(Request $request, Consultant $consultant)
+    {
+        $consultant->update(['project_id' => $request->project_id]);
+        return redirect()->back()->with('success', 'consultant transferred to new project');
+    }
     /**
      * Show the form for editing the specified resource.
      */
