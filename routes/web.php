@@ -29,33 +29,33 @@ Route::get('/', function () {
     $routers_count = \App\Models\Device::where('device_type', 'Router')->count();
     $laptop_count = \App\Models\Device::where('device_type', 'Laptop')->count();
     $camera_count = \App\Models\Device::where('device_type', 'Camera')->count();
-    return view('index' , compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count'));
+    return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/import-simcards', function() {
+Route::get('/import-simcards', function () {
     return view('profile.uploadSimCards');
 })->middleware(['auth', 'role:o-super-admin|o-admin']);
 
-Route::get('/update-employees', function() {
+Route::get('/update-employees', function () {
     return view('employees.uploadEmployeesUpdated');
 })->middleware(['auth', 'role:o-super-admin|o-admin']);
 
 
 Route::post('/update-employees', [EmployeeController::class, 'updateEmployees'])
-->middleware(['auth', 'role:o-super-admin|o-admin'])->name('employees.updateFromExcel');
+    ->middleware(['auth', 'role:o-super-admin|o-admin'])->name('employees.updateFromExcel');
 
-Route::post('/import-simcards', function(Request $request) {
+Route::post('/import-simcards', function (Request $request) {
     Excel::import(new SimCardsImport, $request->file('file'));
     return redirect()->back()->with('success', 'SIM cards imported successfully');
 })->middleware(['auth', 'role:o-super-admin|o-admin']);
 
-Route::get('/import-employees', function() {
+Route::get('/import-employees', function () {
     return view('profile.uploadExcel');
 });
 
 Route::post('/simcards/import', [SimCardController::class, 'import'])->name('simcards.import');
 
-Route::post('/import-employees', function(Request $request) {
+Route::post('/import-employees', function (Request $request) {
     Excel::import(new EmployeesImport, $request->file('file'));
     return redirect()->back()->with('success', 'Employees imported successfully');
 });
@@ -65,25 +65,28 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
-    Route::resource('/clientEmployee' , ClientEmployeeController::class);
-    Route::resource('/consultant' , ConsultantController::class);
-    Route::resource('/clearance' , ClearanceController::class);
-    Route::resource('/receive' , ReceiveController::class);
-    Route::resource('/device' , DeviceController::class);
+Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
+    Route::resource('/clientEmployee', ClientEmployeeController::class);
+    Route::resource('/consultant', ConsultantController::class);
+    Route::resource('/clearance', ClearanceController::class);
+    Route::resource('/receive', ReceiveController::class);
+    Route::resource('/device', DeviceController::class);
     // Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}', [ReceiveController::class, 'make'])->name('receive.make');
     Route::get('/receive/make/{devices?}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
-    Route::post('/up/receive/image/{id}' , [ReceiveController::class , 'finish'])->name('receive.finish');
-    Route::get('/project/{id}/details' , [ProjectController::class , 'show'])->name('project.details');
-    Route::put('/transfer/employee' , [ProjectController::class , 'transfer'])->name('employee.transfer');
-    Route::get('/cancel/device/{id}' , [ReceiveController::class , 'cancel'])->name('receive.cancel');
-    Route::get('/complete/cancel/{id}' , [ReceiveController::class , 'pendingCancel'])->name('comp.clear');
-    Route::post('/device/{id}/{clear}' , [ReceiveController::class , 'clear'])->name('device.clear');
-    Route::get('/client' , ClientManage::class)->name('client.index');
-    Route::get('/resign/employee/{id}' , [EmployeeController::class , 'preResign'])->name('employee.preResign');
-    Route::post('/resign/employee/{id}/clearance/{clr}' , [EmployeeController::class , 'finishResign'])->name('employee.resign-upload-signature');
+    Route::post('/up/receive/image/{id}', [ReceiveController::class, 'finish'])->name('receive.finish');
+    Route::get('/project/{id}/details', [ProjectController::class, 'show'])->name('project.details');
+    Route::put('/transfer/employee', [ProjectController::class, 'transfer'])->name('employee.transfer');
+    Route::get('/cancel/device/{id}', [ReceiveController::class, 'cancel'])->name('receive.cancel');
+    Route::get('/complete/cancel/{id}', [ReceiveController::class, 'pendingCancel'])->name('comp.clear');
+    Route::post('/device/{id}/{clear}', [ReceiveController::class, 'clear'])->name('device.clear');
+    Route::put('/project/client/{client}/remove', [ProjectController::class, 'removeClient'])->name('project.removeClient');
+    Route::put('/project/client/{client}/transfer',  [ProjectController::class, 'transferClient'])->name('project.transferClient');
+    Route::post('/project/add/{id}', [ProjectController::class, 'addClient'])->name('project.addClient');
+    Route::get('/client', ClientManage::class)->name('client.index');
+    Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
+    Route::post('/resign/employee/{id}/clearance/{clr}', [EmployeeController::class, 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
-    ->name('clearance.upload-signature');
+        ->name('clearance.upload-signature');
     Route::get('/employee/receives/{id}', [EmployeeController::class, 'showReceives'])->name('employee.receives');
     Route::get('/employee/receive/{id}', [EmployeeController::class, 'showReceiveDetails'])->name('employee.receive.detail');
     Route::get('/employee/clearance/details/{id}', [EmployeeController::class, 'showClearanceDetails'])->name('employee.clearance.detail');
@@ -92,20 +95,19 @@ Route::middleware(['auth' ,'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
     Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');
 });
-Route::middleware(['auth' , 'role:o-hr|o-super-admin|o-admin'])->group(function () {
+Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     // Route::resource('department' , DepartmentController::class );
 
-    Route::resource('/employees' , EmployeeController::class);
+    Route::resource('/employees', EmployeeController::class);
 
 
-    Route::get('/department' , DepartmentAdder::class)->name('department.index');
+    Route::get('/department', DepartmentAdder::class)->name('department.index');
 
-    Route::get('/position' , PositionAdder::class)->name('position.index');
-    Route::get('/project' , ProjectManage::class)->name('project.index');
+    Route::get('/position', PositionAdder::class)->name('position.index');
+    Route::get('/project', ProjectManage::class)->name('project.index');
 
-    Route::get('/sim' , SimCardManage::class)->name('sim.index');
-
+    Route::get('/sim', SimCardManage::class)->name('sim.index');
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

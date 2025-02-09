@@ -32,9 +32,9 @@
                             <div class="col-lg-6">
                                 <div class="media align-items-center">
                                     <div class="media-img-wrap  d-flex">
-                                        <div class="avatar">
-                                            <img src="{{ asset('X-Files/Dash/imgs/'.$project->manager->profile_image) }}"
-                                                alt="user" class="avatar-img rounded-circle">
+                                        <div class="avatar" style='width: 130px; height: 130px;'>
+                                            <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$project->manager->profile_image) }}"
+                                                alt="user" class="avatar-img rounded-circle" style="object-fit: cover;object-position: top;">
                                         </div>
                                     </div>
                                     <div class="media-body">
@@ -353,15 +353,45 @@
                                         <div class="card-header card-header-action">
                                             <h6><span>Clients <span class="badge badge-soft-primary ml-5">{{
                                                         $clientsCount }}</span></span></h6>
+
                                             <div class="d-flex align-items-center card-action-wrap">
                                                 <div class="inline-block dropdown">
-                                                    <a class="dropdown-toggle no-caret" data-toggle="dropdown" href="#"
-                                                        aria-expanded="false" role="button"><i
-                                                            class="ion ion-ios-settings"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Add New</a>
-                                                        <a class="dropdown-item" href="#">View All</a>
-
+                                                    <div class="d-flex align-items-center card-action-wrap">
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal">
+                                                            Assign Client Employee
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="addClientModalLabel">Add Client to Project</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="{{ route('project.addClient', $project->id) }}" method="POST">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label>Select Client</label>
+                                                                            <select name="client_employee_id" class="form-control">
+                                                                                <option value="">Select Client</option>
+                                                                                @foreach($clientEmployees as $clientEmployee)
+                                                                                    <option value="{{ $clientEmployee->id }}">
+                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project->project_name }}</span>    @endif
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Add Client</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -384,10 +414,45 @@
                                                         <span
                                                             class="d-block text-dark text-capitalize text-truncate mw-150p">{{
                                                             $client->name }}</span>
-                                                        <span class="d-block font-13 text-truncate mw-150p">{{
-                                                            $client->client_employees->client->name }}</span>
                                                     </div>
-                                                    <button class="btn btn-danger">delete</button>
+                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $client->id }}">
+                                                        Transfer
+                                                    </button>
+
+                                                    <!-- Transfer Modal -->
+                                                    <div class="modal fade" id="transferClientModal{{ $client->id }}" tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Transfer {{ $client->name }} to Another Project</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="{{ route('project.transferClient', $client->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <div class="modal-body">
+                                                                        <select name="project_id" class="form-control" required>
+                                                                            <option value="">Select Project</option>
+                                                                            @foreach($projects->where('id', '!=', $project->id) as $proj)
+                                                                                <option value="{{ $proj->id }}">{{ $proj->project_name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Transfer</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <form action="{{ route('project.removeClient', $client->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
                                                 </div>
                                             </li>
                                             @endforeach
@@ -401,13 +466,42 @@
                                                         $consultantsCount }}</span></span></h6>
                                             <div class="d-flex align-items-center card-action-wrap">
                                                 <div class="inline-block dropdown">
-                                                    <a class="dropdown-toggle no-caret" data-toggle="dropdown" href="#"
-                                                        aria-expanded="false" role="button"><i
-                                                            class="ion ion-ios-settings"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Add New</a>
-                                                        <a class="dropdown-item" href="#">View All</a>
-
+                                                    <div class="d-flex align-items-center card-action-wrap">
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal">
+                                                            Assign Consultant Employee
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="addClientModalLabel">Add Consultant to Project</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="{{ route('project.addClient', $project->id) }}" method="POST">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label>Select Client</label>
+                                                                            <select name="client_employee_id" class="form-control">
+                                                                                <option value="">Select Client</option>
+                                                                                @foreach($clientEmployees as $clientEmployee)
+                                                                                    <option value="{{ $clientEmployee->id }}">
+                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project->project_name }}</span>    @endif
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Add Client</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -433,7 +527,44 @@
                                                         <span class="d-block font-13 text-truncate mw-150p">{{
                                                             $consultant->company_name }}</span>
                                                     </div>
-                                                    <button class="btn btn-danger">delete</button>
+                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $client->id }}">
+                                                        Transfer
+                                                    </button>
+
+                                                    <!-- Transfer Modal -->
+                                                    <div class="modal fade" id="transferClientModal{{ $client->id }}" tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Transfer {{ $client->name }} to Another Project</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="{{ route('project.transferClient', $client->id) }}" method="POST">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <div class="modal-body">
+                                                                        <select name="project_id" class="form-control" required>
+                                                                            <option value="">Select Project</option>
+                                                                            @foreach($projects->where('id', '!=', $project->id) as $proj)
+                                                                                <option value="{{ $proj->id }}">{{ $proj->project_name }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Transfer</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <form action="{{ route('project.removeClient', $client->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
                                                 </div>
                                             </li>
                                             @endforeach
