@@ -17,7 +17,7 @@ class DepartmentPositionSelect extends Component
 
     public function mount()
     {
-        dd($this->employeedepartment , $this->employeeposition);
+        // dd($this->employeedepartment , $this->employeeposition);
         $this->departments = Department::all();
         // $this->selectedDepartment = old('department_id');
         // $this->selectedPosition = old('position_id');
