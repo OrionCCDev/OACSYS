@@ -43,7 +43,8 @@
                     class="form-control custom-select form-control custom-select-lg mt-15">
                     <option value="">Select Department</option>
                     @foreach($departments as $department)
-                    <option value="{{ $department->id }}" @selected(old('department_id') == $department->id)>
+                    <option value="{{ $department->id }}"
+                        {{ $selectedDepartment == $department->id ? 'selected' : '' }}>
                         {{ $department->name }}
                     </option>
                     @endforeach
@@ -59,7 +60,7 @@
                     @disabled($selectedDepartment==='' )>
                     <option value="">Select Position</option>
                     @foreach($positions as $position)
-                    <option value="{{ $position->id }}" @selected(old('position_id') == $position->id)>
+                    <option value="{{ $position->id }}" {{ $selectedPosition  == $position->id ? 'selected' : '' }}>
                         {{ $position->name }}
                     </option>
                     @endforeach
