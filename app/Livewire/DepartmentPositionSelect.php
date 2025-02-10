@@ -12,9 +12,12 @@ class DepartmentPositionSelect extends Component
     public $selectedPosition = null;
     public $positions = [];
     public $departments;
+    public $employeedepartment;
+    public $employeeposition;
 
     public function mount()
     {
+        dd($this->employeedepartment , $this->employeeposition);
         $this->departments = Department::all();
         // $this->selectedDepartment = old('department_id');
         // $this->selectedPosition = old('position_id');
