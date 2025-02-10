@@ -15,6 +15,7 @@
                     <thead>
                         <tr>
                             <th>$</th>
+                            <th>img</th>
                             <th>Code</th>
                             <th>Name</th>
                             <th>Type</th>
@@ -29,6 +30,7 @@
                                     wire:model.live="selectedDevices"
                                     value="{{ $device->id }}">
                             </td>
+                            <td> <img src="{{ asset('X-Files/Dash/dist/imgs/devices' . $device->main_image) }}" alt="" srcset="" width="75" height="75"></td>
                             <td>{{ $device->device_code }}</td>
                             <td>{{ $device->device_name }}</td>
                             <td>{{ $device->device_type }}</td>
