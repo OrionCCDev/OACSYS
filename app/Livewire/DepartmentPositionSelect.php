@@ -16,11 +16,13 @@ class DepartmentPositionSelect extends Component
     public function mount()
     {
         $this->departments = Department::all();
+        $this->selectedDepartment = old('department_id');
+        $this->selectedPosition = old('position_id');
     }
 
     public function updatedSelectedDepartment($departmentId)
     {
-    
+
         if ($departmentId) {
             $this->positions = Position::where('department_id', $departmentId)->get();
         } else {
