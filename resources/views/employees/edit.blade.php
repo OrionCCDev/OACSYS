@@ -233,7 +233,7 @@
                                             <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        @livewire('department-position-select')
+                                        @livewire('department-position-select' , ['employee' => $employee])
                                     </div>
                                     <br>
                                     <hr>
