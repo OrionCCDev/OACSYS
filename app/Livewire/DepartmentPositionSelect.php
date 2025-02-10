@@ -8,8 +8,8 @@ use App\Models\Position;
 
 class DepartmentPositionSelect extends Component
 {
-    public $selectedDepartment = '';
-    public $selectedPosition = '';
+    public $selectedDepartment = null;
+    public $selectedPosition = null;
     public $positions = [];
     public $departments;
 
@@ -34,7 +34,7 @@ class DepartmentPositionSelect extends Component
         } else {
             $this->positions = [];
         }
-        $this->selectedPosition = '';
+        $this->selectedPosition = null;
     }
 
 
