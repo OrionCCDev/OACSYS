@@ -139,7 +139,7 @@
                                                 class="d-flex align-items-center justify-content-between position-relative">
                                                 <div>
                                                     <span class="d-block display-5 font-weight-400 text-dark">{{
-                                                        $project->employees->count() }}</span>
+                                                        $projectEmployeesCount }}</span>
                                                 </div>
                                                 <div class="position-absolute r-0">
                                                     {{-- عدد الموظقيين في المشروع --}}
