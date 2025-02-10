@@ -44,7 +44,7 @@
                     <option value="">Select Department</option>
                     @foreach($departments as $department)
                     <option value="{{ $department->id }}"
-                        {{ $selectedDepartment == $department->id ? 'selected' : '' }}>
+                        {{ old('department_id', $selectedDepartment) == $department->id ? 'selected' : '' }}>
                         {{ $department->name }}
                     </option>
                     @endforeach
@@ -60,7 +60,8 @@
                     @disabled($selectedDepartment==='' )>
                     <option value="">Select Position</option>
                     @foreach($positions as $position)
-                    <option value="{{ $position->id }}" {{ $selectedPosition  == $position->id ? 'selected' : '' }}>
+                    <option value="{{ $position->id }}"
+                        {{ old('position_id', $selectedPosition) == $position->id ? 'selected' : '' }}>
                         {{ $position->name }}
                     </option>
                     @endforeach

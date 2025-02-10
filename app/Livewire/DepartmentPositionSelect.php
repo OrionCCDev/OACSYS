@@ -16,8 +16,14 @@ class DepartmentPositionSelect extends Component
     public function mount()
     {
         $this->departments = Department::all();
-        $this->selectedDepartment = old('department_id');
-        $this->selectedPosition = old('position_id');
+        // $this->selectedDepartment = old('department_id');
+        // $this->selectedPosition = old('position_id');
+        $this->selectedDepartment = old('department_id', $this->selectedDepartment);
+        $this->selectedPosition = old('position_id', $this->selectedPosition);
+
+        if ($this->selectedDepartment) {
+            $this->positions = Position::where('department_id', $this->selectedDepartment)->get();
+        }
     }
 
     public function updatedSelectedDepartment($departmentId)
