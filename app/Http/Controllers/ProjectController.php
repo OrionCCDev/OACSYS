@@ -66,8 +66,10 @@ class ProjectController extends Controller
         $clientsCount = $project->clients()->count() ?? '0';
         $consultantsCount = $project->consultants()->count() ?? '0';
         $clientEmployees = ClientEmployee::with('client')->get();
+        $projectEmployeesCount = Employee::where('project_id', $id)->count() ?? '0';
+        dd($projectEmployeesCount);
         $consultants = Consultant::all();
-        return view('project.details', compact('project', 'clientsCount', 'consultantsCount', 'projects', 'clientEmployees', 'consultants'));
+        return view('project.details', compact( 'projectEmployeesCount' , 'project', 'clientsCount', 'consultantsCount', 'projects', 'clientEmployees', 'consultants'));
     }
 
     public function addClient(Request $request, $id)
