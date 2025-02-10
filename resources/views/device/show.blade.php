@@ -66,6 +66,7 @@
                                                 @endif
                                             </span>
                                     </li>
+                                    
                                     @if ($device->project_id != null)
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
