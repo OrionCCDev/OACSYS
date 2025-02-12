@@ -39,7 +39,7 @@ class EmployeeTable extends Component
                 })
                 ->orderBy('updated_at', 'desc')
                 ->paginate(10);}else{
-            $employees = Employee::query()
+            $employees = Employee::query()->orderBy('updated_at', 'desc')
             ->paginate(10);
         }
 
