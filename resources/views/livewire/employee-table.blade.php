@@ -50,7 +50,7 @@
                                                         @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
 
                                                         <th>Rcv & Clr</th>
-                                                        {{-- <th>Resign</th> --}}
+                                                         <th>Resign</th>
                                                         @endif
                                                     </tr>
                                                 </thead>
