@@ -140,7 +140,7 @@
                                                     <div class="card">
                                                         <div class="position-relative" style="position: relative">
                                                             <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$employee->profile_image) }}" alt="Card image cap">
-                                                            <div class="resigned-sign" style="position: absolute;top: 40%;left: 25%%;z-index: 999;">
+                                                            <div class="resigned-sign" style="position: absolute;top: 50%;left: 25%;z-index: 999;">
                                                                 <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
                                                             </div>
                                                         </div>
