@@ -188,7 +188,7 @@ class EmployeeController extends Controller
         $employee = Employee::with(['devices', 'department', 'position', 'project', 'sim_card', 'receives', 'clearance'])->find($employee->id);
         $project = $employee->project;
         $hireDate = Carbon::parse($employee->hire_date)->format('Y,M');
-        $now = Carbon::now();
+        $now = $employee->resign_date ? Carbon::parse($employee->resign_date) : Carbon::now();
         $diff = Carbon::parse($employee->hire_date)->diff($now);
         return view('employees.show', compact('employee', 'project', 'diff' ,'hireDate'));
     }
