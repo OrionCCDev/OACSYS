@@ -86,8 +86,6 @@
                 Back
             </a>
             <!-- Upload Modal -->
-
-
         </div>
         <div class="row" id="PrintingArea" style="position: relative;">
             <div class="col-xl-12">

@@ -138,8 +138,11 @@
                                             <div class="card card-profile-feed">
                                                 <div class="card-body" style="background-color:#10516a;border-radius: 10px;">
                                                     <div class="card">
-                                                        <div class="position-relative">
+                                                        <div class="position-relative" style="position: relative">
                                                             <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$employee->profile_image) }}" alt="Card image cap">
+                                                            <div class="resigned-sign" style="position: absolute;top: 50%;left: 50%;z-index: 999;">
+                                                                <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
+                                                            </div>
                                                         </div>
                                                         <div class="card-body">
                                                             <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $employee->department->name }} - </h5></span>
