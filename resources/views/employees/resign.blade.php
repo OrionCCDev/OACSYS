@@ -105,7 +105,7 @@
                                         <h4>#{{ $clearanceResign->clear_code }}</h4>
                                     </span></h4>
                             </div>
-                            <div class="resigned-sign" style="position: absolute;top: 330px;left: 360px;z-index: 999;">
+                            <div class="resigned-sign" style="position: absolute;top: 330px;left: 340px;z-index: 999;">
                                 <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
                             </div>
                         </div>
