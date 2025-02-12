@@ -37,6 +37,7 @@ class EmployeeTable extends Component
                     $query->where('name', 'like', '%' . $this->search . '%')
                         ->orWhere('employee_id', 'like', '%' . $this->search . '%');
                 })
+                ->orderBy('updated_at', 'desc')
                 ->paginate(10);}else{
             $employees = Employee::query()
             ->paginate(10);
