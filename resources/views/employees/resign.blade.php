@@ -115,7 +115,7 @@
                         <div class="row">
                             <div class="col-6 mb-30" style="justify-items: center">
                                 <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'. $employee->profile_image) }}"
-                                    width="220px" height="150px" class="img-fluid circle" alt="img">
+                                    width="150px" height="150px" class="img-fluid circle" alt="img">
                             </div>
                             <div class="col-6 mb-30 text-center row" style="justify-items: center">
                                 <div class="col-12 text-center align-content-center">
@@ -149,7 +149,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-center px-5" style="color:#174094 ">I, the undersigned,<br> confirm that the
+                    <h3 class="text-center px-5" style="color:#174094;font-size:larger ">I, the undersigned,<br> confirm that the
                         mentioned
                         <br>
                         devices and Items has been returned to the company
@@ -225,21 +225,11 @@
                         </div>
                     </div>
                     <hr>
-                    <ul class="invoice-terms-wrap font-14 list-ul">
+                    {{-- <ul class="invoice-terms-wrap font-14 list-ul">
                         <h6>By Signing This paper You Accept The Following Roles</h6>
                         <li>Do not make any unauthorized modifications or repairs to the equipment.</li>
-                        <li>Handle all equipment with care to avoid damage.</li>
-                        <li>Use appropriate packaging and protective materials during transportation and storage.</li>
-                        <li>For any updates, modifications, or fixes, the equipment must be returned to the IT
-                            department.
-                        </li>
-                        <li>Contact the IT department through the provided channels for any necessary changes or
-                            repairs.
-                        </li>
-                        <li>Any damage caused to the equipment due to negligence or misuse will be the responsibility of
-                            the
-                            receiver.</li>
-                    </ul>
+
+                    </ul> --}}
                 </section>
             </div>
         </div>
