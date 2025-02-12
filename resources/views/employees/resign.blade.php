@@ -89,7 +89,7 @@
 
 
         </div>
-        <div class="row" id="PrintingArea">
+        <div class="row" id="PrintingArea" style="position: relative;">
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">
@@ -99,33 +99,52 @@
                                     src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
                             </div>
                             <div class="col-sm-6 mb-20">
-                                <h4 class="mb-35 font-weight-600">Clearance Details Of Orion Devices</h4>
+                                <h4 class="mb-35 font-weight-600">Clearance Details For Orion Devices and Sim Cards</h4>
                                 <h4 class="mb-35 font-weight-600">Clearance <span style="color:#174094 "
                                         class="d-block font-18 font-weight-600">
                                         <h4>#{{ $clearanceResign->clear_code }}</h4>
                                     </span></h4>
                             </div>
-
+                            <div class="resigned-sign" style="position: absolute;top: 330px;left: 174px;z-index: 999;">
+                                <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
+                            </div>
                         </div>
                     </div>
                     <hr class="mt-0">
                     <div class="invoice-to-wrap pb-20">
                         <div class="row">
-                            <div class="col-6 mb-30 text-center" style="justify-items: center">
+                            <div class="col-6 mb-30" style="justify-items: center">
                                 <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'. $employee->profile_image) }}"
-                                    width="150px" height="150px" class="img-fluid circle" alt="img">
+                                    width="220px" height="150px" class="img-fluid circle" alt="img">
                             </div>
                             <div class="col-6 mb-30 text-center row" style="justify-items: center">
                                 <div class="col-12 text-center align-content-center">
-                                    <p><strong>Name:</strong>
+                                    <p style="font-size: x-large"><strong style="color:#174094 ">Name:</strong>
                                         {{ $employee->name }}
                                     </p>
                                 </div>
                                 <div class="col-12 text-center align-content-center">
-                                    <p><strong>ID:</strong>
+                                    <p style="font-size: x-large"><strong style="color:#174094 ">ID:</strong>
                                         {{ $employee->employee_id }}
                                     </p>
                                 </div>
+                                @if ($employee->position)
+
+                                <div class="col-12 text-center align-content-center">
+                                    <p style="font-size: x-large"><strong style="color:#174094 ">Department:</strong>
+                                        {{ $employee->department?->name }}
+                                    </p>
+                                </div>
+                                @endif
+
+                                @if ($employee->position)
+
+                                <div class="col-12 text-center align-content-center justify-content-start">
+                                    <p style="font-size: x-large"><strong style="color:#174094 ">Position:</strong>
+                                        {{ $employee->position?->name }}
+                                    </p>
+                                </div>
+                                @endif
 
                             </div>
                         </div>

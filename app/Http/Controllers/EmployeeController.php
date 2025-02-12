@@ -223,19 +223,25 @@ class EmployeeController extends Controller
 
             // Attach all devices assigned to the employee
             foreach ($employee->devices as $device) {
-                DB::table('device_and_sim_clearances')->insert([
+                $deviceAndSimClearance = DeviceAndSimClearance::create([
+                    'clearance_id' => $clearanceResign->id,
                     'device_id' => $device->id,
-                    'clearance_id' => $deviceAndSimClearance->id,
+                ]);
+            }
+            foreach ($employee->sim_card as $simCard) {
+                $deviceAndSimClearance = DeviceAndSimClearance::create([
+                    'clearance_id' => $clearanceResign->id,
+                    'sim_card_id' => $simCard->id,
                 ]);
             }
 
             // Attach all SIM cards assigned to the employee
-            foreach ($employee->simCards as $simCard) {
-                DB::table('device_and_sim_clearances')->insert([
-                    'sim_card_id' => $simCard->id,
-                    'clearance_id' => $deviceAndSimClearance->id,
-                ]);
-            }
+            // foreach ($employee->sim_card as $simCard) {
+            //     DB::table('device_and_sim_clearances')->insert([
+            //         'sim_card_id' => $simCard->id,
+            //         'clearance_id' => $deviceAndSimClearance->id,
+            //     ]);
+            // }
         }
 
         return view('employees.resign', compact('employee', 'clearanceResign'));
@@ -256,29 +262,30 @@ class EmployeeController extends Controller
                 'clear_image' => $signatureName,
                 'status' => 'resigned',
             ]);
-            foreach ($employee->devices as $device) {
+            // foreach ($employee->devices as $device) {
 
-                DB::table('device_and_sim_clearances')->create([
-                    'device_id' => $device->id,
-                    'clearance_id' => $finalClearance->id,
-                ]);
-            }
-            foreach ($employee->sim_card() as $sim) {
+            //     DB::table('device_and_sim_clearances')->create([
+            //         'device_id' => $device->id,
+            //         'clearance_id' => $finalClearance->id,
+            //     ]);
+            // }
+            // foreach ($employee->sim_card() as $sim) {
 
-                DB::table('device_and_sim_clearances')->create([
-                    'sim_card_id' => $sim->id,
-                    'clearance_id' => $finalClearance->id,
-                ]);
-            }
+            //     DB::table('device_and_sim_clearances')->create([
+            //         'sim_card_id' => $sim->id,
+            //         'clearance_id' => $finalClearance->id,
+            //     ]);
+            // }
 
             $employee->update([
                 'resign_date' => now(),
-                'projectt_id' => null,
+                'project_id' => null,
                 'type' => 'resigned',
             ]);
             $employee->devices()->update([
-                'employee_id' => null,
                 'status' => 'available',
+                'employee_id' => null,
+                'project_id' => null,
             ]);
             $employee->sim_card()->update([
                 'employee_id' => null,
@@ -351,6 +358,7 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+        return to_route('employees.index')->with('success', 'Employee deleted successfully');
     }
 }

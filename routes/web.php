@@ -87,6 +87,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::post('/project/add/consultant/{id}', [ProjectController::class, 'addConsultant'])->name('project.addConsultant');
 
 
+    Route::get('/project/{id}/add/employees', [ProjectController::class, 'addEmployeeProject'])->name('project.addEmployeeProject');
     Route::get('/project/{id}/add/devices', [ProjectController::class, 'addDevices'])->name('project.addDevice');
     Route::post('/project/add/devices', [ProjectController::class, 'storeDevices'])->name('project.addDevicesToProject');
 

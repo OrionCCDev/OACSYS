@@ -82,17 +82,17 @@ class ReceiverTypeSelect extends Component
         }
     }
     public function updateSearchInput()
-{
-    if ($this->selectedPerson) {
-        $employee = Employee::find($this->selectedPerson);
-        $this->searchEmployeeId = $employee->employee_id;
+    {
+        if ($this->selectedPerson) {
+            $employee = Employee::find($this->selectedPerson);
+            $this->searchEmployeeId = $employee->employee_id;
+        }
     }
-}
 
-public function getSelectedEmployeeId()
-{
-    return Employee::find($this->selectedPerson)?->employee_id;
-}
+        public function getSelectedEmployeeId()
+        {
+            return Employee::find($this->selectedPerson)?->employee_id;
+        }
     public function loadSimcards()
     {
         $this->simcards = Simcard::where('status', 'available')

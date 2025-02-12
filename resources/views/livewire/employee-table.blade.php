@@ -56,7 +56,9 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($employees as $employee)
-                                                    <tr>
+                                                    <tr @if ($employee->resign_date != null)
+                                                        style="background-color: dimgrey;color:white"
+                                                    @endif>
                                                         <td><img class="img-fluid rounded"
                                                                 src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . $employee->profile_image) }}" width="50" height="50" alt="icon"></td>
                                                         <td>{{ $employee->employee_id }}</td>
@@ -95,11 +97,15 @@
                                                                                 </button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <p>Are You sure You want to DELETE This  Client Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
+                                                                                <p>Are You sure You want to DELETE This  Employee <span class="badge badge-soft-danger"></span> with Code <span class="badge badge-soft-danger"></span></p>
                                                                             </div>
-                                                                            <div class="modal-footer">
+                                                                            <div class="modal-footer" style="display: flex; justify-content: space-between;">
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                                <button type="button" data-dismiss="modal" wire:click='del({{ $employee->id }})' class="btn btn-danger">Delete</button>
+                                                                                <form action="{{ route('employees.destroy' , $employee->id) }}" method="post">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="button" data-dismiss="modal" class="btn btn-danger">Delete</button>
+                                                                                </form>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -114,9 +120,14 @@
                                                                     <a href="{{ route('employee.clearances' , ['id' => $employee->id ]) }}" class="btn btn-outline-danger"><i class="icon-login"></i></button>
                                                                 </div>
                                                             </td>
-                                                            {{-- <td class="text-center">
+                                                            <td class="text-center">
+                                                                @if ($employee->resign_date != null)
+                                                                    <button disabled class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></button>
+                                                                @else
+
                                                                 <a href="{{ route('employee.preResign' , ['id' => $employee->id]) }}" class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></a>
-                                                            </td> --}}
+                                                                @endif
+                                                            </td>
 
                                                         @endif
                                                     </tr>

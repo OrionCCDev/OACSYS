@@ -86,9 +86,9 @@
                                 </li>
                                 {{-- <li
                                     style="display: flex; justify-content: flex-center;align-items: center;margin-left:10px">
-                                    <a href="{{ route('project.index') }}"
+                                    <a href="{{ route('project.addEmployeeProject' , $project->id) }}"
                                         class="btn btn-gradient-success btn-wth-icon btn-rounded icon-right"><span
-                                            class="btn-text">Add New Project</span> <span class="icon-label"><span
+                                            class="btn-text">Add Employees To Project</span> <span class="icon-label"><span
                                                 class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
