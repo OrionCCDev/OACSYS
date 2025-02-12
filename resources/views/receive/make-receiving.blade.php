@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h4 class="text-center" style="color:#174094 ">I, the undersigned,<br>
+                        <h4 class="text-center" style="color:#174094;font-size:larger ">I, the undersigned,<br>
                             acknowledge that I have received the following items <br>
                             and agree to the terms and conditions <br>and commit to adhering to them.</h4>
                         <h5 class="pt-20" style="color:#174094 ">Items</h5>
