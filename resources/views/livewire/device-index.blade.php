@@ -119,6 +119,8 @@
                                                     @elseif ($device->status == 'pending-cancel')
                                                     <span class="badge badge-warning">Pending
                                                         Clear</span>
+                                                    @elseif ($device->status == 'In-Project-Site')
+                                                    <span class="badge badge-info">In Project Site</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">

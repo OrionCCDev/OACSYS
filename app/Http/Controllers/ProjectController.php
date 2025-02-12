@@ -36,6 +36,14 @@ class ProjectController extends Controller
     }
 
 
+    public function addEmployeeProject($id)
+    {
+        $project = Project::find($id);
+        // $employees =Employee::all();
+        return view('project.addEmployees' , compact('project'));
+    }
+
+
     public function storeDevices()
     {
         //

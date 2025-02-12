@@ -41,7 +41,7 @@
                 </table>
             </div>
 
-            {{ $devices->links() }}
+            {{-- {{ $devices->links() }} --}}
 
             <div class="mt-3">
                 <button wire:click="assignSelected"

@@ -8,7 +8,7 @@ use App\Models\Device;
 
 class DevicesAssignmentTable extends Component
 {
-    use WithPagination;
+    // use WithPagination;
 
     public $search = '';
     public $selectedDevices = [];
@@ -26,7 +26,7 @@ class DevicesAssignmentTable extends Component
                       ->orWhere('device_code', 'like', '%' . $this->search . '%');
                 });
             })
-            ->paginate(10);
+            ->get();
 
         return view('livewire.devices-assignment-table', [
             'devices' => $devices
