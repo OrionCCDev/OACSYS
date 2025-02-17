@@ -137,7 +137,7 @@
                                                 <th>SimCard Number</th>
                                                 <th>Plan</th>
                                                 <th>Provider</th>
-                                                <th>Owner</th>
+                                                <th>Owner & Status</th>
                                                 <th>Handle</th>
                                             </tr>
                                         </thead>
@@ -166,14 +166,31 @@
                                                 <td>{{ $sim->sim_plan }}</td>
                                             @endif
                                                 <td>
-                                                    @if($sim->employee)
-                                                    <span class="badge badge-indigo">{{ $sim->employee->name }}</span>
-                                                    @elseif($sim->clientEmployee)
-                                                    <span class="badge badge-purple">{{ $sim->clientEmployee->name }}</span>
-                                                    @elseif($sim->consultant)
-                                                    <span class="badge badge-Dark">{{ $sim->consultant->name }}</span>
+                                                    @if ($edtId == $sim->id)
+                                                    <select wire:model='edtStatus' class="form-control">
+                                                        <option value="available">Available</option>
+                                                        <option value="taken">Taken</option>
+                                                        <option value="replacement">Replacement</option>
+                                                    </select>
                                                     @else
-                                                        <span class="badge badge-success">Available</span>
+                                                        @if($sim->employee)
+                                                        <span class="badge badge-indigo">{{ $sim->employee->name }}</span>
+                                                        @elseif($sim->clientEmployee)
+                                                        <span class="badge badge-purple">{{ $sim->clientEmployee->name }}</span>
+                                                        @elseif($sim->consultant)
+                                                        <span class="badge badge-Dark">{{ $sim->consultant->name }}</span>
+                                                        @else
+                                                            @if ($sim->status == 'available')
+
+                                                            <span class="badge badge-success">{{ $sim->status }}</span>
+                                                            @elseif ($sim->status == 'taken')
+
+                                                            <span class="badge badge-info">{{ $sim->status }}</span>
+                                                            @elseif ($sim->status == 'replacement')
+
+                                                            <span class="badge badge-warning">{{ $sim->status }}</span>
+                                                            @endif
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td>

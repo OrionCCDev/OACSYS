@@ -7,6 +7,11 @@
                 {{-- <p>Questions about onboarding lead data? <a href="#">Learn more.</a></p> --}}
             </div>
         </div>
+        <style>
+            .btnEdit {
+                display: none;
+            }
+        </style>
         <!-- Title -->
         <div class="hk-pg">
             <div class="row">
@@ -238,7 +243,7 @@
                                                         <button wire:click="cancel" class="btn btn-danger btn-sm">Cancel</button>
                                                     @else
                                                         {{ $Project->client?->name ?? 'N/A' }}
-                                                        <button style="position:absolute;top:5px;right:5px"
+                                                        <button id="editableBtn" class="btnEdit" style="position:absolute;top:5px;right:5px"
                                                         wire:click="edtProjectClient({{ $Project->id }})" class="btn btn-icon btn-primary  btn-sm"><span class="btn-icon-wrap"><i class="icon-pencil"></i></span></button>
 
                                                     @endif
@@ -250,11 +255,11 @@
                                                                title="View Details">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            {{-- <button wire:click="editProject({{ $Project->id }})"
+                                                            <button onclick="viewEditBtn()"
                                                                     class="btn btn-sm btn-info"
                                                                     title="Edit">
                                                                 <i class="fa fa-edit"></i>
-                                                            </button> --}}
+                                                            </button>
                                                             <button type="button" class="btn btn-sm btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#exampleModalCenter{{ $Project->id }}">
@@ -262,7 +267,13 @@
                                                             </button>
                                                         </div>
                                                     </td>
-
+<script>
+    function viewEditBtn() {
+        document.querySelectorAll('#editableBtn').foreach(function(btn) {
+            btn.classList.toggle = 'btnEdit';
+        })
+    }
+</script>
 
 
                                                     <div class="modal fade" id="exampleModalCenter{{ $Project->id }}" tabindex="-1" role="dialog"
