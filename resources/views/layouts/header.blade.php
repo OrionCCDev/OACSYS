@@ -112,6 +112,10 @@
             <div class="nicescroll-bar">
                 <div class="navbar-nav-wrap" style="padding-top: 50px">
                     <ul class="navbar-nav flex-column">
+
+
+
+
                         @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
                         Auth::user()->hasRole('o-hr'))
 
@@ -150,6 +154,12 @@
                                                                     <img width="50" src="{{ asset('X-Files/Dash/imgs/icons/006-received.png') }}" alt="" srcset=""></span>
 
                                 <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Receives</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ Request::is('request*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('request.index') }}">
+                                <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/request.png') }}" alt="" srcset=""></span>
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Requests</span>
                             </a>
                         </li>
                         @endif

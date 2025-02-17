@@ -17,6 +17,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReceiveController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SimCardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClearanceController;
@@ -70,9 +71,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
-    Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
-    Route::get('/links', [QRCodeController::class, 'showLinks'])->name('links');
-    Route::get('/qrcode', [QRCodeController::class, 'generateQR']);
+    Route::resource('/request', RequestController::class);
+    // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
+    // Route::get('/links', [QRCodeController::class, 'showLinks'])->name('links');
+    // Route::get('/qrcode', [QRCodeController::class, 'generateQR']);
 // Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
 });
 
