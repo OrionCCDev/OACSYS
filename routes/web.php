@@ -12,16 +12,17 @@ use App\Livewire\DepartmentAdder;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReceiveController;
 use App\Http\Controllers\SimCardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ClearanceController;
+use App\Http\Controllers\ConsultantController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
-use App\Http\Controllers\ConsultantController;
-use App\Http\Controllers\ManagerController;
 
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
@@ -69,6 +70,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+    Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
+    Route::get('/links', [QRCodeController::class, 'showLinks'])->name('links');
+    Route::get('/qrcode', [QRCodeController::class, 'generateQR']);
+// Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
 });
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
