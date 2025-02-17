@@ -84,7 +84,7 @@
                                                 </svg></span> </span>
                                     </a>
                                 </li>
-                                {{-- <li
+                                <li
                                     style="display: flex; justify-content: flex-center;align-items: center;margin-left:10px">
                                     <a href="{{ route('project.addEmployeeProject' , $project->id) }}"
                                         class="btn btn-gradient-success btn-wth-icon btn-rounded icon-right"><span
@@ -98,7 +98,7 @@
                                                     <line x1="8" y1="12" x2="16" y2="12"></line>
                                                 </svg></span> </span>
                                     </a>
-                                </li> --}}
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -408,8 +408,8 @@
                                                     </div>
                                                     <div class="media-body">
                                                         <span
-                                                            class="d-block text-dark text-capitalize text-truncate mw-150p">{{
-                                                            $client->name }}</span>
+                                                            class="d-block text-dark text-capitalize text-truncate mw-150p"><a href="{{ route('clientEmployee.show' , $client->id) }}">{{
+                                                            $client->name }}</a></span>
                                                     </div>
                                                     <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $client->id }}">
                                                         Transfer
@@ -518,8 +518,8 @@
                                                     </div>
                                                     <div class="media-body">
                                                         <span
-                                                            class="d-block text-dark text-capitalize text-truncate mw-150p">{{
-                                                            $consultant->name }}</span>
+                                                            class="d-block text-dark text-capitalize text-truncate mw-150p"><a href="{{ route('consultant.show' , $consultant->id) }}">{{
+                                                            $consultant->name }}</a></span>
                                                         <span class="d-block font-13 text-truncate mw-150p">{{
                                                             $consultant->company_name }}</span>
                                                     </div>
