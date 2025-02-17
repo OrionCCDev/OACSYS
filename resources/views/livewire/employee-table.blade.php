@@ -116,8 +116,10 @@
 
                                                             <td class="text-center">
                                                                 <div class="btn-group btn-group-rounded mr-25" role="group" aria-label="First group">
-                                                                    <a href="{{ route('employee.receives' , ['id' => $employee->id ]) }}" class="btn btn-outline-info"><i class="icon-layers"></i></button>
-                                                                    <a href="{{ route('employee.clearances' , ['id' => $employee->id ]) }}" class="btn btn-outline-danger"><i class="icon-login"></i></button>
+                                                                    <a href="{{ route('employee.receives' , ['id' => $employee->id ]) }}" class="btn btn-outline-info"><i class="icon-layers"></i></a>
+                                                                    <a href="{{ route('employee.clearances' , ['id' => $employee->id ]) }}" class="btn btn-outline-danger">
+                                                                        <i class="icon-login"></i>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                             <td class="text-center">
