@@ -12,7 +12,7 @@ class ClientEmployee extends Model implements HasMedia
     protected $guarded = [];
 
     public function client(){
-        return $this->belongsTo(client::class , 'client_id' , 'id');
+        return $this->belongsTo(Client::class , 'client_id' , 'id');
     }
     public function clearance(){
         return $this->hasMany(Clearance::class , 'client_employee_id' , 'id');
