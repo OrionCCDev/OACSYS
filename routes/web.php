@@ -21,6 +21,7 @@ use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
 use App\Http\Controllers\ConsultantController;
+use App\Http\Controllers\ManagerController;
 
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
@@ -65,6 +66,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
+    Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+});
+
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/clientEmployee', ClientEmployeeController::class);
     Route::resource('/consultant', ConsultantController::class);
