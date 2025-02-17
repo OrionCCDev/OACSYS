@@ -42,7 +42,8 @@ class ClientManage extends Component
             // dd($this->client_image);
             $imageName = time() . '.' . $this->client_image->extension();
             // $destinationPath = public_path('X-Files/Dash/imgs/clients/' . $imageName);
-            $this->client_image->storeAs('/clients', $imageName , 'public_uploads');
+            $this->client_image->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
+            // $this->client_image->storeAs('/clients', $imageName , 'public_uploads');
             $client->update(['image' => $imageName]);
         }
         $this->reset(['client_name', 'client_image']);
@@ -116,7 +117,9 @@ class ClientManage extends Component
             }
 
             $imageName = time() . '.' . $this->edtableImage->extension();
-            $this->edtableImage->storeAs('/clients', $imageName , 'public_uploads');
+            // $this->edtableImage->storeAs('/clients', $imageName , 'public_uploads');
+            $this->edtableImage->move(public_path('X-Files/Dash/imgs/clients'), $imageName);
+
             $client->update(['image' => $imageName]);
         }
 
