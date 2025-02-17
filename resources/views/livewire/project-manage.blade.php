@@ -8,9 +8,9 @@
             </div>
         </div>
         <style>
-            .btnEdit {
+            /* .btnEdit {
                 display: none;
-            }
+            } */
         </style>
         <!-- Title -->
         <div class="hk-pg">
@@ -243,7 +243,7 @@
                                                         <button wire:click="cancel" class="btn btn-danger btn-sm">Cancel</button>
                                                     @else
                                                         {{ $Project->client?->name ?? 'N/A' }}
-                                                        <button id="editableBtn" class="btnEdit" style="position:absolute;top:5px;right:5px"
+                                                        <button  style="position:absolute;top:5px;right:5px"
                                                         wire:click="edtProjectClient({{ $Project->id }})" class="btn btn-icon btn-primary  btn-sm"><span class="btn-icon-wrap"><i class="icon-pencil"></i></span></button>
 
                                                     @endif
@@ -255,11 +255,11 @@
                                                                title="View Details">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            <button onclick="viewEditBtn()"
+                                                            {{-- <button onclick="viewEditBtn()"
                                                                     class="btn btn-sm btn-info"
                                                                     title="Edit">
                                                                 <i class="fa fa-edit"></i>
-                                                            </button>
+                                                            </button> --}}
                                                             <button type="button" class="btn btn-sm btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#exampleModalCenter{{ $Project->id }}">
@@ -267,13 +267,13 @@
                                                             </button>
                                                         </div>
                                                     </td>
-<script>
+{{-- <script>
     function viewEditBtn() {
         document.querySelectorAll('#editableBtn').foreach(function(btn) {
             btn.classList.toggle = 'btnEdit';
         })
     }
-</script>
+</script> --}}
 
 
                                                     <div class="modal fade" id="exampleModalCenter{{ $Project->id }}" tabindex="-1" role="dialog"
