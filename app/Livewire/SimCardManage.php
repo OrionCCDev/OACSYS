@@ -23,6 +23,7 @@ class SimCardManage extends Component
     public $edtNumber;
     public $edtProvider;
     public $edtPlan;
+    public $edtStatus;
 
     public $excelFile;
 
@@ -81,11 +82,13 @@ class SimCardManage extends Component
         $this->edtNumber = $sim->sim_number;
         $this->edtProvider = $sim->sim_provider;
         $this->edtPlan = $sim->sim_plan;
+
+        $this->edtStatus = $sim->status;
     }
     public function cancel()
     {
         $this->edtId = null;
-        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan']);
+        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' , 'edtStatus']);
     }
     public function update( SimCard $sim)
     {
@@ -94,10 +97,11 @@ class SimCardManage extends Component
         $sim->update([
             'sim_number' => $this->edtNumber,
             'sim_provider' => $this->edtProvider,
-            'sim_plan' => $this->edtPlan
+            'sim_plan' => $this->edtPlan,
+            'status' => $this->edtStatus
         ]);
         $this->edtId = null;
-        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan']);
+        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' ,'edtStatus']);
         $this->dispatch('showToastOfUpdate');
     }
 }
