@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
+Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
     Route::resource('/request', RequestController::class);
     // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
@@ -78,7 +78,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 // Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
 });
 
-Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
+Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     Route::resource('/clientEmployee', ClientEmployeeController::class);
     Route::resource('/consultant', ConsultantController::class);
     Route::resource('/clearance', ClearanceController::class);
