@@ -129,7 +129,7 @@
 
                         @endif
                         <hr class="nav-separator">
-                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') )
+                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr'))
 
                         <li class="nav-item {{ Request::is('device*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('device.index') }}">
@@ -208,7 +208,7 @@
                             </ul>
                         </li>
                         <hr class="nav-separator">
-                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') )
+                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr'))
 
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">

@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
+Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
     Route::resource('/request', RequestController::class);
     // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
@@ -78,20 +78,16 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
 // Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
 });
 
-Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
+Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/clientEmployee', ClientEmployeeController::class);
     Route::resource('/consultant', ConsultantController::class);
-    Route::resource('/clearance', ClearanceController::class);
-    Route::resource('/receive', ReceiveController::class);
+
     Route::resource('/device', DeviceController::class);
     // Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}', [ReceiveController::class, 'make'])->name('receive.make');
-    Route::get('/receive/make/{devices?}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
-    Route::post('/up/receive/image/{id}', [ReceiveController::class, 'finish'])->name('receive.finish');
+
     Route::get('/project/{id}/details', [ProjectController::class, 'show'])->name('project.details');
-    Route::put('/transfer/employee', [ProjectController::class, 'transfer'])->name('employee.transfer');
-    Route::get('/cancel/device/{id}', [ReceiveController::class, 'cancel'])->name('receive.cancel');
-    Route::get('/complete/cancel/{id}', [ReceiveController::class, 'pendingCancel'])->name('comp.clear');
-    Route::post('/device/{id}/{clear}', [ReceiveController::class, 'clear'])->name('device.clear');
+
+
     Route::put('/project/client/{client}/remove', [ProjectController::class, 'removeClient'])->name('project.removeClient');
     Route::put('/project/client/{client}/transfer',  [ProjectController::class, 'transferClient'])->name('project.transferClient');
     Route::post('/project/add/{id}', [ProjectController::class, 'addClient'])->name('project.addClient');
@@ -107,6 +103,13 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
 
 
     Route::get('/client', ClientManage::class)->name('client.index');
+
+});
+Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
+    // Route::resource('department' , DepartmentController::class );
+    Route::resource('/clearance', ClearanceController::class);
+    Route::resource('/receive', ReceiveController::class);
+    Route::resource('/employees', EmployeeController::class);
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::post('/resign/employee/{id}/clearance/{clr}', [EmployeeController::class, 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
@@ -118,15 +121,13 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     Route::get('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');
     Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
     Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');
-});
-Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
-    // Route::resource('department' , DepartmentController::class );
-
-    Route::resource('/employees', EmployeeController::class);
-
-
+    Route::get('/receive/make/{devices?}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
+    Route::post('/up/receive/image/{id}', [ReceiveController::class, 'finish'])->name('receive.finish');
+    Route::put('/transfer/employee', [ProjectController::class, 'transfer'])->name('employee.transfer');
     Route::get('/department', DepartmentAdder::class)->name('department.index');
-
+    Route::get('/cancel/device/{id}', [ReceiveController::class, 'cancel'])->name('receive.cancel');
+    Route::get('/complete/cancel/{id}', [ReceiveController::class, 'pendingCancel'])->name('comp.clear');
+    Route::post('/device/{id}/{clear}', [ReceiveController::class, 'clear'])->name('device.clear');
     Route::get('/position', PositionAdder::class)->name('position.index');
     Route::get('/project', ProjectManage::class)->name('project.index');
 
