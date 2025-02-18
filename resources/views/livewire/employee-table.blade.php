@@ -112,7 +112,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
+                                                        {{-- @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin')) --}}
 
                                                             <td class="text-center">
                                                                 <div class="btn-group btn-group-rounded mr-25" role="group" aria-label="First group">
@@ -132,7 +132,7 @@
                                                                 @endif
                                                             </td>
 
-                                                        @endif
+                                                        {{-- @endif --}}
                                                     </tr>
 
                                                     @endforeach
