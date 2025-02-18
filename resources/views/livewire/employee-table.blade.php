@@ -47,11 +47,11 @@
                                                         <th>Position</th>
                                                         <th>Manage</th>
 
-                                                        @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin'))
+                                                        {{-- @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin')) --}}
 
                                                         <th>Rcv & Clr</th>
                                                          <th>Resign</th>
-                                                        @endif
+                                                        {{-- @endif --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -124,7 +124,8 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 @if ($employee->resign_date != null)
-                                                                    <button disabled class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></button>
+                                                                    {{-- <button disabled class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></button> --}}
+                                                                    <a href="{{ route('employee.preResign' , ['id' => $employee->id]) }}" class="btn btn-icon btn-icon-circle btn-gradient-info btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></a>
                                                                 @else
 
                                                                 <a href="{{ route('employee.preResign' , ['id' => $employee->id]) }}" class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></a>
