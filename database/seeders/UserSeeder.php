@@ -40,18 +40,18 @@ class UserSeeder extends Seeder
         // $u2->addRole('o-super-admin');
         // $u3->addRole('o-hr');
          // Create users for managers
-         $managers = Employee::where('type', 'manager')->get();
-         foreach($managers as $manager) {
-            $formattedName = strtolower(str_replace(' ', '_', $manager->name));
-             $user = User::create([
-                 'name' => $manager->name,
-                 'email' => $manager->email ?? $formattedName . '@orioncc.com',
-                 'password' => bcrypt($formattedName . '@123'), // You can set a default password
-                 'image' => $manager->profile_image,
-                 'orion_role_lvl' => 'o-manager'
-             ]);
+        //  $managers = Employee::where('type', 'manager')->get();
+        //  foreach($managers as $manager) {
+        //     $formattedName = strtolower(str_replace(' ', '_', $manager->name));
+        //      $user = User::create([
+        //          'name' => $manager->name,
+        //          'email' => $manager->email ?? $formattedName . '@orioncc.com',
+        //          'password' => bcrypt($formattedName . '@123'), // You can set a default password
+        //          'image' => $manager->profile_image,
+        //          'orion_role_lvl' => 'o-manager'
+        //      ]);
 
-             $user->addRole('o-manager');
-         }
+        //      $user->addRole('o-manager');
+        //  }
     }
 }
