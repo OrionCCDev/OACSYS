@@ -89,6 +89,9 @@
         </div>
         <div class="row" id="PrintingArea" style="position: relative;">
             <div class="col-xl-12">
+                @if ($clearanceResign->status == 'resigned')
+                <img src="{{ asset('X-Files/Dash/imgs/clearance/' . $clearanceResign->clear_image) }}" alt="" srcset="">
+                @else
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">
                         <div class="row">
@@ -229,6 +232,7 @@
 
                     </ul> --}}
                 </section>
+                @endif
             </div>
         </div>
 

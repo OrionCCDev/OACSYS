@@ -174,8 +174,8 @@
                             <ul class="nav flex-column  collapse-level-1">
                                 <li class="nav-item">
                                     <ul class="nav flex-column">
-                                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin')
-                                        )
+                                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
+                        Auth::user()->hasRole('o-hr'))
 
                                         <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('department.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/003-department.png') }}" alt="" srcset="">Departments</a>
