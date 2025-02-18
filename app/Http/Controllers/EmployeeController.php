@@ -34,6 +34,7 @@ class EmployeeController extends Controller
         // Logic to display all employee receives
         return view('employees.receives', compact('employee'));
     }
+
     public function updateEmployees(Request $request)
     {
         $request->validate([
@@ -44,6 +45,7 @@ class EmployeeController extends Controller
 
         return redirect()->back()->with('success', 'Employees updated successfully.');
     }
+
     public function showReceiveDetails($id)
     {
         $receive = Receive::find($id);

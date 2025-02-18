@@ -43,6 +43,8 @@ Route::get('/update-employees', function () {
     return view('employees.uploadEmployeesUpdated');
 })->middleware(['auth', 'role:o-super-admin|o-admin']);
 
+Route::get('/update-sims', [SimCardController::class , 'create'])->middleware(['auth', 'role:o-super-admin|o-admin']);
+
 
 Route::post('/update-employees', [EmployeeController::class, 'updateEmployees'])
     ->middleware(['auth', 'role:o-super-admin|o-admin'])->name('employees.updateFromExcel');
