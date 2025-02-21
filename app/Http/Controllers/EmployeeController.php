@@ -123,7 +123,7 @@ class EmployeeController extends Controller
         $validatedData = $request->validate([
             'employee_code' => 'required',
             'employee_name' => 'required',
-            'employee_personal_email' => 'email|unique:employees,personal_email',
+            'employee_personal_email' => 'nullable|email|unique:employees,personal_email',
             'employee_personal_mobile' => 'nullable',
             'employee_orion_email' => 'nullable|email|unique:employees,orion_email',
             'employee_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
