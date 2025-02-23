@@ -72,7 +72,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
-    Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+    // Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+    // Route::get('/manager', [ManagerController::class, 'show'])->name('manager.show');
+
+
+    Route::resource('/manager', ManagerController::class);
     Route::resource('/request', RequestController::class);
     Route::post('/request/{id}/upload-signature', 'RequestController@uploadSignature')->name('request.upload.signature');
     // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
