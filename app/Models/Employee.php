@@ -32,6 +32,9 @@ class Employee extends Model implements HasMedia
     public function receives(){
         return $this->hasMany(Receive::class);
     }
+    public function requests(){
+        return $this->hasMany(Request::class);
+    }
     public function manage_project(){
         return $this->hasOne(Project::class , 'id' , 'project_manager_id');
     }
