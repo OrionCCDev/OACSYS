@@ -49,6 +49,10 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (Auth::user()->hasRole('o-manager')) {
+            redirect()->intended(route('manager.show', ['user' => Auth::user()]));
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

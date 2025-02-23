@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->string('request_code')->unique();
-            $table->string('request_signed')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // $table->string('request_signed')->unique();
+            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->enum('status' , ['pending', 'pending-approve' , 'approved', 'pending-receive' , 'rejected']); // pending, approved, rejected
-            $table->text('notes')->nullable();
+            // $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
