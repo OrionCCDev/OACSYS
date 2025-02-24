@@ -24,6 +24,7 @@ use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\ConsultantController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
+use App\Http\Controllers\DeductionController;
 
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
@@ -71,19 +72,43 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
-    // Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
-    // Route::get('/manager', [ManagerController::class, 'show'])->name('manager.show');
+//------------------------------------------------
+// the right way to do it with middleware---------
+//------------------------------------------------
+Route::middleware(['web', 'auth'])->group(function () {
+    // All routes except 'show' require o-hr, o-super-admin, or o-admin role
+    Route::middleware(['role:o-hr|o-super-admin|o-admin'])->group(function () {
+        Route::resource('manager', ManagerController::class)
+            ->except(['show']);
+    });
 
-
-    Route::resource('/manager', ManagerController::class);
+    // 'show' route allows managers as well
+    Route::middleware(['role:o-hr|o-super-admin|o-admin|o-manager'])->group(function () {
+        Route::resource('manager', ManagerController::class)
+            ->only(['show']);
+    Route::resource('/employees', EmployeeController::class)->only(['show']);
     Route::resource('/request', RequestController::class);
+    Route::resource('/deductions', DeductionController::class);
+    Route::get('/deductions/employee/{id}', [DeductionController::class , 'showEmployeeDeductions'])->name('deduction.showEmployeeDeduction');
+    Route::get('/deductions/employee/{id}/make', [DeductionController::class , 'createNewDeduct'])->name('deductions.createNewDeduct');
+    Route::get('deductions/print/{id}', [DeductionController::class, 'showDeductionReport'])->name('deductions.showDeductionReport');
+    Route::post('deductions/upload/signed/{id}', [DeductionController::class, 'uploadSignedDeduction'])->name('deductions.upload-signed');
     Route::post('/request/{id}/upload-signature', 'RequestController@uploadSignature')->name('request.upload.signature');
-    // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
-    // Route::get('/links', [QRCodeController::class, 'showLinks'])->name('links');
-    // Route::get('/qrcode', [QRCodeController::class, 'generateQR']);
-// Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
+
+    });
 });
+//------------------------------------------------
+// the right way to do it with middleware---------
+//------------------------------------------------
+// Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin|o-manager'])->group(function () {
+//     // Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+//     // Route::get('/manager', [ManagerController::class, 'show'])->name('manager.show');
+
+//     // Route::get('/company-qr', [QRCodeController::class, 'generateCompanyQR'])->name('company.qr');
+//     // Route::get('/links', [QRCodeController::class, 'showLinks'])->name('links');
+//     // Route::get('/qrcode', [QRCodeController::class, 'generateQR']);
+// // Route::post('/company-qr/store', [QRCodeController::class, 'store'])->name('company.qr.store');
+// });
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/clientEmployee', ClientEmployeeController::class);
@@ -116,7 +141,7 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     // Route::resource('department' , DepartmentController::class );
     Route::resource('/clearance', ClearanceController::class);
     Route::resource('/receive', ReceiveController::class);
-    Route::resource('/employees', EmployeeController::class);
+    Route::resource('/employees', EmployeeController::class)->except(['show']);
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::post('/resign/employee/{id}/clearance/{clr}', [EmployeeController::class, 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])

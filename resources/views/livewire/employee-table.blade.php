@@ -43,13 +43,14 @@
                                                         <th>ID</th>
                                                         <th>Name</th>
                                                         <th>O-Mobile</th>
-                                                        <th>Department</th>
+                                                        {{-- <th>Department</th> --}}
                                                         <th>Position</th>
                                                         <th>Manage</th>
 
                                                         {{-- @if (Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-super-admin')) --}}
 
                                                         <th>Rcv & Clr</th>
+
                                                          <th>Resign</th>
                                                         {{-- @endif --}}
                                                     </tr>
@@ -68,9 +69,9 @@
                                                             <span class="badge badge-success">{{ $sim->sim_number }}</span>
                                                             @endforeach
                                                         </td>
-                                                        <td>
+                                                        {{-- <td>
                                                             {{ $employee->department?->name ?? 'Not Found' }}
-                                                        </td>
+                                                        </td> --}}
                                                         <td>
                                                             {{ $employee->position?->name ?? 'Not Found' }}
                                                         </td>
@@ -86,6 +87,10 @@
                                                                 data-target="#exampleModalCenter{{ $employee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
                                                                 <i class="icon-trash"></i>
                                                                 </button>
+                                                                
+                                                                <a href="{{ route('deduction.showEmployeeDeduction' , ['id' => $employee->id ]) }}" class="btn btn-warning btn-sm">
+                                                                    <i class="fa fa-money"></i>
+                                                                </a>
                                                                 <div class="modal fade" id="exampleModalCenter{{ $employee->id }}" tabindex="-1" role="dialog"
                                                                     aria-labelledby="exampleModalCenter{{ $employee->id }}" aria-hidden="true" style="display: none;">
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -122,6 +127,7 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
+
                                                             <td class="text-center">
                                                                 @if ($employee->resign_date != null)
                                                                     {{-- <button disabled class="btn btn-icon btn-icon-circle btn-gradient-danger btn-icon-style-2"><span class="btn-icon-wrap"><i class="icon-rocket"></i></span></button> --}}

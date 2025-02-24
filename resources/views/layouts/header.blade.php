@@ -116,8 +116,8 @@
 
 
 
-                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
-                        Auth::user()->hasRole('o-hr'))
+                        {{-- @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
+                        Auth::user()->hasRole('o-hr')) --}}
 
 
                         <li class="nav-item {{ Request::is('employees*') ? 'active' : '' }}">
@@ -127,9 +127,9 @@
                             </a>
                         </li>
 
-                        @endif
+                        {{-- @endif --}}
                         <hr class="nav-separator">
-                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr'))
+                        {{-- @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr')) --}}
 
                         <li class="nav-item {{ Request::is('device*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('device.index') }}">
@@ -162,7 +162,7 @@
                                 <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Requests</span>
                             </a>
                         </li>
-                        @endif
+                        {{-- @endif --}}
 
                         <hr class="nav-separator">
                         <li class="nav-item">
@@ -174,8 +174,8 @@
                             <ul class="nav flex-column  collapse-level-1">
                                 <li class="nav-item">
                                     <ul class="nav flex-column">
-                                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
-                        Auth::user()->hasRole('o-hr'))
+                                        {{-- @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
+                        Auth::user()->hasRole('o-hr')) --}}
 
                                         <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('department.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/003-department.png') }}" alt="" srcset="">Departments</a>
@@ -191,9 +191,9 @@
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('project.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Projects</a>
                                         </li>
 
-                                        @elseif (Auth::user()->hasRole('o-hr') )
+                                        {{-- @elseif (Auth::user()->hasRole('o-hr') ) --}}
 
-                                        <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                        {{-- <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('department.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/003-department.png') }}" alt="" srcset="">Departments</a>
                                         </li>
                                         <li class="nav-item {{ Request::is('position*') ? 'active' : '' }}" style="margin-bottom: 7px">
@@ -201,14 +201,14 @@
                                         </li>
                                         <li class="nav-item {{ Request::is('sim*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('sim.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/001-dual.png') }}" alt="" srcset="">Sim Cards</a>
-                                        </li>
-                                        @endif
+                                        </li> --}}
+                                        {{-- @endif --}}
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         <hr class="nav-separator">
-                        @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr'))
+                        {{-- @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') || Auth::user()->hasRole('o-hr')) --}}
 
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
@@ -240,7 +240,7 @@
                                 <a class="nav-link" style="font-size: 25px" href="{{ route('manager.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/manager.png') }}" alt="" srcset="">Managers</a>
                             </li>
                         </ul>
-                        @endif
+                        {{-- @endif --}}
 
                     </ul>
 
