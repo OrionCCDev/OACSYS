@@ -104,7 +104,9 @@
                             <h3><strong>Device Information:</strong></h3>
                             <h5>Name: {{ $device->device_name }}</h5>
                             <h5>Type: {{ $device->device_type }}</h5>
+                            <h5>Price: {{ $device->device_price }}</h5>
                             <h5>Code: {{ $device->device_code }}</h5>
+                            <h5>Description: {{ $device->short_description }}</h5>
                         </div>
                         @endif
                     </div>
@@ -112,7 +114,7 @@
                     <div class="mb-5">
                         <h3 class="my-2"><strong>Deduction Details:</strong></h3>
                         <h4>Reason: {{ ucfirst($reason ?: '-') }}</h4>
-                        <h4 style="color: red">Amount: {{ number_format($amount ?: 0, 2) }} AED</h4>
+                        <h4 style="color: red">Amount Of Deduct: {{ number_format($amount ?: 0, 2) }} AED</h4>
                         <h4 class="my-3">Description: {!! nl2br(e($description ?: '-')) !!}</h4>
                     </div>
 
