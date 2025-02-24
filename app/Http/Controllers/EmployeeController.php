@@ -22,6 +22,8 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         $employees = Employee::with(['devices', 'department', 'position', 'project', 'sim_card'])->orderBy('created_at', 'DESC')->paginate(25);
@@ -187,6 +189,16 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
+        $user = auth()->user();
+        if (!$user->hasRole(['o-hr', 'o-super-admin', 'o-admin','o-manager'])) {
+
+                abort(403, 'Unauthorized access');
+
+        }
+        if($user->hasRole(['o-manager']) && $employee->manager_id != $user->employee_profile_id){
+            abort(403, 'Unauthorized access');
+        }
+
         $employee = Employee::with(['devices', 'department', 'position', 'project', 'sim_card', 'receives', 'clearance'])->find($employee->id);
         $project = $employee->project;
         $hireDate = Carbon::parse($employee->hire_date)->format('Y,M');

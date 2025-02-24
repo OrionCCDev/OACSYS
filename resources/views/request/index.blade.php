@@ -84,8 +84,8 @@
 
                                                                     <th>status</th>
 
-                                                                    <th>Signture</th>
-                                                                    <th>Manage</th>
+                                                                    <th class="text-center">Signture</th>
+                                                                    <th class="text-center">Manage</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -305,19 +305,14 @@
 
                                     <!-- Signatures -->
                                     <div class="row mt-5">
-                                        <div class="col-4 text-center">
-                                            <div class="signature-line">
-                                                <p>____________________</p>
-                                                <p>Requester Signature</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 text-center">
+
+                                        <div class="col-6 text-center">
                                             <div class="signature-line">
                                                 <p>____________________</p>
                                                 <p>IT Department Approval</p>
                                             </div>
                                         </div>
-                                        <div class="col-4 text-center">
+                                        <div class="col-6 text-center">
                                             <div class="signature-line">
                                                 <p>____________________</p>
                                                 <p>Manager Approval</p>

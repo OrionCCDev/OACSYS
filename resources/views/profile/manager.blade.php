@@ -1,118 +1,49 @@
 @extends('layouts.app')
-@section('sweetalert')
-<script>
-  @if(session('success'))
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: '{{ session('success') }}'
-        });
-    @endif
-</script>
+@section('custom_css')
+<style>
+    .customize-thumbnails-gallery {
+    display: flex;
+    justify-content: space-between;
+    }
+    .customize-thumbnails-gallery a img{
+    width: 250px;
+    height: 250px;
+    }
+</style>
 @endsection
 @section('content')
-@dd($user)
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/css/lightgallery.min.css" integrity="sha512-QMCloGTsG2vNSnHcsxYTapI6pFQNnUP6yNizuLL5Wh3ha6AraI6HrJ3ABBaw6SIUHqlSTPQDs/SydiR98oTeaQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <div class="hk-pg-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-xl-12 pa-0">
-                <div class="profile-cover-wrap overlay-wrap">
+                <div class="profile-cover-wrap overlay-wrap" style="min-height: 370px">
                     <div class="profile-cover-img"
-                        style="background-image:url('{{ asset('X-Files/Dash/imgs/' . $project->project_main_image) }}')">
+                        style="background-image:url('{{ asset('X-Files/Dash/imgs/profile-back.webp') }}')">
                     </div>
                     <div class="bg-overlay bg-trans-dark-60"></div>
                     <div class="container profile-cover-content py-50">
-                        <div class="hk-row">
-                            <div class="col-lg-6">
-                                <div class="media align-items-center">
-                                    <div class="media-img-wrap  d-flex">
-                                        <div class="avatar" style='width: 130px; height: 130px;'>
-                                            <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$project->manager->profile_image) }}"
-                                                alt="user" class="avatar-img rounded-circle" style="object-fit: cover;object-position: top;">
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="text-white text-capitalize display-6 mb-5 font-weight-400">{{
-                                            $project->manager->name }}</div>
-                                        <div class="font-14 text-white"><span class="mr-5">Project Manager</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="bg-white shadow-bottom">
                     <div class="container">
                         <div class="row">
-                            <ul class="nav nav-light nav-tabs col-6" id="list-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a href="#data" id="list-of-data" data-toggle="list" role="tab"
-                                        aria-controls="list-of-data"
-                                        class="d-flex h-60p align-items-center nav-link active">Data</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#device" id="list-of-devices" data-toggle="list" role="tab"
-                                        aria-controls="list-of-devices"
-                                        class="d-flex h-60p align-items-center nav-link">Devices</a>
-                                </li>
 
-                                {{-- <li class="nav-item">
-                                    <a href="#gallary" id="list-of-gallary" data-toggle="list" role="tab"
-                                        aria-controls="list-of-gallary"
-                                        class="d-flex h-60p align-items-center nav-link">Gallary</a>
-                                </li> --}}
-                            </ul>
-                            <ul class="nav nav-light nav-tabs col-6 justify-content-end">
-                                <li
-                                    style="display: flex; justify-content: flex-center;align-items: center;margin-right:10px">
-                                    <a href="{{ route('project.addDevice' , $project->id) }}"
-                                        class="btn btn-gradient-info btn-wth-icon btn-rounded icon-right"><span
-                                            class="btn-text">Add Devices Here</span> <span class="icon-label"><span
-                                                class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-arrow-right-circle">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <polyline points="12 16 16 12 12 8"></polyline>
-                                                    <line x1="8" y1="12" x2="16" y2="12"></line>
-                                                </svg></span> </span>
-                                    </a>
-                                </li>
-                                <li
-                                    style="display: flex; justify-content: flex-center;align-items: center;margin-left:10px">
-                                    <a href="{{ route('project.addEmployeeProject' , $project->id) }}"
-                                        class="btn btn-gradient-success btn-wth-icon btn-rounded icon-right"><span
-                                            class="btn-text">Add Employees To Project</span> <span class="icon-label"><span
-                                                class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-arrow-right-circle">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <polyline points="12 16 16 12 12 8"></polyline>
-                                                    <line x1="8" y1="12" x2="16" y2="12"></line>
-                                                </svg></span> </span>
-                                    </a>
-                                </li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>
                 <div class="container  mt-sm-60 mt-30">
                     <div class="hk-pg-header" style="justify-content: center;">
                         <div>
-                            <h2 class="hk-pg-title font-weight-600">{{ $project->project_name }}</h2>
+                            <h2 class="hk-pg-title font-weight-600">{{ $manager->name }}</h2>
                         </div>
                         <div class="d-flex mb-0 flex-wrap">
                             <div class="btn-group btn-group-sm btn-group-rounded mb-15 ml-15" role="group">
-                                <button type="button" class="btn btn-primary">Code</button>
-                                <button type="button" class="btn btn-outline-primary">{{ $project->project_code
+                                <button type="button" class="btn btn-primary">ID : </button>
+                                <button type="button" class="btn btn-outline-primary">{{ $manager->employee_id
                                     }}</button>
                             </div>
                             {{-- <button
@@ -128,19 +59,18 @@
                     </div>
                 </div>
                 <div class="tab-content mt-sm-60 mt-30">
-                    <div class="tab-pane fade show active" id="data" aria-labelledby="list-of-data" role="tabpanel">
+                    <div class="" id="">
                         <div class="container">
                             <div class="hk-row">
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
-                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Employees</span>
+                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Receives</span>
                                             <div
                                                 class="d-flex align-items-center justify-content-between position-relative">
                                                 <div>
-                                                    <span class="d-block display-5 font-weight-400 text-dark">{{
-                                                        $projectEmployeesCount }}</span>
+                                                    <span class="d-block display-5 font-weight-400 text-dark">{{ $manager?->receives?->count() ?? 0 }}</span>
                                                 </div>
                                                 <div class="position-absolute r-0">
                                                     {{-- عدد الموظقيين في المشروع --}}
@@ -154,20 +84,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
-                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Camera
-                                                Number</span>
+                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Clearances</span>
                                             <div
                                                 class="d-flex align-items-center justify-content-between position-relative">
                                                 <div>
                                                     <span class="d-block">
                                                         <span class="display-5 font-weight-400 text-dark"><span
                                                                 class="counter-anim">{{
-                                                                $project->devices->where('device_type',
-                                                                'Camera')->count() }}
+                                                                $manager?->clearance?->count() ?? 0 }}
                                                             </span></span>
                                                     </span>
                                                 </div>
@@ -183,419 +111,414 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
-                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">PCs
-                                                & Laptops</span>
+                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Devices</span>
                                             <div class="d-flex align-items-end justify-content-between">
                                                 <div>
                                                     <span class="d-block">
                                                         <span class="display-5 font-weight-400 text-dark">{{
-                                                            $project->devices->whereIn('device_type', ['pc',
-                                                            'Laptop'])->count() }}</span>
+                                                            $manager?->devices?->count() ?? 0 }}</span>
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-sm-6">
-                                    <div class="card card-sm">
-                                        <div class="card-body">
-                                            <span
-                                                class="d-block font-11 font-weight-500 text-dark text-uppercase mb-10">Printers</span>
-                                            <div class="d-flex align-items-end justify-content-between">
-                                                <div>
-                                                    <span class="d-block">
-                                                        <span class="display-5 font-weight-400 text-dark">{{
-                                                            $project->devices->where('device_type', 'Printer')->count()
-                                                            }}</span>
-                                                    </span>
-                                                </div>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="hk-row">
-                                <div class="col-lg-12">
-                                    <div class="card card-profile-feed">
-                                        <div class="card">
-                                            <div class="card-body pa-0">
-                                                <div class="table-wrap">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-sm table-hover mb-0">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>Name</th>
-                                                                    <th>Department</th>
-                                                                    <th>Position</th>
-                                                                    <th>Devices</th>
-                                                                    <th>Manage</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach ($project->employees as $employee )
-                                                                <tr>
+                                <div class="col-12">
 
-                                                                    <td>{{ $employee->employee_id }}</td>
-                                                                    <td>{{ $employee->name }}</td>
-                                                                    <td>{{ $employee->department->name }}</td>
-                                                                    <td>{{ $employee->position->name }}</td>
-                                                                    <td>{{ $employee->devices->count() }}
-                                                                    </td>
-                                                                    <td class="">
-                                                                        <div class="d-flex align-items-center btn-group btn-group-rounded mr-10"
-                                                                            role="group" aria-label="Basic example">
-                                                                            <button type="button" data-toggle="modal"
-                                                                                data-target="#transferEmpModal{{ $employee->id }}"
-                                                                                class="btn btn-outline-warning  btn-warning ">Transfer
-                                                                                To Project</button>
-                                                                            <div class="modal fade"
-                                                                                id="transferEmpModal{{ $employee->id }}"
-                                                                                tabindex="-1" role="dialog"
-                                                                                aria-labelledby="transferEmpModalLabel"
-                                                                                aria-hidden="true">
-                                                                                <div class="modal-dialog"
-                                                                                    role="document">
-                                                                                    <div class="modal-content">
-                                                                                        <div class="modal-header">
-                                                                                            <h5 class="modal-title"
-                                                                                                id="exampleModalLabel{{ $employee->id }}">
-                                                                                                Transfer Employee To
-                                                                                                Another Project</h5>
-                                                                                            <button type="button"
-                                                                                                class="close"
-                                                                                                data-dismiss="modal"
-                                                                                                aria-label="Close">
-                                                                                                <span
-                                                                                                    aria-hidden="true">&times;</span>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                        <div class="modal-body">
-                                                                                            <p>Choose Project Which You
-                                                                                                Want To Transffer
-                                                                                                <strong> {{
-                                                                                                    $employee->name }}
-                                                                                                </strong>
-                                                                                            </p>
-                                                                                            <form
-                                                                                                action="{{ route('employee.transfer') }}"
-                                                                                                method="post">
-                                                                                                @csrf
-                                                                                                @method('PUT')
-
-                                                                                                <input type="hidden"
-                                                                                                    name="employee_id"
-                                                                                                    value="{{ $employee->id }}">
-
-                                                                                                <select name="project_id"
-                                                                                                    class="form-control custom-select form-control custom-select-lg mt-15">
-                                                                                                    <option selected="">
-                                                                                                        Select a Project
-                                                                                                    </option>
-                                                                                                    @foreach ($projects
-                                                                                                    as $pro )
-                                                                                                    <option
-                                                                                                        value="{{ $pro->id }}">
-                                                                                                        {{
-                                                                                                        $pro->project_name
-                                                                                                        }} @ {{
-                                                                                                        $pro->project_code
-                                                                                                        }}
-                                                                                                    </option>
-                                                                                                    @endforeach
-
-                                                                                                </select>
-                                                                                        </div>
-                                                                                        <div class="modal-footer">
-                                                                                            <button type="submit"
-                                                                                                class="btn btn-primary">Save
-                                                                                                changes</button>
-                                                                                            </form>
-
-                                                                                            <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-dismiss="modal">Close</button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <a href="{{ route('employees.show' , ['employee' => $employee->id]) }}"
-                                                                                type="button"
-                                                                                class="btn btn-outline-info ">Show
-                                                                                Info</a>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                                @endforeach
-
-                                                            </tbody>
-                                                        </table>
-                                                        {{ $project->employees->links('pagination::bootstrap-4') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="card card-profile-feed">
-                                        <div class="card-header card-header-action">
-                                            <h6><span>Clients <span class="badge badge-soft-primary ml-5">{{
-                                                        $clientsCount }}</span></span></h6>
-
-                                            <div class="d-flex align-items-center card-action-wrap">
-                                                <div class="inline-block dropdown">
-                                                    <div class="d-flex align-items-center card-action-wrap">
-                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal">
-                                                            Assign Client Employee
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="addClientModalLabel">Add Client to Project</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="{{ route('project.addClient', $project->id) }}" method="POST">
-                                                                    @csrf
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label>Select Client</label>
-                                                                            <select name="client_employee_id" class="form-control">
-                                                                                <option value="">Select Client</option>
-                                                                                @foreach($clientEmployees as $clientEmployee)
-                                                                                    <option value="{{ $clientEmployee->id }}">
-                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project->project_name }}</span>    @endif
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Add Client</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            @foreach ($project->clients as $client )
-                                            <li class="list-group-item border-0">
-                                                <div class="media align-items-center">
-                                                    <div class="d-flex media-img-wrap mr-15">
-                                                        <div class="avatar avatar-sm">
-                                                            <span
-                                                                class="avatar-text avatar-text-inv-pink rounded-circle">
-                                                                <span class="initial-wrap"><span>{{
-                                                                        strtoupper(substr($client->name, 0, 1))
-                                                                        }}</span></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <span
-                                                            class="d-block text-dark text-capitalize text-truncate mw-150p"><a href="{{ route('clientEmployee.show' , $client->id) }}">{{
-                                                            $client->name }}</a></span>
-                                                    </div>
-                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $client->id }}">
-                                                        Transfer
-                                                    </button>
-
-                                                    <!-- Transfer Modal -->
-                                                    <div class="modal fade" id="transferClientModal{{ $client->id }}" tabindex="-1" role="dialog">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Transfer {{ $client->name }} to Another Project</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="{{ route('project.transferClient', $client->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <div class="modal-body">
-                                                                        <select name="project_id" class="form-control" required>
-                                                                            <option value="">Select Project</option>
-                                                                            @foreach($projects->where('id', '!=', $project->id) as $proj)
-                                                                                <option value="{{ $proj->id }}">{{ $proj->project_name }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Transfer</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <form action="{{ route('project.removeClient', $client->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
-                                                </div>
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="card card-profile-feed">
-                                        <div class="card-header card-header-action">
-                                            <h6><span>Consultants <span class="badge badge-soft-primary ml-5">{{
-                                                        $consultantsCount }}</span></span></h6>
-                                            <div class="d-flex align-items-center card-action-wrap">
-                                                <div class="inline-block dropdown">
-                                                    <div class="d-flex align-items-center card-action-wrap">
-                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addClientModal12">
-                                                            Assign Consultant Employee
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal fade" id="addClientModal12" tabindex="-1" role="dialog" aria-labelledby="addClientModal12Label" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="addClientModal12Label">Add Consultant to Project</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="{{ route('project.addConsultant', $project->id) }}" method="POST">
-                                                                    @csrf
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label>Select Consultant</label>
-                                                                            <select name="consultantEmployee" class="form-control">
-                                                                                <option value="">Select Consultant</option>
-                                                                                @foreach($consultants as $Ce)
-                                                                                    <option value="{{ $Ce->id }}">
-                                                                                        {{ $Ce->name }} - {{ $Ce->company_name }} @if($Ce->project_id != null) <span style="background-color: yellowgreen"> - {{ $Ce->project->project_name }}</span>    @endif
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Add Consultant</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            @foreach ($project->consultants as $consultant )
-                                            <li class="list-group-item border-0">
-                                                <div class="media align-items-center">
-                                                    <div class="d-flex media-img-wrap mr-15">
-                                                        <div class="avatar avatar-sm">
-                                                            <span
-                                                                class="avatar-text avatar-text-inv-pink rounded-circle"><span
-                                                                    class="initial-wrap"><span>{{
-                                                                        strtoupper(substr($consultant->name, 0, 1))
-                                                                        }}</span></span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <span
-                                                            class="d-block text-dark text-capitalize text-truncate mw-150p"><a href="{{ route('consultant.show' , $consultant->id) }}">{{
-                                                            $consultant->name }}</a></span>
-                                                        <span class="d-block font-13 text-truncate mw-150p">{{
-                                                            $consultant->company_name }}</span>
-                                                    </div>
-                                                    <button type="button" class="btn btn-warning mx-2" data-toggle="modal" data-target="#transferClientModal{{ $consultant->id }}">
-                                                        Transfer
-                                                    </button>
-
-                                                    <!-- Transfer Modal -->
-                                                    <div class="modal fade" id="transferClientModal{{ $consultant->id }}" tabindex="-1" role="dialog">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Transfer {{ $consultant->name }} to Another Project</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="{{ route('project.transferConsultant', $consultant->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <div class="modal-body">
-                                                                        <select name="project_id" class="form-control" required>
-                                                                            <option value="">Select Project</option>
-                                                                            @foreach($projects->where('id', '!=', $project->id) as $proj)
-                                                                                <option value="{{ $proj->id }}">{{ $proj->project_name }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Transfer</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <form action="{{ route('project.removeConsultant', $consultant->id) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                                    </form>
-                                                </div>
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade show " id="device" aria-labelledby="list-of-device" role="tabpanel">
-                        <div class="container">
-                            <div class="hk-row">
-                                <div class="col-lg-12">
                                     <div class="row">
+                                        <div class="col-12 col-md-6 offset-md-3">
+                                            <div class="card card-profile-feed">
+                                                <div class="card-body" style="background-color:#10516a;border-radius: 10px;">
+                                                    <div class="card">
+                                                        <div class="position-relative" style="position: relative">
+                                                            <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$manager->profile_image) }}" alt="Card image cap">
+                                                            @if ($manager->resign_date != null)
+                                                                <div class="resigned-sign" style="position: absolute;top: 50%;left: 25%;z-index: 999;">
+                                                                    <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $manager->department->name }} - </h5></span>
+                                                            <span style="font-size: 20px" class="badge badge-soft-warning mt-15 mr-10"><h5>{{ $manager->position->name }}</h5></span>
 
-
-                                    @foreach ( $project->devices as $device )
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="card mb-20">
-                                            <a href="{{ route('device.show', $device->id) }}">
-                                                <img class="card-img-top" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" alt="Card image cap">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $device->device_name }}</h5>
-                                                    <p class="card-text">{{ $device->device_model }} -- {{ $device->device_type }} -- {{ $device->short_description }}</p>
-                                                    <p class="card-text"><small class="text-muted">{{ $device->device_code }}</small></p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </a>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="profile-tabs">
+                                                <ul class="tab-nav" id="list-tab" role="tablist">
+                                                    <li>
+                                                        <button class="tab-button active" data-tab="personalData">
+                                                            <i class="ion ion-md-person"></i>
+                                                            Personal Info
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="tab-button" data-tab="list-of-devices">
+                                                            <i class="ion ion-md-laptop"></i>
+                                                            My Devices
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="tab-button" data-tab="list-of-emps">
+                                                            <i class="ion ion-md-people"></i>
+                                                            My Employees
+                                                        </button>
+                                                    </li>
+                                                </ul>
+
+                                                <div class="tab-content">
+                                                    {{-- Personal Info Tab --}}
+                                                    <div class="tab-pane active" id="personalData">
+                                                        <div class="profile-card">
+                                                            <div class="profile-stats">
+                                                                <div class="stat-box">
+                                                                    <div class="stat-value">Years: {{ $diff->y }}, Months: {{ $diff->m }}, Days: {{ $diff->d }}</div>
+                                                                    <div class="stat-label">Working For</div>
+                                                                </div>
+                                                                <div class="stat-box">
+                                                                    <div class="stat-value">{{ $manager->department->name }}</div>
+                                                                    <div class="stat-label">Department</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul class="info-list">
+                                                                <li class="info-item">
+                                                                    <i class="ion ion-md-calendar"></i>
+                                                                    <span class="info-label">Hire Date:</span>
+                                                                    <span>{{ $hireDate }}</span>
+                                                                </li>
+                                                                <li class="info-item">
+                                                                    <i class="ion ion-md-briefcase"></i>
+                                                                    <span class="info-label">Branch:</span>
+                                                                    <span>Ras AlKhaima</span>
+                                                                </li>
+                                                                <li class="info-item">
+                                                                    <i class="ion ion-md-phone-portrait"></i>
+                                                                    <span class="info-label">Orion Mobile:</span>
+                                                                    <span>
+                                                                        @if ($manager->sim_card->count() > 0)
+                                                                            @foreach ($manager->sim_card as $sim)
+                                                                                <span class="badge badge-success">{{ $sim->sim_number }}</span>
+                                                                            @endforeach
+                                                                        @else
+                                                                            <span class="badge badge-danger">No Sim Found</span>
+                                                                        @endif
+                                                                    </span>
+                                                                </li>
+                                                                <li class="info-item">
+                                                                    <i class="ion ion-md-mail"></i>
+                                                                    <span class="info-label">Orion Email:</span>
+                                                                    <span>{{ $manager->orion_email ?? 'No Email Assigned' }}</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Devices Tab --}}
+                                                    <div class="tab-pane" id="list-of-devices">
+                                                        <div class="profile-card">
+                                                            <div class="card-header">
+                                                                <h3>Devices and Items <span class="badge badge-success">{{ $manager->devices->count() }}</span></h3>
+                                                            </div>
+                                                            @if ($manager->devices->count() > 0)
+                                                                <div class="device-grid">
+                                                                    @foreach ($manager->devices as $device)
+                                                                        <div class="device-card">
+                                                                            <img src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}"
+                                                                                 alt="{{ $device->device_name }}"
+                                                                                 class="device-image">
+                                                                            <div class="device-name">{{ $device->device_name }}</div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <div class="p-4 text-center text-gray-500">
+                                                                    No devices found
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Employees Tab --}}
+                                                    <div class="tab-pane" id="list-of-emps">
+                                                        @livewire('employee-list-on-manager-view', ['managerId' => $manager->id])
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    @endforeach
+                                    <style>
+                                        /* Tab Styles */
+                                        .profile-tabs {
+                                            padding: 2rem;
+                                            max-width: 1200px;
+                                            margin: 0 auto;
+                                            background-color: lightblue;
+                                            border-radius: 15px;
+                                        }
 
+                                        .tab-nav {
+                                            display: flex;
+                                            border-bottom: 2px solid #e5e7eb;
+                                            margin-bottom: 1.5rem;
+                                            gap: 0.5rem;
+                                        }
+
+                                        .tab-button {
+                                            padding: 0.75rem 1.5rem;
+                                            border: none;
+                                            background: none;
+                                            color: #6b7280;
+                                            font-weight: 500;
+                                            cursor: pointer;
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 0.5rem;
+                                            border-bottom: 2px solid transparent;
+                                            margin-bottom: -2px;
+                                            transition: all 0.2s;
+                                        }
+
+                                        .tab-button:hover {
+                                            color: #4b5563;
+                                            background-color: #f9fafb;
+                                        }
+
+                                        .tab-button.active {
+                                            color: #2563eb;
+                                            border-bottom-color: #2563eb;
+                                        }
+
+                                        .tab-button i {
+                                            font-size: 1.25rem;
+                                        }
+
+                                        /* Card Styles */
+                                        .profile-card {
+                                            background: white;
+                                            border-radius: 0.5rem;
+                                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                                            margin-bottom: 1.5rem;
+                                        }
+
+                                        .profile-stats {
+                                            display: grid;
+                                            grid-template-columns: repeat(2, 1fr);
+                                            gap: 1.5rem;
+                                            margin-bottom: 2rem;
+                                            text-align: center;
+                                        }
+
+                                        .stat-box {
+                                            background: #f9fafb;
+                                            padding: 1.5rem;
+                                            border-radius: 0.5rem;
+                                        }
+
+                                        .stat-value {
+                                            font-size: 1.5rem;
+                                            font-weight: 600;
+                                            color: #1f2937;
+                                            margin-bottom: 0.5rem;
+                                        }
+
+                                        .stat-label {
+                                            color: #6b7280;
+                                            font-size: 0.875rem;
+                                        }
+
+                                        .info-list {
+                                            list-style: none;
+                                            padding: 0;
+                                            margin: 0;
+                                        }
+
+                                        .info-item {
+                                            display: flex;
+                                            align-items: center;
+                                            padding: 1rem;
+                                            background: #f9fafb;
+                                            border-radius: 0.5rem;
+                                            margin-bottom: 0.75rem;
+                                        }
+
+                                        .info-item i {
+                                            color: #9ca3af;
+                                            margin-right: 1rem;
+                                            font-size: 1.25rem;
+                                        }
+
+                                        .info-label {
+                                            font-weight: 500;
+                                            margin-right: 0.5rem;
+                                            color: #374151;
+                                        }
+
+                                        /* Device Grid */
+                                        .device-grid {
+                                            display: grid;
+                                            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                                            gap: 1rem;
+                                            padding: 1rem;
+                                        }
+
+                                        .device-card {
+                                            background: #f9fafb;
+                                            border-radius: 0.5rem;
+                                            overflow: hidden;
+                                            transition: transform 0.2s;
+                                        }
+
+                                        .device-card:hover {
+                                            transform: scale(1.02);
+                                        }
+
+                                        .device-image {
+                                            aspect-ratio: 1;
+                                            width: 100%;
+                                            object-fit: cover;
+                                        }
+
+                                        .device-name {
+                                            padding: 0.75rem;
+                                            text-align: center;
+                                            font-size: 0.875rem;
+                                            color: #374151;
+                                        }
+
+                                        /* Table Styles */
+                                        .table-container {
+                                            overflow-x: auto;
+                                        }
+
+                                        .profile-table {
+                                            width: 100%;
+                                            border-collapse: separate;
+                                            border-spacing: 0;
+                                        }
+
+                                        .profile-table th,
+                                        .profile-table td {
+                                            padding: 0.75rem 1rem;
+                                            text-align: left;
+                                        }
+
+                                        .profile-table th {
+                                            background: #f9fafb;
+                                            font-weight: 500;
+                                            color: #374151;
+                                        }
+
+                                        .profile-table tr {
+                                            transition: background-color 0.2s;
+                                        }
+
+                                        .profile-table tr:hover {
+                                            background-color: #f9fafb;
+                                        }
+
+                                        .profile-table td {
+                                            border-bottom: 1px solid #e5e7eb;
+                                        }
+
+                                        .badge {
+                                            display: inline-block;
+                                            padding: 0.25rem 0.75rem;
+                                            border-radius: 9999px;
+                                            font-size: 0.75rem;
+                                            font-weight: 500;
+                                        }
+
+                                        .badge-success {
+                                            background: #dcfce7;
+                                            color: #166534;
+                                        }
+
+                                        .badge-danger {
+                                            background: #fee2e2;
+                                            color: #991b1b;
+                                        }
+
+                                        .btn {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            padding: 0.5rem 1rem;
+                                            border-radius: 0.375rem;
+                                            font-size: 0.875rem;
+                                            font-weight: 500;
+                                            transition: all 0.2s;
+                                        }
+
+                                        .btn-info {
+                                            background: #2563eb;
+                                            color: white;
+                                        }
+
+                                        .btn-info:hover {
+                                            background: #1d4ed8;
+                                        }
+
+                                        /* Responsive Design */
+                                        @media (max-width: 768px) {
+                                            .profile-stats {
+                                                grid-template-columns: 1fr;
+                                            }
+
+                                            .tab-button {
+                                                padding: 0.5rem 1rem;
+                                            }
+
+                                            .profile-tabs {
+                                                padding: 1rem;
+                                            }
+                                        }
+                                        </style>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                // Tab switching functionality
+                                                const tabButtons = document.querySelectorAll('.tab-button');
+                                                const tabPanes = document.querySelectorAll('.tab-pane');
+
+                                                tabButtons.forEach(button => {
+                                                    button.addEventListener('click', () => {
+                                                        // Remove active class from all buttons and panes
+                                                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                                                        tabPanes.forEach(pane => pane.classList.remove('active'));
+
+                                                        // Add active class to clicked button and corresponding pane
+                                                        button.classList.add('active');
+                                                        document.getElementById(button.dataset.tab).classList.add('active');
+                                                    });
+                                                });
+                                            });
+                                            </script>
+                                    <div class="row mt-30">
+                                        <div class="col-auto">
+
+                                            {{-- <a href="{{ route('employees.index') }}" style="display: inline-flex;align-items:center;" class="btn  mb-2 btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-left btn-lg">
+                                                <i class="icon-logout"></i>
+                                                <span class="btn-text">Back</span>
+                                            </a>
+                                            <a href="{{ route('employees.edit' , $manager->id) }}" class="btn mb-2 btn-gradient-bunting btn-wth-icon icon-wthot-bg btn-rounded icon-right btn-lg">
+                                                <span class="btn-text">Edit</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span> </span>
+                                            </a> --}}
+
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
