@@ -116,7 +116,9 @@
                                         <h5>Device Information</h5>
                                         <p><strong>Device Name:</strong> {{ $deduction->device->device_name }}</p>
                                         <p><strong>Device Code:</strong> {{ $deduction->device->device_code }}</p>
+                                        <p><strong>Device Code:</strong> {{ $deduction->device->device_price }}</p>
                                         <p><strong>Type:</strong> {{  $deduction->device->device_type }}</p>
+                                        <p><strong>Device Code:</strong> {{ $deduction->device->short_description }}</p>
                                     </div>
                                     @endif
                                 </div>
