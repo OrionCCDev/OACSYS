@@ -114,7 +114,7 @@
 
                     <div class="row mt-30">
                         <div class="col-auto">
-                            <a href="{{ url()->previous() }}" class="btn btn-danger btn-lg mb-2">Back</a>
+                            <a href="{{ route('employees.index') }}" class="btn btn-danger btn-lg mb-2">Back</a>
 
                         </div>
                     </div>
