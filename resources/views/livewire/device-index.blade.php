@@ -111,8 +111,11 @@
                                                     @if ($device->status == 'available')
                                                     <span class="badge badge-success">Available</span>
                                                     @elseif ($device->status == 'taken')
-                                                    <span class="badge badge-indigo">Not
-                                                        Available</span>
+                                                    {{-- <span class="badge badge-indigo">Not
+                                                        Available</span> --}}
+                                                    <span class="badge badge-indigo">
+                                                        {{ $device?->?employee->name ?? 'Not Available'}}
+                                                    </span>
                                                     @elseif ($device->status == 'pending-receiving')
                                                     <span class="badge badge-warning">Pending
                                                         Receive</span>
