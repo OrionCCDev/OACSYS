@@ -30,6 +30,7 @@ class DeviceIndex extends Component
     {
         $devices = Device::where('device_name', 'like', '%'.$this->search.'%')
                         ->orWhere('device_code', 'like', '%'.$this->search.'%')
+                        ->orderBy('updated_at', 'desc')
                         ->paginate(10);
 
         return view('livewire.device-index', [
