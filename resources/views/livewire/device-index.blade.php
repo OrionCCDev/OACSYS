@@ -114,7 +114,7 @@
                                                     {{-- <span class="badge badge-indigo">Not
                                                         Available</span> --}}
                                                     <span class="badge badge-indigo">
-                                                        {{ $device?->?employee->name ?? 'Not Available'}}
+                                                        {{ $device->employee->name ?? 'Not Available'}}
                                                     </span>
                                                     @elseif ($device->status == 'pending-receiving')
                                                     <span class="badge badge-warning">Pending
