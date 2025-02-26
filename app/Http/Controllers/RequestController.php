@@ -75,7 +75,7 @@ class RequestController extends Controller
 
         }
 
-        return redirect()->route('request.index')->with('success', 'Requests created successfully!');
+        return redirect()->route('asset-request.index')->with('success', 'Requests created successfully!');
     }
 
     /**
@@ -101,12 +101,27 @@ class RequestController extends Controller
     {
         //
     }
+    public function reject($id)
+    {
+        $request = Request::findOrFail($id);
+        $request->status = 'rejected';
+        $request->save();
 
+        return redirect()->back()->with('success', 'Request has been rejected successfully');
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(GlobalRequestInputs $request)
     {
-        //
+        dd($request);
+        if($request->image){
+            $oldImagePath = public_path('X-Files/Dash/imgs/request/' . $request->image);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
+        }
+        $request->delete();
+        return redirect()->route('asset-request.index')->with('success', 'Request deleted successfully!');
     }
 }

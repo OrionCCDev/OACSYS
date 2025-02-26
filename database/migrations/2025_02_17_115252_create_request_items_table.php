@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('request_id')->constrained()->onDelete('cascade');
             $table->string('item_type'); // laptop, pc, sim_card, screen, mouse, hd
             $table->integer('quantity')->default(1);
-            $table->enum('request_for_type' , ['employee', 'project' , 'consultant' , 'client']);
+            $table->enum('request_for_type' , ['employee', 'project' , 'consultant' , 'client' , 'other']);
             $table->string('requested_for_id')->nullable();
             $table->string('requested_for_name')->nullable();
             $table->string('requested_for_position')->nullable();
