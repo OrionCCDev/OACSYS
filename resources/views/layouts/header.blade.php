@@ -156,8 +156,8 @@
                                 <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Receives</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('request*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('request.index') }}">
+                        <li class="nav-item {{ Request::is('asset-request*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('asset-request.index') }}">
                                 <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/request.png') }}" alt="" srcset=""></span>
                                 <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Requests</span>
                             </a>

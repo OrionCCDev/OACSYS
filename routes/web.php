@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetRequestController;
 use App\Models\Receive;
 use Illuminate\Http\Request;
 use App\Livewire\ClientManage;
@@ -87,13 +88,16 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::resource('manager', ManagerController::class)
             ->only(['show']);
     Route::resource('/employees', EmployeeController::class)->only(['show']);
-    Route::resource('/request', RequestController::class);
+    Route::resource('/asset-request', AssetRequestController::class);
+    Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
+    Route::patch('/asset-request/{id}/approve', [AssetRequestController::class, 'approve'])->name('asset-request.approve');
+    Route::patch('/asset-request/{id}/reject', [AssetRequestController::class, 'reject'])->name('asset-request.reject');
     Route::resource('/deductions', DeductionController::class);
     Route::get('/deductions/employee/{id}', [DeductionController::class , 'showEmployeeDeductions'])->name('deduction.showEmployeeDeduction');
     Route::get('/deductions/employee/{id}/make', [DeductionController::class , 'createNewDeduct'])->name('deductions.createNewDeduct');
     Route::get('deductions/print/{id}', [DeductionController::class, 'showDeductionReport'])->name('deductions.showDeductionReport');
     Route::post('deductions/upload/signed/{id}', [DeductionController::class, 'uploadSignedDeduction'])->name('deductions.upload-signed');
-    Route::post('/request/{id}/upload-signature', 'RequestController@uploadSignature')->name('request.upload.signature');
+    // Route::post('/request/{id}/upload-signature', 'RequestController@uploadSignature')->name('request.upload.signature');
 
     });
 });

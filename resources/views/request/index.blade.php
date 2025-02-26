@@ -49,7 +49,7 @@
 
                          <section class="hk-sec-wrapper">
                             <h5 class="hk-sec-title">Make New Request</h5>
-                            <a href="{{ route('request.create') }}"
+                            <a href="{{ route('asset-request.create') }}"
                                 class="btn btn-gradient-primary btn-wth-icon btn-rounded icon-right">
                                 <span class="btn-text">Make Request</span>
                                 <span class="icon-label">
@@ -82,7 +82,8 @@
 
                                                                     <th>Name</th>
 
-                                                                    <th>status</th>
+                                                                    <th>Signed</th>
+                                                                    <th>Status</th>
 
                                                                     <th class="text-center">Signture</th>
                                                                     <th class="text-center">Manage</th>
@@ -96,6 +97,20 @@
                                                                     <td>{{ $req->request_code }}</td>
                                                                     <td>{{ $req->employee->name }}</td>
 
+                                                                    <td>
+                                                                        @if ($req->image == null)
+                                                                        <div class="alert alert-danger alert-wth-icon alert-dismissible fade show" role="alert">
+                                                                            <i class="zmdi zmdi-block"></i>
+
+                                                                        </div>
+
+                                                                        @else
+                                                                        <div class="alert alert-success alert-wth-icon alert-dismissible fade show" role="alert">
+                                                                            <i class="zmdi zmdi-check-circle"></i>
+
+                                                                        </div>
+                                                                        @endif
+                                                                    </td>
                                                                     <td>
                                                                         {{ $req->status }}
                                                                     </td>
@@ -125,7 +140,7 @@
                                                                                                     <span aria-hidden="true">×</span>
                                                                                                 </button>
                                                                                             </div>
-                                                                                            <form action="{{ route('request.upload.signature', $req->id) }}" method="POST" enctype="multipart/form-data">
+                                                                                            <form action="{{ route('asset-request.upload-signature', $req->id) }}" method="POST" enctype="multipart/form-data">
                                                                                                 @csrf
                                                                                                 <div class="modal-body">
                                                                                                     <div class="form-group">
@@ -148,7 +163,7 @@
 
                                                                     <td class="text-center">
                                                                         <div class="btn-group" role="group">
-                                                                            <a href="{{ route('request.show' , $req->id) }}"
+                                                                            <a href="{{ route('asset-request.show' , $req->id) }}"
                                                                                 class="btn btn-sm btn-success"
                                                                                 title="View Details">
                                                                                 <i class="fa fa-eye"></i>
@@ -197,13 +212,13 @@
                                                                                                 class="btn btn-secondary"
                                                                                                 data-dismiss="modal">Close</button>
                                                                                             <form
-                                                                                                action="{{ route('request.destroy' , $req->id ) }}"
+                                                                                                action="{{ route('asset-request.destroy' , $req->id ) }}"
                                                                                                 method="post">
                                                                                                 @csrf
                                                                                                 @method('delete')
 
-                                                                                                <button type="button"
-                                                                                                    data-dismiss="modal"
+                                                                                                <button type="submit"
+
                                                                                                     class="btn btn-danger">Delete</button>
                                                                                             </form>
                                                                                         </div>
@@ -232,119 +247,121 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="printModal{{ $req->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Request Details - {{ $req->request_code }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body" id="printArea{{ $req->id }}">
-                                    <!-- Print Header -->
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <div class="company-info">
-                                            <img class="img-fluid invoice-brand-img d-block mb-20" width="250"
-                                            src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
-                                            <p>Asset Request Form</p>
-                                        </div>
-                                        <div class="request-info text-right">
-
-                                            <p><strong>Date:</strong> {{ $req->created_at->format('d/m/Y') }}</p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Requester Info -->
-                                    <div class="card mb-3">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Requester Information</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p><strong>Name:</strong> {{ $req->employee->name }}</p>
-                                                    <p><strong>Position:</strong> {{ $req->employee->position->name }}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    {{-- <p><strong>Status:</strong> {{ $req->status }}</p> --}}
-                                                    <p><strong>Department:</strong> {{ $req->employee->department->name }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Requested Items -->
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Requested Items</h5>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Item Type</th>
-                                                        <th>Quantity</th>
-                                                        <th>For</th>
-                                                        <th>Receiver</th>
-                                                        <th>Notes</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($req->items as $item)
-                                                    <tr>
-                                                        <td>{{ $item->item_type }}</td>
-                                                        <td>{{ $item->quantity }}</td>
-                                                        <td>{{ $item->request_for_type }}</td>
-                                                        <td>{{ $item->requested_for_name }}<br>
-                                                            <small>{{ $item->requested_for_position }}</small>
-                                                        </td>
-                                                        <td>{{ $item->notes }}</td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <!-- Signatures -->
-                                    <div class="row mt-5">
-
-                                        <div class="col-6 text-center">
-                                            <div class="signature-line">
-                                                <p>____________________</p>
-                                                <p>IT Department Approval</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 text-center">
-                                            <div class="signature-line">
-                                                <p>____________________</p>
-                                                <p>Manager Approval</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="printRequest({{ $req->id }})">Print</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        function printRequest(requestId) {
-                            const printContent = document.getElementById(`printArea${requestId}`);
-                            const originalContents = document.body.innerHTML;
-
-                            document.body.innerHTML = printContent.innerHTML;
-                            window.print();
-                            document.body.innerHTML = originalContents;
-
-                            // Reinitialize any necessary scripts/events after restoring content
-                            location.reload();
-                        }
-                        </script>
 
                 </div>
             </div>
 
+@foreach ($requests as $req )
+<div class="modal fade" id="printModal{{ $req->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Request Details - {{ $req->request_code }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="printArea{{ $req->id }}">
+                <!-- Print Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="company-info">
+                        <img class="img-fluid invoice-brand-img d-block mb-20" width="250"
+                        src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
+                        <p>Asset Request Form</p>
+                    </div>
+                    <div class="request-info text-right">
 
+                        <p><strong>Date:</strong> {{ $req->created_at->format('d/m/Y') }}</p>
+                    </div>
+                </div>
+
+                <!-- Requester Info -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Requester Information</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Name:</strong> {{ $req->employee->name }}</p>
+                                <p><strong>Position:</strong> {{ $req->employee->position->name }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                {{-- <p><strong>Status:</strong> {{ $req->status }}</p> --}}
+                                <p><strong>Department:</strong> {{ $req->employee->department->name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Requested Items -->
+                <div class="card" style="max-width: 100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Requested Items</h5>
+                        <table class="table table-bordered"  style="max-width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Item Type</th>
+                                    <th>Quantity</th>
+                                    <th>For</th>
+                                    <th>Receiver</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($req->items as $item)
+                                <tr>
+                                    <td>{{ $item->item_type }}</td>
+                                    <td>{{ $item->quantity }}</td>
+                                    <td>{{ $item->request_for_type }}</td>
+                                    <td>{{ $item->requested_for_name }}<br>
+                                        <small>{{ $item->requested_for_position }}</small>
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Signatures -->
+                <div class="row mt-5">
+
+                    <div class="col-6 text-center">
+                        <div class="signature-line">
+                            <p>____________________</p>
+                            <p>IT Department Approval</p>
+                        </div>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="signature-line">
+                            <p>____________________</p>
+                            <p>Manager Approval</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printRequest({{ $req->id }})">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function printRequest(requestId) {
+        const printContent = document.getElementById(`printArea${requestId}`);
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContent.innerHTML;
+        window.print();
+        document.body.innerHTML = originalContents;
+
+        // Reinitialize any necessary scripts/events after restoring content
+        location.reload();
+    }
+</script>
+
+@endforeach
         </div>
     </div>
 </div>

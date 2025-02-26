@@ -196,7 +196,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm">
-                                <form method="post" enctype="multipart/form-data" action="{{ route('request.store') }}"
+                                <form method="post" enctype="multipart/form-data" action="{{ route('asset-request.store') }}"
                                     class="form-inline">
                                     @csrf
                                     <input type="hidden" name="request_code" value="{{ 'REQ-' . time() . '-' . rand(1000,9999) }}">
@@ -222,6 +222,7 @@
                                                                     <option value="Switch">Switch</option>
                                                                     <option value="Printer">Printer</option>
                                                                     <option value="Electric_Element">Electric Element</option>
+                                                                    <option value="Other">Other</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -233,6 +234,7 @@
                                                                     <option value="client">Client</option>
                                                                     <option value="consultant">Consultant</option>
                                                                     <option value="project">Project</option>
+                                                                    <option value="other">Other</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -286,6 +288,7 @@
                                     <div class="row mt-30">
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary mb-2">Make</button>
+                                            <a href="{{ route('asset-request.index') }}" type="submit" class="btn btn-info mb-2">Back</a>
                                         </div>
                                     </div>
                                 </form>

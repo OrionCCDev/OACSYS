@@ -9,7 +9,7 @@ class RequestItem extends Model
     protected $guarded = [];
 
     public function request(){
-        return $this->belongsTo(Request::class);
+        return $this->belongsTo(AssetRequest::class , 'request_id' , 'id');
     }
 
 
