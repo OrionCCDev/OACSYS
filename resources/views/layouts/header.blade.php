@@ -65,8 +65,14 @@
             </a>
             <ul class="navbar-nav hk-navbar-content">
 
-                <li class="nav-item dropdown dropdown-authentication">
-                    <a class="nav-link dropdown-toggle no-caret" href="#" role="button" data-toggle="dropdown"
+                <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
+                    <a href="{{ route('dashboard') }}">
+                        <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
+                    </a>
+                    <a href="{{ url('https://www.orioncc.com/') }}" target="_blank" >
+                        <img src="{{ asset('X-Files/Dash/imgs/icons/world-wide-web.png') }}" width="75" height="75" alt=""  style="padding:5px 5px;" >
+                    </a>
+                    <a class="nav-link dropdown-toggle no-caret"  style="padding:5px 5px;"  href="#" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <div class="media">
                             <div class="media-img-wrap">
@@ -82,7 +88,8 @@
                             </div>
                         </div>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" data-dropdown-in="flipInX"
+
+                    <div class="dropdown-menu dropdown-menu-right"  style="padding:5px 5px;"  data-dropdown-in="flipInX"
                         data-dropdown-out="flipOutX">
 
                         <form action="{{ route('logout') }}" method="post">
@@ -110,14 +117,14 @@
             <a href="javascript:void(0);" id="hk_nav_close" class="hk-nav-close"><span class="feather-icon"><i
                         data-feather="x"></i></span></a>
             <div class="nicescroll-bar">
+                @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
+                Auth::user()->hasRole('o-hr'))
                 <div class="navbar-nav-wrap" style="padding-top: 50px">
                     <ul class="navbar-nav flex-column">
 
 
 
 
-                        {{-- @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin') ||
-                        Auth::user()->hasRole('o-hr')) --}}
 
 
                         <li class="nav-item {{ Request::is('employees*') ? 'active' : '' }}">
@@ -245,6 +252,7 @@
                     </ul>
 
                 </div>
+                @endif
             </div>
         </nav>
         <div id="hk_nav_backdrop" class="hk-nav-backdrop"></div>

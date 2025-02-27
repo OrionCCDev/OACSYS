@@ -15,6 +15,9 @@ class AssetRequestController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->hasRole(['o-admin', 'o-super-admin'])) {
+            return redirect()->back()->with('error', 'You are not authorized to approve requests');
+        }
         $requests = AssetRequest::paginate(15);
         return view('request.index', compact('requests'));
     }
@@ -38,19 +41,28 @@ class AssetRequestController extends Controller
         $destinationPath = public_path('X-Files/Dash/imgs/request');
         $request->signature->move($destinationPath, $imageName);
         $requestAsset->image = $imageName;
-        $requestAsset->status = 'pending-approve';
+        $requestAsset->status = 'pending-receive';
         $requestAsset->save();
         return redirect()->route('asset-request.index')->with('success', 'Signature uploaded successfully.');
     }
+
     public function approve($id)
     {
+        if (!auth()->user()->hasRole(['o-admin', 'o-super-admin'])) {
+            return redirect()->back()->with('error', 'You are not authorized to approve requests');
+        }
         $request = AssetRequest::findOrFail($id);
         $request->status = 'approved';
         $request->save();
         return redirect()->back()->with('success', 'Request approved successfully');
+
     }
+
     public function reject($id)
     {
+        if (!auth()->user()->hasRole(['o-admin', 'o-super-admin'])) {
+            return redirect()->back()->with('error', 'You are not authorized to approve requests');
+        }
         $request = AssetRequest::findOrFail($id);
         $request->status = 'rejected';
         $request->save();
@@ -102,7 +114,11 @@ class AssetRequestController extends Controller
 
         }
 
-        return redirect()->route('asset-request.index')->with('success', 'Requests created successfully!');
+        if(Auth::user()->orion_role_lvl == 'o-manager'){
+            return redirect()->route('manager.show' , ['manager' => $employee_id])->with('success', 'Requests created successfully!');
+        }else{
+            return redirect()->route('asset-request.index')->with('success', 'Requests created successfully!');
+        }
     }
 
     /**

@@ -177,6 +177,18 @@
                                                             My Employees
                                                         </button>
                                                     </li>
+                                                    <li>
+                                                        <button class="tab-button" data-tab="list-of-req">
+                                                            <i class="ion ion-md-paper"></i>
+                                                            My Requests
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="tab-button" data-tab="account-settings">
+                                                            <i class="ion ion-md-lock"></i>
+                                                            Account Settings
+                                                        </button>
+                                                    </li>
                                                 </ul>
 
                                                 <div class="tab-content">
@@ -256,10 +268,120 @@
                                                     <div class="tab-pane" id="list-of-emps">
                                                         @livewire('employee-list-on-manager-view', ['managerId' => $manager->id])
                                                     </div>
+
+                                                    {{-- Requests Tab --}}
+                                                    <div class="tab-pane" id="list-of-req">
+                                                        @livewire('user-asset-requests-component')
+                                                    </div>
+
+                                                    <div class="tab-pane" id="account-settings">
+                                                        <div class="profile-card">
+                                                            <div class="card-header">
+                                                                <h3>Change Password</h3>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                @if(session('success'))
+                                                                    <div class="alert alert-success">
+                                                                        {{ session('success') }}
+                                                                    </div>
+                                                                @endif
+
+                                                                <form method="POST" action="{{ route('password.Manager.update') }}" class="p-4">
+                                                                    @csrf
+                                                                    @method('PUT')
+
+                                                                    <div class="form-group mb-3">
+                                                                        <label for="current_password">Current Password</label>
+                                                                        <input type="password" class="form-control @error('current_password') is-invalid @enderror"
+                                                                               id="current_password" name="current_password" required>
+                                                                        @error('current_password')
+                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+
+                                                                    <div class="form-group mb-3">
+                                                                        <label for="new_password">New Password</label>
+                                                                        <input type="password" class="form-control @error('new_password') is-invalid @enderror"
+                                                                               id="new_password" name="new_password" required>
+                                                                        @error('new_password')
+                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+
+                                                                    <div class="form-group mb-3">
+                                                                        <label for="new_password_confirmation">Confirm New Password</label>
+                                                                        <input type="password" class="form-control @error('new_password_confirmation') is-invalid @enderror"
+                                                                               id="new_password_confirmation" name="new_password_confirmation" required>
+                                                                        @error('new_password_confirmation')
+                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+
+                                                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+    // Get tab from URL query parameter or fragment
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabFromUrl = urlParams.get('tab');
+    const fragmentFromUrl = window.location.hash ? window.location.hash.substring(1) : null;
+
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    // Determine which tab to activate
+    let tabToActivate = null;
+
+    // Check for validation errors in the account-settings form
+    const hasPasswordErrors = document.querySelectorAll('#account-settings .invalid-feedback').length > 0;
+
+    if (hasPasswordErrors) {
+        // If there are password validation errors, activate the account-settings tab
+        tabToActivate = 'account-settings';
+    } else if (fragmentFromUrl) {
+        // If there's a fragment in the URL, use that
+        tabToActivate = fragmentFromUrl;
+    } else if (tabFromUrl) {
+        // If there's a tab parameter in the URL, use that
+        tabToActivate = tabFromUrl;
+    }
+
+    // Activate the determined tab
+    if (tabToActivate) {
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+
+        const targetPane = document.getElementById(tabToActivate);
+        const targetButton = document.querySelector(`[data-tab="${tabToActivate}"]`);
+
+        if (targetPane && targetButton) {
+            targetPane.classList.add('active');
+            targetButton.classList.add('active');
+        }
+    }
+
+    // Regular tab switching functionality
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+
+            button.classList.add('active');
+            document.getElementById(button.dataset.tab).classList.add('active');
+
+            // Optionally update URL fragment
+            window.history.replaceState(null, null, `#${button.dataset.tab}`);
+        });
+    });
+});
+                                    </script>
                                     <style>
                                         /* Tab Styles */
                                         .profile-tabs {

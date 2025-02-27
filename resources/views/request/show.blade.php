@@ -14,10 +14,12 @@
             height: 100vh;
             margin: 0;
         }
+
         img {
             max-width: 100%;
             max-height: 100vh;
         }
+
         body {
             height: auto;
         }
@@ -34,78 +36,90 @@
             <div class="card-header d-flex justify-content-between align-items-center" id="request-header">
                 <h5>Request #{{ $request->request_code }}</h5>
                 <div class="btn-group">
-                    @if($request->status !== 'pending' && $request->status !== 'pending-approve'&& $request->status !== 'rejected')
-                    <button  onclick="printImage()" id="btn-of-print" class="btn btn-info">
-                        <i class="fa fa-print"></i> Print Signed Document
-                    </button>
-                        <script>
-                            function printImage() {
-                            var printWindow = window.open('', '_blank', 'width=600,height=400');
-                            var img = document.getElementById('imageToPrint');
+                    @if (Auth::user()->hasRole(['o-admin', 'o-super-admin']))
+                        @if($request->status == 'pending-receive' || $request->status == 'approved')
+                            @if ($request->image !== null)
+                                <button onclick="printImage()" id="btn-of-print" class="btn btn-info">
+                                    <i class="fa fa-print"></i> Print Signed Document
+                                </button>
+                                <script>
+                                    function printImage() {
+                                        var printWindow = window.open('', '_blank', 'width=600,height=400');
+                                        var img = document.getElementById('imageToPrint');
 
-                            printWindow.document.write('<html><head><title>Print Image</title></head><body>');
-                            printWindow.document.write('<img src="' + img.src + '" alt="Image to Print">');
-                            printWindow.document.write('</body></html>');
-                            printWindow.document.close();
-                            printWindow.print();}
-                        </script>
-                    @endif
-                    @if($request->status === 'pending' || $request->status === 'pending-receive' ||
-                    Auth::user()->hasRole(['o-admin', 'o-super-admin']))
-                    <!-- Edit Button -->
-                    <a href="{{ route('asset-request.edit', $request->id) }}" class="btn btn-primary">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-
-                    @if($request->status === 'approved')
-                    <!-- Reject Button -->
-                    <form action="{{ route('asset-request.reject', $request->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="btn btn-warning">
-                            <i class="fa fa-times"></i> Reject
-                        </button>
-                    </form>
-                    @else
-                    <!-- Approve Button -->
-                    <form action="{{ route('asset-request.approve', $request->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-check"></i> Approve
-                        </button>
-                    </form>
+                                        printWindow.document.write('<html><head><title>Print Image</title></head><body>');
+                                        printWindow.document.write('<img src="' + img.src + '" alt="Image to Print">');
+                                        printWindow.document.write('</body></html>');
+                                        printWindow.document.close();
+                                        printWindow.print();}
+                                </script>
+                            @endif
+                        @endif
                     @endif
 
 
-                    <!-- Delete Button -->
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                    <!-- Delete Modal -->
-                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content alert alert-warning">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Delete Request</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+
+
+                    @if (Auth::user()->hasRole(['o-admin', 'o-super-admin']))
+
+
+                            @if($request->status === 'pending' || $request->status === 'pending-approve')
+                                <!-- Edit Button -->
+                                <a href="{{ route('asset-request.edit', $request->id) }}" class="btn btn-primary">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            @endif
+
+                                @if($request->status === 'approved')
+                                <!-- Reject Button -->
+                                <form action="{{ route('asset-request.reject', $request->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fa fa-times"></i> Reject
                                     </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you want to delete this request?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <form action="{{ route('asset-request.destroy', $request->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
+                                </form>
+                                @elseif($request->status === 'pending-approve' || $request->status === 'pending')
+                                <!-- Approve Button -->
+                                <form action="{{ route('asset-request.approve', $request->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                @endif
+
+
+                            <!-- Delete Button -->
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content alert alert-warning">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete Request</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this request?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <form action="{{ route('asset-request.destroy', $request->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+
                     @endif
                 </div>
             </div>
@@ -166,7 +180,16 @@
                         alt="Signed Document" class="img-fluid">
                 </div>
                 @endif
+
+                @if (Auth::user()->hasRole(['o-admin', 'o-super-admin']))
+
                 <a href="{{ route('asset-request.index') }}" type="submit" class="btn btn-info mb-2">Back</a>
+
+                @elseif(Auth::user()->hasRole(['o-manager']))
+                <a href="{{ route('manager.show' , ['manager' => Auth::user()->id]) }}?tab=list-of-req" type="submit"
+                    class="btn btn-info mb-2">Back</a>
+
+                @endif
 
             </div>
         </div>
@@ -176,7 +199,3 @@
 
 
 @endsection
-
-
-
-

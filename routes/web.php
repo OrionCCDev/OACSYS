@@ -85,8 +85,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // 'show' route allows managers as well
     Route::middleware(['role:o-hr|o-super-admin|o-admin|o-manager'])->group(function () {
-        Route::resource('manager', ManagerController::class)
-            ->only(['show']);
+    Route::resource('manager', ManagerController::class)
+        ->only(['show']);
+    Route::put('/password/update', [ManagerController::class, 'updatePW'])->name('password.Manager.update');
     Route::resource('/employees', EmployeeController::class)->only(['show']);
     Route::resource('/asset-request', AssetRequestController::class);
     Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
