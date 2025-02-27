@@ -8,8 +8,9 @@ use App\Models\Receive;
 use App\Models\SimCard;
 use App\Models\Employee;
 use App\Models\Clearance;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class ManagerController extends Controller
 {
@@ -52,6 +53,27 @@ class ManagerController extends Controller
     public function store(Request $request)
     {
         //
+    }
+    public function updatePW(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    $fail('The current password is incorrect.');
+                }
+            }],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'new_password_confirmation' => ['required'],
+        ]);
+        // Update password
+        Auth::user()->update([
+            'password' => Hash::make($validated['new_password']),
+        ]);
+
+        return redirect()
+            ->route('manager.show' , ['manager' => Auth::user()->id])
+            ->with('success', 'Password changed successfully!')
+            ->fragment('account-settings');
     }
 
     /**
