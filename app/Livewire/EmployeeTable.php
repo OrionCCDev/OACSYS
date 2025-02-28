@@ -14,6 +14,7 @@ class EmployeeTable extends Component
 
     #[Url(history: true)]
     public $search = '';
+    public $positionFilter = '';
 
     protected $paginationTheme = 'bootstrap';
     protected $queryString = [
@@ -31,22 +32,38 @@ class EmployeeTable extends Component
 
     public function render()
     {
-        if($this->search != ''){
-            $employees = Employee::query()
-                ->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('employee_id', 'like', '%' . $this->search . '%');
-                })
-                ->orderBy('updated_at', 'desc')
-                ->paginate(10);}else{
-            $employees = Employee::query()->orderBy('updated_at', 'desc')
-            ->paginate(10);
-        }
+
+        $query = Employee::query()
+        ->when($this->search, function($query) {
+            $query->where('name', 'like', '%'.$this->search.'%')
+                ->orWhere('employee_id', 'like', '%'.$this->search.'%');
+        })
+        ->when($this->positionFilter === 'manager', function($query) {
+            $query->whereHas('position', function($q) {
+                $q->where('name', 'like', '%manager%');
+            });
+        });
+
+            return view('livewire.employee-table', [
+                'employees' => $query->orderBy('updated_at', 'desc')->paginate(10)
+            ]);
+
+        // if($this->search != ''){
+        //     $employees = Employee::query()
+        //         ->where(function ($query) {
+        //             $query->where('name', 'like', '%' . $this->search . '%')
+        //                 ->orWhere('employee_id', 'like', '%' . $this->search . '%');
+        //         })
+        //         ->orderBy('updated_at', 'desc')
+        //         ->paginate(10);}else{
+        //     $employees = Employee::query()->orderBy('updated_at', 'desc')
+        //     ->paginate(10);
+        // }
 
 
 
-        return view('livewire.employee-table', [
-            'employees' => $employees,
-        ]);
+        // return view('livewire.employee-table', [
+        //     'employees' => $employees,
+        // ]);
     }
 }

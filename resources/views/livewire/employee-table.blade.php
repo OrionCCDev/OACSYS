@@ -28,7 +28,14 @@
                                                 <input type="text" wire:model.live="search" class="form-control" placeholder="Search employees...">
                                             </div>
                                         </div>
-
+                                        <div class="col-auto">
+                                            <div class="input-group mb-2">
+                                                <select wire:model.live="positionFilter" class="form-control">
+                                                    <option value="">All Positions</option>
+                                                    <option value="manager">Managers Only</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +94,7 @@
                                                                 data-target="#exampleModalCenter{{ $employee->id }}" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalCenter8">
                                                                 <i class="icon-trash"></i>
                                                                 </button>
-                                                                
+
                                                                 <a href="{{ route('deduction.showEmployeeDeduction' , ['id' => $employee->id ]) }}" class="btn btn-warning btn-sm">
                                                                     <i class="fa fa-money"></i>
                                                                 </a>
