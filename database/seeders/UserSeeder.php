@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     protected $initialUsers = [
         [
-            'id' => 'AhmedSayed',
+            'name' => 'AhmedSayed',
             'email' => 'a.sayed@it.orion',
             'password' => 'THEgh0$t',
             'image' => 'sayed.jpg',
