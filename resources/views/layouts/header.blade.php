@@ -77,7 +77,7 @@
                         <div class="media">
                             <div class="media-img-wrap">
                                 <div class="avatar" style="width: 55px !important; height: 55px !important;">
-                                    <img src="{{ asset('X-Files/Dash/imgs/' . Auth::user()->image) }}" alt="user"
+                                    <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . Auth::user()->image) }}" alt="user"
                                         class="avatar-img rounded-circle" style="object-fit: cover;
                                         object-position: top;">
                                 </div>
