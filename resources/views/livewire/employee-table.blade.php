@@ -78,7 +78,7 @@
                                                             @if ($employee->orion_email == null)
 
                                                             <span class="badge badge-danger">Not Assigned !</span>
-                                                            @elsea
+                                                            @else
 
                                                             <span class="badge badge-success">{{ $employee->orion_email }}</span>
                                                             @endif
