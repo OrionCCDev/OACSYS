@@ -79,7 +79,7 @@
 
                                                             <span class="badge badge-Danger">Not Assigned !</span>
                                                             @endif
-                                                            <span class="badge badge-success">{{ $sim->orion_email }}</span>
+                                                            <span class="badge badge-success">{{ $employee->orion_email }}</span>
                                                         </td>
                                                         {{-- <td>
                                                             {{ $employee->department?->name ?? 'Not Found' }}
