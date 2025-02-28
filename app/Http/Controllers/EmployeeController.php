@@ -364,7 +364,10 @@ class EmployeeController extends Controller
             }
         }
 
-        return to_route('employees.index')->with('success', 'Employee updated successfully');
+        return to_route('employees.index', [
+            'page' => $request->input('return_page'),
+            'positionFilter' => $request->input('return_filter')
+        ])->with('success', 'Employee updated successfully');
     }
 
     /**

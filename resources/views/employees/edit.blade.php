@@ -28,6 +28,8 @@
                                     action="{{ route('employees.update', $employee->id) }}" class="form-inline">
                                     @csrf
                                     @method('PUT')
+                                    <input type="hidden" name="return_page" value="{{ request()->get('page') }}">
+    <input type="hidden" name="return_filter" value="{{ request()->get('positionFilter') }}">
                                     <div class="row w-100">
                                         {{-- ---------------- --}}
                                         {{-- employee Orion Image --}}
@@ -304,7 +306,7 @@
                                     <div class="row mt-30">
                                         <div class="col-auto">
                                             <button type="submit" class="btn btn-primary mb-2">Save</button>
-                                            <a href="{{ route('employees.index') }}" type="button" class="btn btn-danger mb-2">Cancel</a>
+                                            <a href="{{ route('employees.index', ['page' => request()->get('page'), 'positionFilter' => request()->get('positionFilter')]) }}" type="button" class="btn btn-danger mb-2">Cancel</a>
                                         </div>
                                     </div>
                             </div>

@@ -18,6 +18,7 @@ class EmployeeTable extends Component
 
     protected $paginationTheme = 'bootstrap';
     protected $queryString = [
+        'positionFilter',
         'search' => ['except' => ''],
         'page' => ['except' => 1],
     ];

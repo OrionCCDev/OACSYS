@@ -94,7 +94,7 @@
                                                                 <a href="{{ route('employees.show' , $employee->id) }}" class="btn btn-sm btn-success" title="View Details">
                                                                     <i class="fa fa-eye"></i>
                                                                 </a>
-                                                                <a href="{{ route('employees.edit' , $employee->id) }}" class="btn btn-sm btn-info" title="Edit">
+                                                                <a href="{{ route('employees.edit', ['employee' => $employee->id, 'page' => request()->get('page'), 'positionFilter' => $positionFilter]) }}" class="btn btn-sm btn-info" title="Edit">
                                                                     <i class="fa fa-edit"></i>
                                                                 </a>
                                                                 <button  data-toggle="modal"
