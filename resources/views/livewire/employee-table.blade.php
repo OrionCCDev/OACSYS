@@ -49,7 +49,7 @@
                                                         <th>Img</th>
                                                         <th>ID</th>
                                                         <th>Name</th>
-                                                        <th>O-Mobile</th>
+                                                        <th>O-Email</th>
                                                         {{-- <th>Department</th> --}}
                                                         <th>Position</th>
                                                         <th>Manage</th>
@@ -72,9 +72,14 @@
                                                         <td>{{ $employee->employee_id }}</td>
                                                         <td>{{ $employee->name }}</td>
                                                         <td>
-                                                            @foreach ($employee->sim_card as $sim)
+                                                            {{-- @foreach ($employee->sim_card as $sim)
                                                             <span class="badge badge-success">{{ $sim->sim_number }}</span>
-                                                            @endforeach
+                                                            @endforeach --}}
+                                                            @if ($employee->orion_email == null)
+
+                                                            <span class="badge badge-Danger">Not Assigned !</span>
+                                                            @endif
+                                                            <span class="badge badge-success">{{ $sim->orion_email }}</span>
                                                         </td>
                                                         {{-- <td>
                                                             {{ $employee->department?->name ?? 'Not Found' }}
