@@ -43,6 +43,7 @@
                 </thead>
                 <tbody>
                     @foreach($requests as $request)
+
                     <tr>
                         <td>{{ $request->request_code }}</td>
                         <td>
@@ -159,118 +160,118 @@
         </div>
         @endif
     </div>
-    @if (in_array($request->status, ['approved']))
-        @foreach ($requests as $req )
-            <div class="modal fade" id="printModal{{ $req->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Request Details - {{ $req->request_code }}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+    @foreach ($requests as $req )
+    @if (in_array($req->status, ['approved']))
+        <div class="modal fade" id="printModal{{ $req->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Request Details - {{ $req->request_code }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="printArea{{ $req->id }}">
+                        <!-- Print Header -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="company-info">
+                                <img class="img-fluid invoice-brand-img d-block mb-20" width="250"
+                                src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
+                                <p>Asset Request Form</p>
+                            </div>
+                            <div class="request-info text-right">
+
+                                <p><strong>Date:</strong> {{ $req->created_at->format('d/m/Y') }}</p>
+                            </div>
                         </div>
-                        <div class="modal-body" id="printArea{{ $req->id }}">
-                            <!-- Print Header -->
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div class="company-info">
-                                    <img class="img-fluid invoice-brand-img d-block mb-20" width="250"
-                                    src="{{ asset('X-Files/Dash/imgs/logo-blue.webp') }}" alt="brand">
-                                    <p>Asset Request Form</p>
-                                </div>
-                                <div class="request-info text-right">
 
-                                    <p><strong>Date:</strong> {{ $req->created_at->format('d/m/Y') }}</p>
-                                </div>
-                            </div>
-
-                            <!-- Requester Info -->
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Requester Information</h5>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong>Name:</strong> {{ $req->employee->name }}</p>
-                                            <p><strong>Position:</strong> {{ $req->employee->position->name }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{-- <p><strong>Status:</strong> {{ $req->status }}</p> --}}
-                                            <p><strong>Department:</strong> {{ $req->employee->department->name }}</p>
-                                        </div>
+                        <!-- Requester Info -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Requester Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Name:</strong> {{ $req->employee->name }}</p>
+                                        <p><strong>Position:</strong> {{ $req->employee->position->name }}</p>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Requested Items -->
-                            <div class="card" style="max-width: 100%">
-                                <div class="card-body">
-                                    <h5 class="card-title">Requested Items</h5>
-                                    <table class="table table-bordered"  style="max-width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th>Item Type</th>
-                                                <th>Quantity</th>
-                                                <th>For</th>
-                                                <th>Receiver</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($req->items as $item)
-                                            <tr>
-                                                <td>{{ $item->item_type }}</td>
-                                                <td>{{ $item->quantity }}</td>
-                                                <td>{{ $item->request_for_type }}</td>
-                                                <td>{{ $item->requested_for_name }}<br>
-                                                    <small>{{ $item->requested_for_position }}</small>
-                                                </td>
-
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Signatures -->
-                            <div class="row mt-5">
-
-                                <div class="col-6 text-center">
-                                    <div class="signature-line">
-                                        <p>____________________</p>
-                                        <p>IT Department Approval</p>
-                                    </div>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <div class="signature-line">
-                                        <p>____________________</p>
-                                        <p>Manager Approval</p>
+                                    <div class="col-md-6">
+                                        {{-- <p><strong>Status:</strong> {{ $req->status }}</p> --}}
+                                        <p><strong>Department:</strong> {{ $req->employee->department->name }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="printRequest({{ $req->id }})">Print</button>
+
+                        <!-- Requested Items -->
+                        <div class="card" style="max-width: 100%">
+                            <div class="card-body">
+                                <h5 class="card-title">Requested Items</h5>
+                                <table class="table table-bordered"  style="max-width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Type</th>
+                                            <th>Quantity</th>
+                                            <th>For</th>
+                                            <th>Receiver</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($req->items as $item)
+                                        <tr>
+                                            <td>{{ $item->item_type }}</td>
+                                            <td>{{ $item->quantity }}</td>
+                                            <td>{{ $item->request_for_type }}</td>
+                                            <td>{{ $item->requested_for_name }}<br>
+                                                <small>{{ $item->requested_for_position }}</small>
+                                            </td>
+
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+
+                        <!-- Signatures -->
+                        <div class="row mt-5">
+
+                            <div class="col-6 text-center">
+                                <div class="signature-line">
+                                    <p>____________________</p>
+                                    <p>IT Department Approval</p>
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div class="signature-line">
+                                    <p>____________________</p>
+                                    <p>Manager Approval</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="printRequest({{ $req->id }})">Print</button>
                     </div>
                 </div>
             </div>
-            <script>
-                function printRequest(requestId) {
-                    const printContent = document.getElementById(`printArea${requestId}`);
-                    const originalContents = document.body.innerHTML;
+        </div>
+        <script>
+            function printRequest(requestId) {
+                const printContent = document.getElementById(`printArea${requestId}`);
+                const originalContents = document.body.innerHTML;
 
-                    document.body.innerHTML = printContent.innerHTML;
-                    window.print();
-                    document.body.innerHTML = originalContents;
+                document.body.innerHTML = printContent.innerHTML;
+                window.print();
+                document.body.innerHTML = originalContents;
 
-                    // Reinitialize any necessary scripts/events after restoring content
-                    location.reload();
-                }
-            </script>
-        @endforeach
-    @endif
+                // Reinitialize any necessary scripts/events after restoring content
+                location.reload();
+            }
+        </script>
+@endif
+    @endforeach
     <style>
         .actions {
             white-space: nowrap;
