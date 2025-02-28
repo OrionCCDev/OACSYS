@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
         foreach ($managers as $manager) {
             $user = User::create([
                 'name' => $manager->name,
-                'email' => $manager->email ?? 'manager@orion.com',
+                'email' => $manager->orion_email ?? 'manager@orion.com',
                 'password' => bcrypt('manager@' . $manager->id),
                 'image' => $manager->profile_image,
                 'orion_role_lvl' => 'o-manager',
