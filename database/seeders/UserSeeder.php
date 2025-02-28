@@ -50,6 +50,8 @@ class UserSeeder extends Seeder
                 'orion_role_lvl' => 'o-manager',
                 'employee_profile_id' => $manager->id
             ]);
+            $user->addRole($user['orion_role_lvl']);
+
         }
             foreach ($this->initialUsers as $userData) {
             $user =  User::updateOrCreate(
