@@ -77,9 +77,11 @@
                                                             @endforeach --}}
                                                             @if ($employee->orion_email == null)
 
-                                                            <span class="badge badge-Danger">Not Assigned !</span>
-                                                            @endif
+                                                            <span class="badge badge-danger">Not Assigned !</span>
+                                                            @elsea
+
                                                             <span class="badge badge-success">{{ $employee->orion_email }}</span>
+                                                            @endif
                                                         </td>
                                                         {{-- <td>
                                                             {{ $employee->department?->name ?? 'Not Found' }}
