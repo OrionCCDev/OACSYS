@@ -124,6 +124,12 @@
                                     {{ $data['clientEmployee']->name }}
                                     @endif
                                 </p>
+                                @if ($data['employee'])
+                                    <p><strong>ID:</strong>
+                                    {{ $data['employee']->employee_id }}
+
+                                @endif
+                                </p>
                             </div>
                         </div>
                     </div>
