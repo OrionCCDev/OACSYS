@@ -107,7 +107,7 @@ class AssetRequestController extends Controller
                 'requested_for_id' => $requestData['requested_for_id'],
                 'requested_for_name' => $requestData['requested_for_name'],
                 'requested_for_position' => $requestData['requested_for_position'],
-                'quantity' => $requestData['quantity'],
+                'quantity' => $requestData['quantity'] ?? 1,
                 'notes' => $requestData['notes'],
             ]);
 
