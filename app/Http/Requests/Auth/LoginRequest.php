@@ -49,11 +49,6 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-
-        if (Auth::user()->orion_role_lvl == 'o-manager') {
-            redirect()->route('manager.show', ['manager' => Auth::user()->id]);
-        }
-
         RateLimiter::clear($this->throttleKey());
     }
 

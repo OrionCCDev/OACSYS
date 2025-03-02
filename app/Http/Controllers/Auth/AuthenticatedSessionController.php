@@ -27,7 +27,9 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        if (Auth::user()->orion_role_lvl == 'o-manager') {
+         return  redirect()->route('manager.show', ['manager' => Auth::user()->id]);
+        }
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
