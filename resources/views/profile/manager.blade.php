@@ -2,17 +2,20 @@
 @section('custom_css')
 <style>
     .customize-thumbnails-gallery {
-    display: flex;
-    justify-content: space-between;
+        display: flex;
+        justify-content: space-between;
     }
-    .customize-thumbnails-gallery a img{
-    width: 250px;
-    height: 250px;
+
+    .customize-thumbnails-gallery a img {
+        width: 250px;
+        height: 250px;
     }
 </style>
 @endsection
 @section('content')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/css/lightgallery.min.css" integrity="sha512-QMCloGTsG2vNSnHcsxYTapI6pFQNnUP6yNizuLL5Wh3ha6AraI6HrJ3ABBaw6SIUHqlSTPQDs/SydiR98oTeaQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.1/css/lightgallery.min.css"
+    integrity="sha512-QMCloGTsG2vNSnHcsxYTapI6pFQNnUP6yNizuLL5Wh3ha6AraI6HrJ3ABBaw6SIUHqlSTPQDs/SydiR98oTeaQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="hk-pg-wrapper">
     <div class="container-fluid">
@@ -70,7 +73,8 @@
                                             <div
                                                 class="d-flex align-items-center justify-content-between position-relative">
                                                 <div>
-                                                    <span class="d-block display-5 font-weight-400 text-dark">{{ $manager?->receives?->count() ?? 0 }}</span>
+                                                    <span class="d-block display-5 font-weight-400 text-dark">{{
+                                                        $manager?->receives?->count() ?? 0 }}</span>
                                                 </div>
                                                 <div class="position-absolute r-0">
                                                     {{-- عدد الموظقيين في المشروع --}}
@@ -136,19 +140,31 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6 offset-md-3">
                                             <div class="card card-profile-feed">
-                                                <div class="card-body" style="background-color:#10516a;border-radius: 10px;">
+                                                <div class="card-body"
+                                                    style="background-color:#10516a;border-radius: 10px;">
                                                     <div class="card">
                                                         <div class="position-relative" style="position: relative">
-                                                            <img class="card-img-top d-block" src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$manager->profile_image) }}" alt="Card image cap">
+                                                            <img class="card-img-top d-block"
+                                                                src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$manager->profile_image) }}"
+                                                                alt="Card image cap">
                                                             @if ($manager->resign_date != null)
-                                                                <div class="resigned-sign" style="position: absolute;top: 50%;left: 25%;z-index: 999;">
-                                                                    <img width="280" src="{{ asset('X-Files/Dash/imgs/resigned.png') }}" alt="">
-                                                                </div>
+                                                            <div class="resigned-sign"
+                                                                style="position: absolute;top: 50%;left: 25%;z-index: 999;">
+                                                                <img width="280"
+                                                                    src="{{ asset('X-Files/Dash/imgs/resigned.png') }}"
+                                                                    alt="">
+                                                            </div>
                                                             @endif
                                                         </div>
                                                         <div class="card-body">
-                                                            <span style="font-size: 20px" class=" badge badge-soft-success mt-15 mr-10"><h5>{{ $manager->department->name }} - </h5></span>
-                                                            <span style="font-size: 20px" class="badge badge-soft-warning mt-15 mr-10"><h5>{{ $manager->position->name }}</h5></span>
+                                                            <span style="font-size: 20px"
+                                                                class=" badge badge-soft-success mt-15 mr-10">
+                                                                <h5>{{ $manager->department->name }} - </h5>
+                                                            </span>
+                                                            <span style="font-size: 20px"
+                                                                class="badge badge-soft-warning mt-15 mr-10">
+                                                                <h5>{{ $manager->position->name }}</h5>
+                                                            </span>
 
                                                         </div>
                                                     </div>
@@ -197,11 +213,14 @@
                                                         <div class="profile-card">
                                                             <div class="profile-stats">
                                                                 <div class="stat-box">
-                                                                    <div class="stat-value">Years: {{ $diff->y }}, Months: {{ $diff->m }}, Days: {{ $diff->d }}</div>
+                                                                    <div class="stat-value">Years: {{ $diff->y }},
+                                                                        Months: {{ $diff->m }}, Days: {{ $diff->d }}
+                                                                    </div>
                                                                     <div class="stat-label">Working For</div>
                                                                 </div>
                                                                 <div class="stat-box">
-                                                                    <div class="stat-value">{{ $manager->department->name }}</div>
+                                                                    <div class="stat-value">{{
+                                                                        $manager->department->name }}</div>
                                                                     <div class="stat-label">Department</div>
                                                                 </div>
                                                             </div>
@@ -222,18 +241,21 @@
                                                                     <span class="info-label">Orion Mobile:</span>
                                                                     <span>
                                                                         @if ($manager->sim_card->count() > 0)
-                                                                            @foreach ($manager->sim_card as $sim)
-                                                                                <span class="badge badge-success">{{ $sim->sim_number }}</span>
-                                                                            @endforeach
+                                                                        @foreach ($manager->sim_card as $sim)
+                                                                        <span class="badge badge-success">{{
+                                                                            $sim->sim_number }}</span>
+                                                                        @endforeach
                                                                         @else
-                                                                            <span class="badge badge-danger">No Sim Found</span>
+                                                                        <span class="badge badge-danger">No Sim
+                                                                            Found</span>
                                                                         @endif
                                                                     </span>
                                                                 </li>
                                                                 <li class="info-item">
                                                                     <i class="ion ion-md-mail"></i>
                                                                     <span class="info-label">Orion Email:</span>
-                                                                    <span>{{ $manager->orion_email ?? 'No Email Assigned' }}</span>
+                                                                    <span>{{ $manager->orion_email ?? 'No Email
+                                                                        Assigned' }}</span>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -243,30 +265,34 @@
                                                     <div class="tab-pane" id="list-of-devices">
                                                         <div class="profile-card">
                                                             <div class="card-header">
-                                                                <h3>Devices and Items <span class="badge badge-success">{{ $manager->devices->count() }}</span></h3>
+                                                                <h3>Devices and Items <span
+                                                                        class="badge badge-success">{{
+                                                                        $manager->devices->count() }}</span></h3>
                                                             </div>
                                                             @if ($manager->devices->count() > 0)
-                                                                <div class="device-grid">
-                                                                    @foreach ($manager->devices as $device)
-                                                                        <div class="device-card">
-                                                                            <img src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}"
-                                                                                 alt="{{ $device->device_name }}"
-                                                                                 class="device-image">
-                                                                            <div class="device-name">{{ $device->device_name }}</div>
-                                                                        </div>
-                                                                    @endforeach
+                                                            <div class="device-grid">
+                                                                @foreach ($manager->devices as $device)
+                                                                <div class="device-card">
+                                                                    <img src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}"
+                                                                        alt="{{ $device->device_name }}"
+                                                                        class="device-image">
+                                                                    <div class="device-name">{{ $device->device_name }}
+                                                                    </div>
                                                                 </div>
+                                                                @endforeach
+                                                            </div>
                                                             @else
-                                                                <div class="p-4 text-center text-gray-500">
-                                                                    No devices found
-                                                                </div>
+                                                            <div class="p-4 text-center text-gray-500">
+                                                                No devices found
+                                                            </div>
                                                             @endif
                                                         </div>
                                                     </div>
 
                                                     {{-- Employees Tab --}}
                                                     <div class="tab-pane" id="list-of-emps">
-                                                        @livewire('employee-list-on-manager-view', ['managerId' => $manager->id])
+                                                        @livewire('employee-list-on-manager-view', ['managerId' =>
+                                                        $manager->id])
                                                     </div>
 
                                                     {{-- Requests Tab --}}
@@ -281,43 +307,57 @@
                                                             </div>
                                                             <div class="card-body">
                                                                 @if(session('success'))
-                                                                    <div class="alert alert-success">
-                                                                        {{ session('success') }}
-                                                                    </div>
+                                                                <div class="alert alert-success">
+                                                                    {{ session('success') }}
+                                                                </div>
                                                                 @endif
 
-                                                                <form method="POST" action="{{ route('password.Manager.update') }}" class="p-4">
+                                                                <form method="POST"
+                                                                    action="{{ route('password.Manager.update') }}"
+                                                                    class="p-4">
                                                                     @csrf
                                                                     @method('PUT')
 
                                                                     <div class="form-group mb-3">
-                                                                        <label for="current_password">Current Password</label>
-                                                                        <input type="password" class="form-control @error('current_password') is-invalid @enderror"
-                                                                               id="current_password" name="current_password" required>
+                                                                        <label for="current_password">Current
+                                                                            Password</label>
+                                                                        <input type="password"
+                                                                            class="form-control @error('current_password') is-invalid @enderror"
+                                                                            id="current_password"
+                                                                            name="current_password" required>
                                                                         @error('current_password')
-                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        <div class="invalid-feedback">{{ $message }}
+                                                                        </div>
                                                                         @enderror
                                                                     </div>
 
                                                                     <div class="form-group mb-3">
                                                                         <label for="new_password">New Password</label>
-                                                                        <input type="password" class="form-control @error('new_password') is-invalid @enderror"
-                                                                               id="new_password" name="new_password" required>
+                                                                        <input type="password"
+                                                                            class="form-control @error('new_password') is-invalid @enderror"
+                                                                            id="new_password" name="new_password"
+                                                                            required>
                                                                         @error('new_password')
-                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        <div class="invalid-feedback">{{ $message }}
+                                                                        </div>
                                                                         @enderror
                                                                     </div>
 
                                                                     <div class="form-group mb-3">
-                                                                        <label for="new_password_confirmation">Confirm New Password</label>
-                                                                        <input type="password" class="form-control @error('new_password_confirmation') is-invalid @enderror"
-                                                                               id="new_password_confirmation" name="new_password_confirmation" required>
+                                                                        <label for="new_password_confirmation">Confirm
+                                                                            New Password</label>
+                                                                        <input type="password"
+                                                                            class="form-control @error('new_password_confirmation') is-invalid @enderror"
+                                                                            id="new_password_confirmation"
+                                                                            name="new_password_confirmation" required>
                                                                         @error('new_password_confirmation')
-                                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                                        <div class="invalid-feedback">{{ $message }}
+                                                                        </div>
                                                                         @enderror
                                                                     </div>
 
-                                                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                                                    <button type="submit" class="btn btn-primary">Update
+                                                                        Password</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -328,59 +368,59 @@
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
-    // Get tab from URL query parameter or fragment
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabFromUrl = urlParams.get('tab');
-    const fragmentFromUrl = window.location.hash ? window.location.hash.substring(1) : null;
+                                        // Get tab from URL query parameter or fragment
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        const tabFromUrl = urlParams.get('tab');
+                                        const fragmentFromUrl = window.location.hash ? window.location.hash.substring(1) : null;
 
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabPanes = document.querySelectorAll('.tab-pane');
+                                        const tabButtons = document.querySelectorAll('.tab-button');
+                                        const tabPanes = document.querySelectorAll('.tab-pane');
 
-    // Determine which tab to activate
-    let tabToActivate = null;
+                                        // Determine which tab to activate
+                                        let tabToActivate = null;
 
-    // Check for validation errors in the account-settings form
-    const hasPasswordErrors = document.querySelectorAll('#account-settings .invalid-feedback').length > 0;
+                                        // Check for validation errors in the account-settings form
+                                        const hasPasswordErrors = document.querySelectorAll('#account-settings .invalid-feedback').length > 0;
 
-    if (hasPasswordErrors) {
-        // If there are password validation errors, activate the account-settings tab
-        tabToActivate = 'account-settings';
-    } else if (fragmentFromUrl) {
-        // If there's a fragment in the URL, use that
-        tabToActivate = fragmentFromUrl;
-    } else if (tabFromUrl) {
-        // If there's a tab parameter in the URL, use that
-        tabToActivate = tabFromUrl;
-    }
+                                        if (hasPasswordErrors) {
+                                            // If there are password validation errors, activate the account-settings tab
+                                            tabToActivate = 'account-settings';
+                                        } else if (fragmentFromUrl) {
+                                            // If there's a fragment in the URL, use that
+                                            tabToActivate = fragmentFromUrl;
+                                        } else if (tabFromUrl) {
+                                            // If there's a tab parameter in the URL, use that
+                                            tabToActivate = tabFromUrl;
+                                        }
 
-    // Activate the determined tab
-    if (tabToActivate) {
-        tabPanes.forEach(pane => pane.classList.remove('active'));
-        tabButtons.forEach(btn => btn.classList.remove('active'));
+                                        // Activate the determined tab
+                                        if (tabToActivate) {
+                                            tabPanes.forEach(pane => pane.classList.remove('active'));
+                                            tabButtons.forEach(btn => btn.classList.remove('active'));
 
-        const targetPane = document.getElementById(tabToActivate);
-        const targetButton = document.querySelector(`[data-tab="${tabToActivate}"]`);
+                                            const targetPane = document.getElementById(tabToActivate);
+                                            const targetButton = document.querySelector(`[data-tab="${tabToActivate}"]`);
 
-        if (targetPane && targetButton) {
-            targetPane.classList.add('active');
-            targetButton.classList.add('active');
-        }
-    }
+                                            if (targetPane && targetButton) {
+                                                targetPane.classList.add('active');
+                                                targetButton.classList.add('active');
+                                            }
+                                        }
 
-    // Regular tab switching functionality
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabPanes.forEach(pane => pane.classList.remove('active'));
+                                        // Regular tab switching functionality
+                                        tabButtons.forEach(button => {
+                                            button.addEventListener('click', () => {
+                                                tabButtons.forEach(btn => btn.classList.remove('active'));
+                                                tabPanes.forEach(pane => pane.classList.remove('active'));
 
-            button.classList.add('active');
-            document.getElementById(button.dataset.tab).classList.add('active');
+                                                button.classList.add('active');
+                                                document.getElementById(button.dataset.tab).classList.add('active');
 
-            // Optionally update URL fragment
-            window.history.replaceState(null, null, `#${button.dataset.tab}`);
-        });
-    });
-});
+                                                // Optionally update URL fragment
+                                                window.history.replaceState(null, null, `#${button.dataset.tab}`);
+                                            });
+                                        });
+                                    });
                                     </script>
                                     <style>
                                         /* Tab Styles */
@@ -432,7 +472,7 @@
                                         .profile-card {
                                             background: white;
                                             border-radius: 0.5rem;
-                                            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                                             margin-bottom: 1.5rem;
                                         }
 
@@ -607,9 +647,286 @@
                                                 padding: 1rem;
                                             }
                                         }
-                                        </style>
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function() {
+                                        /* Base styles for the profile tabs */
+.profile-tabs {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* Tab navigation styling */
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tab-nav li {
+  margin-bottom: -1px;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  background: none;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab-button i {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.tab-button.active {
+  color: #007bff;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.tab-button:hover:not(.active) {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-color: transparent;
+}
+
+/* Tab content styling */
+.tab-content {
+  padding: 1rem 0;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Profile card styling */
+.profile-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+/* Profile stats */
+.profile-stats {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-box {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  min-width: 120px;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+/* Info list */
+.info-list {
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+
+.info-item {
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item i {
+  width: 2rem;
+  font-size: 1.25rem;
+  color: #007bff;
+}
+
+.info-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  min-width: 100px;
+}
+
+/* Device grid styling */
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.device-card {
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.device-card:hover {
+  transform: translateY(-5px);
+}
+
+.device-image {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  background-color: #fff;
+  padding: 0.5rem;
+}
+
+.device-name {
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* Responsive styles */
+@media (max-width: 991.98px) {
+  .profile-stats {
+    flex-direction: column;
+  }
+
+  .stat-box {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tab-nav {
+    flex-direction: column;
+    border-bottom: none;
+  }
+
+  .tab-nav li {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .tab-button {
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+    justify-content: flex-start;
+  }
+
+  .tab-button.active {
+    border-color: #007bff;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-item i {
+    margin-bottom: 0.5rem;
+  }
+
+  .info-label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .device-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .stat-box {
+    min-width: 100%;
+  }
+
+  .device-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+                                    </style>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
                                                 // Tab switching functionality
                                                 const tabButtons = document.querySelectorAll('.tab-button');
                                                 const tabPanes = document.querySelectorAll('.tab-pane');
@@ -626,16 +943,27 @@
                                                     });
                                                 });
                                             });
-                                            </script>
+                                    </script>
                                     <div class="row mt-30">
                                         <div class="col-auto">
 
-                                            {{-- <a href="{{ route('employees.index') }}" style="display: inline-flex;align-items:center;" class="btn  mb-2 btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-left btn-lg">
+                                            {{-- <a href="{{ route('employees.index') }}"
+                                                style="display: inline-flex;align-items:center;"
+                                                class="btn  mb-2 btn-gradient-danger btn-wth-icon icon-wthot-bg btn-rounded icon-left btn-lg">
                                                 <i class="icon-logout"></i>
                                                 <span class="btn-text">Back</span>
                                             </a>
-                                            <a href="{{ route('employees.edit' , $manager->id) }}" class="btn mb-2 btn-gradient-bunting btn-wth-icon icon-wthot-bg btn-rounded icon-right btn-lg">
-                                                <span class="btn-text">Edit</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span> </span>
+                                            <a href="{{ route('employees.edit' , $manager->id) }}"
+                                                class="btn mb-2 btn-gradient-bunting btn-wth-icon icon-wthot-bg btn-rounded icon-right btn-lg">
+                                                <span class="btn-text">Edit</span> <span class="icon-label"><span
+                                                        class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg"
+                                                            width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="feather feather-arrow-right">
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                                        </svg></span> </span>
                                             </a> --}}
 
                                         </div>
