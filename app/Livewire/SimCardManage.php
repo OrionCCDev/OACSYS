@@ -10,10 +10,11 @@ use Livewire\Attributes\Rule;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SimCardsImport;
-
+use App\Exports\SimCardsExport;
 class SimCardManage extends Component
 {
     use WithPagination , WithFileUploads;
+    
     protected $paginationTheme = 'bootstrap';
     public $SimCard_number;
     public $sim_provider;
@@ -90,6 +91,12 @@ class SimCardManage extends Component
         $this->edtId = null;
         $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' , 'edtStatus']);
     }
+
+    public function exportSimCards()
+    {
+        return Excel::download(new SimCardsExport, 'simcards_' . now()->format('Y-m-d_H-i-s') . '.csv');
+    }
+
     public function update( SimCard $sim)
     {
 
