@@ -5,6 +5,10 @@
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">SimCards Management</h2>
                 {{-- <p>Questions about onboarding lead data? <a href="#">Learn more.</a></p> --}}
+
+                <button wire:click="exportSimCards" class="btn btn-success">
+                    <i class="icon-cloud-download"></i> Export to CSV
+                </button>
             </div>
         </div>
 
