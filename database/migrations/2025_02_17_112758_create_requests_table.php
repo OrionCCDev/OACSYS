@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->enum('status' , ['pending', 'pending-approve' , 'approved', 'pending-receive' , 'rejected']); // pending, approved, rejected
+            $table->boolean('is_read')->nullable();
             // $table->text('notes')->nullable();
             $table->timestamps();
         });

@@ -40,6 +40,39 @@
         .hk-wrapper.hk-vertical-nav .hk-nav.hk-nav-dark {
             background-color: #114e67 !important;
         }
+        .dropdown-notifications .badge-indicator {
+        position: absolute;
+        top: 5px;
+        right: 2px;
+        font-size: 20px;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .notification-dropdown {
+        width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .notifications-wrap {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+    .notifications-text {
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+    .notifications-time {
+        font-size: 12px;
+        color: #6c757d;
+    }
     </style>
 </head>
 
@@ -64,7 +97,47 @@
                     height="85px" alt="brand" />
             </a>
             <ul class="navbar-nav hk-navbar-content">
+                <li class="nav-item dropdown dropdown-notifications">
+                    <a class="nav-link dropdown-toggle no-caret d-flex" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ asset('X-Files/Dash/imgs/icons/bell.png') }}" width="60" alt="" srcset="">
+                        @if(App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() > 0)
+                            <span class="badge badge-danger badge-indicator" style="position: absolute; top: 0; right: 0;">
+                                {{ App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() }}
+                            </span>
+                        @endif
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right notification-dropdown" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                        <h6 class="dropdown-header">Notifications</h6>
+                        <div class="notifications-wrap">
+                            @php
+                                $latestRequests = App\Models\AssetRequest::where('is_read', false)->latest()->take(5)->get();
+                            @endphp
 
+                            @if($latestRequests->count() > 0)
+                                @foreach($latestRequests as $notification)
+                                    <a href="{{ route('asset-request.show', $notification->id) }}" class="dropdown-item">
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <div class="notifications-text">New asset request from <span class="text-dark text-capitalize">{{ $notification->employee->name }}</span></div>
+                                                <div class="notifications-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                @endforeach
+                            @else
+                                <div class="dropdown-item">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <div class="notifications-text">No new notifications</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <a href="{{ route('asset-request.index') }}" class="dropdown-item text-center">View all notifications</a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
                     <a href="{{ route('dashboard') }}">
                         <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
