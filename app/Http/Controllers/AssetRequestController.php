@@ -80,6 +80,7 @@ class AssetRequestController extends Controller
             'employee_id' => $employee_id,
             'request_code' => $request->request_code,
             'status' => 'pending',
+            'is_read' => false,
         ]);
 
         foreach ($requests as $requestData) {
@@ -127,6 +128,7 @@ class AssetRequestController extends Controller
     public function show(string $id)
     {
         $request = AssetRequest::with(['employee.position', 'employee.department', 'items'])->findOrFail($id);
+        $request->update(['is_read' => true]);
         return view('request.show', compact('request'));
 
     }
@@ -171,6 +173,10 @@ class AssetRequestController extends Controller
     //     $request->delete();
     //     return redirect()->route('asset-request.index')->with('success', 'Request deleted successfully!');
     // }
+    public static function getUnreadRequestsCount()
+    {
+        return AssetRequest::where('is_read', false)->count();
+    }
 
     public function destroy($id)
     {
