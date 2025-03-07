@@ -88,7 +88,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::resource('manager', ManagerController::class)
         ->only(['show']);
     Route::put('/password/update', [ManagerController::class, 'updatePW'])->name('password.Manager.update');
-    Route::resource('/employees', EmployeeController::class)->only(['show']);
+    Route::resource('/employees', EmployeeController::class);
     Route::resource('/asset-request', AssetRequestController::class);
     Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
     Route::patch('/asset-request/{id}/approve', [AssetRequestController::class, 'approve'])->name('asset-request.approve');
