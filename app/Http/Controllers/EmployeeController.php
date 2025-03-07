@@ -105,6 +105,8 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+
+
         $lastID = Employee::orderByRaw('CAST(employee_id AS UNSIGNED) DESC')
             ->value('employee_id');
 
