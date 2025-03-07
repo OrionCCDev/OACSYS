@@ -9,6 +9,9 @@
                 <button wire:click="exportSimCards" class="btn btn-success">
                     <i class="icon-cloud-download"></i> Export to CSV
                 </button>
+                <a href="{{ route('simCard.create') }}" class="btn btn-primary">
+                    <i class="icon-link"></i> Assign SimCard
+                </a>
             </div>
         </div>
 
