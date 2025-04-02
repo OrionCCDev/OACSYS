@@ -177,6 +177,10 @@ class AssetRequestController extends Controller
     {
         return AssetRequest::where('is_read', false)->count();
     }
+    public static function getPendingRequestsCount()
+    {
+        return AssetRequest::whereIn('status', ['pending', 'pending-approve', 'pending-receive'])->count();
+    }
 
     public function destroy($id)
     {
