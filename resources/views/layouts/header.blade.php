@@ -73,6 +73,19 @@
         font-size: 12px;
         color: #6c757d;
     }
+
+    .notification-number-requests {
+
+
+            animation: flash 1s infinite;
+
+        }
+
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 
@@ -96,83 +109,99 @@
                 <img class="brand-img d-inline-block" src="{{ asset('X-Files/Dash/logo-white.webp') }}" width="115px"
                     height="85px" alt="brand" />
             </a>
-            <ul class="navbar-nav hk-navbar-content">
-                <li class="nav-item dropdown dropdown-notifications">
-                    <a class="nav-link dropdown-toggle no-caret d-flex" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset('X-Files/Dash/imgs/icons/bell.png') }}" width="60" alt="" srcset="">
-                        @if(App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() > 0)
-                            <span class="badge badge-danger badge-indicator" style="position: absolute; top: 0; right: 0;">
-                                {{ App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() }}
-                            </span>
-                        @endif
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right notification-dropdown" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                        <h6 class="dropdown-header">Notifications</h6>
-                        <div class="notifications-wrap">
-                            @php
-                                $latestRequests = App\Models\AssetRequest::where('is_read', false)->latest()->take(5)->get();
-                            @endphp
+            @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin'))
+                <ul class="navbar-nav hk-navbar-content">
 
-                            @if($latestRequests->count() > 0)
-                                @foreach($latestRequests as $notification)
-                                    <a href="{{ route('asset-request.show', $notification->id) }}" class="dropdown-item">
+                    <li class="nav-item dropdown dropdown-notifications">
+                        <a class="nav-link dropdown-toggle no-caret d-flex" href="{{ route('asset-request.index') }}">
+                            <img src="{{ asset('X-Files/Dash/imgs/icons/pending-tasks.png') }}" width="60" alt="" srcset="">
+                            @if(App\Http\Controllers\AssetRequestController::getPendingRequestsCount() > 0)
+                                <span class="badge badge-danger badge-indicator notification-number-requests" style="position: absolute; top: 0; right: 0;">
+                                    {{ App\Http\Controllers\AssetRequestController::getPendingRequestsCount() }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown dropdown-notifications">
+                        <a class="nav-link dropdown-toggle no-caret d-flex" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ asset('X-Files/Dash/imgs/icons/bell.png') }}" width="60" alt="" srcset="">
+                            @if(App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() > 0)
+                                <span class="badge badge-danger badge-indicator" style="position: absolute; top: 0; right: 0;">
+                                    {{ App\Http\Controllers\AssetRequestController::getUnreadRequestsCount() }}
+                                </span>
+                            @endif
+                        </a>
+
+
+                        <div class="dropdown-menu dropdown-menu-right notification-dropdown" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                            <h6 class="dropdown-header">Notifications</h6>
+                            <div class="notifications-wrap">
+                                @php
+                                    $latestRequests = App\Models\AssetRequest::where('is_read', false)->latest()->take(5)->get();
+                                @endphp
+
+                                @if($latestRequests->count() > 0)
+                                    @foreach($latestRequests as $notification)
+                                        <a href="{{ route('asset-request.show', $notification->id) }}" class="dropdown-item">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="notifications-text">New asset request from <span class="text-dark text-capitalize">{{ $notification->employee->name }}</span></div>
+                                                    <div class="notifications-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                    @endforeach
+                                @else
+                                    <div class="dropdown-item">
                                         <div class="media">
                                             <div class="media-body">
-                                                <div class="notifications-text">New asset request from <span class="text-dark text-capitalize">{{ $notification->employee->name }}</span></div>
-                                                <div class="notifications-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                                <div class="notifications-text">No new notifications</div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                @endforeach
-                            @else
-                                <div class="dropdown-item">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <div class="notifications-text">No new notifications</div>
-                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
-                        <a href="{{ route('asset-request.index') }}" class="dropdown-item text-center">View all notifications</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
-                    <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
-                    </a>
-                    <a href="{{ url('https://www.orioncc.com/') }}" target="_blank" >
-                        <img src="{{ asset('X-Files/Dash/imgs/icons/world-wide-web.png') }}" width="75" height="75" alt=""  style="padding:5px 5px;" >
-                    </a>
-                    <a class="nav-link dropdown-toggle no-caret"  style="padding:5px 5px;"  href="#" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <div class="media">
-                            <div class="media-img-wrap">
-                                <div class="avatar" style="width: 55px !important; height: 55px !important;">
-                                    <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . Auth::user()->image) }}" alt="user"
-                                        class="avatar-img rounded-circle" style="object-fit: cover;
-                                        object-position: top;">
-                                </div>
-                                <span class="badge badge-success badge-indicator"></span>
+                                @endif
                             </div>
-                            <div class="media-body">
-                                <span>{{ Auth::user()->name }}<i class="zmdi zmdi-chevron-down"></i></span>
-                            </div>
+                            <a href="{{ route('asset-request.index') }}" class="dropdown-item text-center">View all notifications</a>
                         </div>
-                    </a>
+                    </li>
+                    <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
+                        <a href="{{ route('dashboard') }}">
+                            <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
+                        </a>
+                        <a href="{{ url('https://www.orioncc.com/') }}" target="_blank" >
+                            <img src="{{ asset('X-Files/Dash/imgs/icons/world-wide-web.png') }}" width="75" height="75" alt=""  style="padding:5px 5px;" >
+                        </a>
+                        <a class="nav-link dropdown-toggle no-caret"  style="padding:5px 5px;"  href="#" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <div class="media">
+                                <div class="media-img-wrap">
+                                    <div class="avatar" style="width: 55px !important; height: 55px !important;">
+                                        <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . Auth::user()->image) }}" alt="user"
+                                            class="avatar-img rounded-circle" style="object-fit: cover;
+                                            object-position: top;">
+                                    </div>
+                                    <span class="badge badge-success badge-indicator"></span>
+                                </div>
+                                <div class="media-body">
+                                    <span>{{ Auth::user()->name }}<i class="zmdi zmdi-chevron-down"></i></span>
+                                </div>
+                            </div>
+                        </a>
 
-                    <div class="dropdown-menu dropdown-menu-right"  style="padding:5px 5px;"  data-dropdown-in="flipInX"
-                        data-dropdown-out="flipOutX">
+                        <div class="dropdown-menu dropdown-menu-right"  style="padding:5px 5px;"  data-dropdown-in="flipInX"
+                            data-dropdown-out="flipOutX">
 
-                        <form action="{{ route('logout') }}" method="post">
-                            @csrf
-                            <button class="dropdown-item" href=""><i class="dropdown-icon zmdi zmdi-power"></i><span>Log
-                                    out</span></button>
-                        </form>
-                    </div>
-                </li>
-            </ul>
+                            <form action="{{ route('logout') }}" method="post">
+                                @csrf
+                                <button class="dropdown-item" href=""><i class="dropdown-icon zmdi zmdi-power"></i><span>Log
+                                        out</span></button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+
+            @endif
         </nav>
         <form role="search" class="navbar-search">
             <div class="position-relative">
