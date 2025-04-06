@@ -27,7 +27,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
 use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\EvaluateController;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
     $project_count = \App\Models\Project::count();
@@ -93,6 +93,17 @@ Route::middleware(['web', 'auth'])->group(function () {
 
         Route::resource('/employees', EmployeeController::class);
         Route::resource('/evaluations', EvaluateController::class);
+        Route::get('/generate-pdf', function () {
+            $data = [
+                'employeeId' => '12345',
+                'employeeName' => 'John Doe',
+                'evaluatorName' => 'Jane Smith',
+                // Add other data as needed
+            ];
+        
+            $pdf = Pdf::loadView('evaluates.create', $data);
+            return $pdf->download('evaluation.pdf');
+        });
         Route::resource('/asset-request', AssetRequestController::class);
 
         Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
