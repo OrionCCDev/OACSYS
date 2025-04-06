@@ -200,6 +200,12 @@
                                                         </button>
                                                     </li>
                                                     <li>
+                                                        <button class="tab-button" data-tab="list-of-eval">
+                                                            <i class="ion ion-md-paper"></i>
+                                                            My Evaluations
+                                                        </button>
+                                                    </li>
+                                                    <li>
                                                         <button class="tab-button" data-tab="account-settings">
                                                             <i class="ion ion-md-lock"></i>
                                                             Account Settings
@@ -298,6 +304,44 @@
                                                     {{-- Requests Tab --}}
                                                     <div class="tab-pane" id="list-of-req">
                                                         @livewire('user-asset-requests-component')
+                                                    </div>
+                                                    {{-- eval Tab --}}
+
+                                                    <div class="tab-pane" id="list-of-eval">
+                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                            <h4>Evaluations</h4>
+                                                            <a href="{{ route('evaluations.create') }}" class="btn btn-primary">New Evaluation</a>
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID</th>
+                                                                        <th>Employee Name</th>
+                                                                        <th>Evaluation</th>
+                                                                        <th>Options</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {{-- @foreach($evaluations as $evaluation)
+                                                                    <tr>
+                                                                        <td>{{ $evaluation->id }}</td>
+                                                                        <td>{{ $evaluation->employee_name }}</td>
+                                                                        <td>{{ $evaluation->evaluation }}</td>
+                                                                        <td>
+                                                                            <a href="{{ route('evaluations.show', $evaluation->id) }}" class="btn btn-info btn-sm">Show</a>
+                                                                            <a href="{{ route('evaluations.edit', $evaluation->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                                                            <form action="{{ route('evaluations.destroy', $evaluation->id) }}" method="POST" style="display:inline-block;">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endforeach --}}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
 
                                                     <div class="tab-pane" id="account-settings">
