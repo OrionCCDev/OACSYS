@@ -200,7 +200,46 @@
                         </div>
                     </li>
                 </ul>
+            @else
+            <ul class="navbar-nav hk-navbar-content">
 
+
+                
+                <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
+                    <a href="{{ route('dashboard') }}">
+                        <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
+                    </a>
+                    <a href="{{ url('https://www.orioncc.com/') }}" target="_blank" >
+                        <img src="{{ asset('X-Files/Dash/imgs/icons/world-wide-web.png') }}" width="75" height="75" alt=""  style="padding:5px 5px;" >
+                    </a>
+                    <a class="nav-link dropdown-toggle no-caret"  style="padding:5px 5px;"  href="#" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <div class="media">
+                            <div class="media-img-wrap">
+                                <div class="avatar" style="width: 55px !important; height: 55px !important;">
+                                    <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . Auth::user()->image) }}" alt="user"
+                                        class="avatar-img rounded-circle" style="object-fit: cover;
+                                        object-position: top;">
+                                </div>
+                                <span class="badge badge-success badge-indicator"></span>
+                            </div>
+                            <div class="media-body">
+                                <span>{{ Auth::user()->name }}<i class="zmdi zmdi-chevron-down"></i></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right"  style="padding:5px 5px;"  data-dropdown-in="flipInX"
+                        data-dropdown-out="flipOutX">
+
+                        <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <button class="dropdown-item" href=""><i class="dropdown-icon zmdi zmdi-power"></i><span>Log
+                                    out</span></button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
             @endif
         </nav>
         <form role="search" class="navbar-search">
