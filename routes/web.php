@@ -156,6 +156,12 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::post('/project/add/consultant/{id}', [ProjectController::class, 'addConsultant'])->name('project.addConsultant');
 
 
+
+// Receiving routes
+Route::get('project/receives/create/{project_id}', [ReceiveController::class, 'createRproject'])->name('project.receives.create');
+Route::post('project/receives/finish/{id}', [ReceiveController::class, 'finishRproject'])->name('project.receive.finish');
+Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyRproject'])->name('project.receive.destroy');
+
     Route::get('/project/{id}/add/employees', [ProjectController::class, 'addEmployeeProject'])->name('project.addEmployeeProject');
     Route::get('/project/{id}/recive/devices', [ProjectController::class, 'makeReciveProjectDevice'])->name('project.device_on_project_details');
     Route::get('/project/{id}/add/devices', [ProjectController::class, 'addDevices'])->name('project.addDevice');

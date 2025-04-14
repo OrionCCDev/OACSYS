@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Project;
 use App\Models\Receive;
 use App\Models\SimCard;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\DeviceAndSimReceive;
 use Illuminate\Support\Facades\Storage;
 
@@ -81,6 +84,161 @@ class ReceiveController extends Controller
 
         return view('receive.cancel-receiving', compact('device', 'newClearance', 'hisDevices', 'simCards'));
     }
+
+
+
+
+
+
+
+    public function createRproject($project_id)
+    {
+        // Use a database transaction to ensure data integrity
+        return DB::transaction(function() use ($project_id) {
+            $project = Project::findOrFail($project_id);
+
+            // Check if a pending receive already exists for this project
+            $existingReceive = Receive::where('project_id', $project_id)
+                                      ->where('status', 'pending')
+                                      ->first();
+
+            if ($existingReceive) {
+                // Use existing receive rather than creating a new one
+                $receive = $existingReceive;
+                $receive_id = $receive->code;
+            } else {
+                // Get all devices with pending-project-device status for this project
+                $devicesData = Device::where('project_id', $project_id)
+                                     ->where('status', 'pending-project-device')
+                                     ->get();
+
+                if ($devicesData->isEmpty()) {
+                    // No devices to process
+                    return redirect()->back()->with('error', 'No pending devices found for this project');
+                }
+
+                // Generate a unique receive ID
+                $receive_id = 'RCV-' . strtoupper(Str::random(8));
+
+                // Get the project manager or client as receiver
+                $receiver = $project->manager ?? $project->client;
+                $receiver_type = $project->manager_id ? 'employee' : 'client';
+
+                // Create a new pending receive record
+                $receive = Receive::create([
+                    'code' => $receive_id,
+                    'project_id' => $project_id,
+                    'status' => 'pending',
+                    // Add any other fields your Receive model requires
+                ]);
+
+                // Create device associations
+                foreach ($devicesData as $device) {
+                    // Check if the device is already associated with this receive
+                    $exists = DeviceAndSimReceive::where('receive_id', $receive->id)
+                                                 ->where('device_id', $device->id)
+                                                 ->exists();
+
+                    if (!$exists) {
+                        DeviceAndSimReceive::create([
+                            'receive_id' => $receive->id,
+                            'device_id' => $device->id,
+                        ]);
+                    }
+                }
+            }
+
+            // Get the latest data for the view using a direct query without relying on the relationship
+            $deviceIds = DeviceAndSimReceive::where('receive_id', $receive->id)
+                                           ->pluck('device_id')
+                                           ->toArray();
+
+            $devicesData = Device::whereIn('id', $deviceIds)->get();
+
+            $receiver = $project->manager ?? $project->client;
+            $receiver_type = $project->manager_id ? 'employee' : 'client';
+
+            return view('receive.project.create', compact('devicesData', 'receiver', 'receiver_type', 'project', 'receive_id', 'receive'));
+        });
+    }
+
+    /**
+     * Complete the receiving process.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function finishRproject(Request $request, $id)
+    {
+        $request->validate([
+            'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'devices' => 'required|json',
+        ]);
+
+        // Get the receive record
+        $receive = Receive::findOrFail($id);
+
+        // Process the image
+        if ($request->hasFile('receiving_signature')) {
+            $image = $request->file('receiving_signature');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
+
+            $receive->receive_image = $imageName;
+            $receive->status = 'received';
+            $receive->save();
+
+            // Update all devices in the JSON to 'In-Project-Site' status
+            $devices = json_decode($request->devices);
+            foreach ($devices as $device) {
+                Device::where('id', $device->id)
+                    ->update([
+                        'status' => 'In-Project-Site',
+                    ]);
+            }
+
+            return redirect()->route('project.details', $receive->project_id)
+                ->with('success', 'Devices received successfully!');
+        }
+
+        return back()->with('error', 'Error uploading signature.');
+    }
+
+    /**
+     * Delete a receiving document.
+     *
+     * @param  int  $receive
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyRproject($receive)
+    {
+        $receive = Receive::findOrFail($receive);
+        // Get all records from device_and_sim_receives with the same receive_id
+        $records = DeviceAndSimReceive::where('receive_id', $receive->id)->get();
+        foreach ($records as $record) {
+            // Update device if device_id is present
+            if ($record->device_id) {
+                Device::where('id', $record->device_id)
+                    ->update([
+                        'status' => 'available',
+                        'project_id' => null,
+
+                    ]);
+            }
+            $record->delete();
+        }
+        $project_id = $receive->project_id;
+
+        $receive->delete();
+
+        return redirect()->route('project.details', $project_id)
+            ->with('success', 'Receiving document deleted successfully!');
+    }
+
+
+
+
 
     public function clear($id, $clearId, Request $request)
     {
