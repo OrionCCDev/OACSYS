@@ -204,7 +204,7 @@
             <ul class="navbar-nav hk-navbar-content">
 
 
-                
+
                 <li class="nav-item dropdown dropdown-authentication" style="display: flex; align-items: center;justify-content: between;">
                     <a href="{{ route('dashboard') }}">
                         <img src="{{ asset('X-Files/Dash/imgs/icons/home-button.png') }}" width="75" height="75" alt="" srcset="" style="padding:5px 5px;" >
@@ -263,17 +263,13 @@
                 <div class="navbar-nav-wrap" style="padding-top: 50px">
                     <ul class="navbar-nav flex-column">
 
-
-
-
-
-
                         <li class="nav-item {{ Request::is('employees*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('employees.index') }}">
                                 <span class="feather-icon"><img width="50" src="{{ asset('X-Files/Dash/imgs/icons/009-division.png') }}" alt="" srcset=""></span>
                                 <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Employees</span>
                             </a>
                         </li>
+
 
                         {{-- @endif --}}
                         <hr class="nav-separator">
@@ -338,7 +334,7 @@
                                         <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('project.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Projects</a>
                                         </li>
-
+                                
                                         {{-- @elseif (Auth::user()->hasRole('o-hr') ) --}}
 
                                         {{-- <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">
@@ -393,6 +389,7 @@
                     </ul>
 
                 </div>
+
                 @endif
             </div>
         </nav>
