@@ -27,7 +27,7 @@ return new class () extends Migration {
 
             // $table->string('count')->nullable();
             // $table->string('available_count')->nullable();
-            $table->enum('status', ['available','taken','pending-receiving','pending-cancel','In-Project-Site'])->comment('available is mean not used by employee or client or consultant,taken')->default('available');
+            $table->enum('status', ['available','taken','pending-receiving','pending-cancel','In-Project-Site','pending-project-device'])->comment('available is mean not used by employee or client or consultant,taken')->default('available');
             $table->text('notes')->nullable();//
             $table->timestamps();
         });

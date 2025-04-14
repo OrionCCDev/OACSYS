@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('orion_role_lvl' , ['o-super-admin' , 'o-admin','o-hr','o-employee','o-manager']);
+            $table->enum('orion_role_lvl' , ['o-super-admin' , 'o-admin','o-hr','o-employee','o-manager','lo-dc' , 'lo-manager' , 'lo-user']);
             $table->string('image') ;
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

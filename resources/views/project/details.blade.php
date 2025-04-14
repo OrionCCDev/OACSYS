@@ -41,9 +41,10 @@
                                         <div class="text-white text-capitalize display-6 mb-5 font-weight-400">{{
                                             $project->manager->name }}</div>
                                         <div class="font-14 text-white"><span class="mr-5">Project Manager</span></div>
+
                                     </div>
                                 </div>
-                            </div>
+                            </div>/
                         </div>
                     </div>
                 </div>

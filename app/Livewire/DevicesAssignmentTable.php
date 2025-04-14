@@ -38,11 +38,12 @@ class DevicesAssignmentTable extends Component
         // Add your assignment logic here
         if (count($this->selectedDevices) > 0) {
             Device::whereIn('id', $this->selectedDevices)
-                ->update(['project_id' => $this->project_id , 'status' => 'In-Project-Site']); // Add your project ID
+                ->update(['project_id' => $this->project_id , 'status' => 'pending-project-device']); // Add your project ID
 
             $this->selectedDevices = [];
             session()->flash('success', 'Devices assigned successfully');
-            return redirect()->route('project.details', $this->project_id);
+            return redirect()->route('project.device_on_project_details', $this->project_id);
+            // return redirect()->route('project.details', $this->project_id);
         }
     }
 

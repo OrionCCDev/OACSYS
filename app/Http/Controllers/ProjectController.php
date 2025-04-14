@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Consultant;
 use Illuminate\Http\Request;
 use App\Models\ClientEmployee;
+use App\Models\ProjectDevice;
 
 class ProjectController extends Controller
 {
@@ -31,8 +32,20 @@ class ProjectController extends Controller
     public function addDevices($id)
     {
         $project = Project::find($id);
-        $devices = Device::whereNotNull('project_id')->whereNotNull('employee_id')->whereNotNull( 'consultant_id')->whereNotNull('client_id')->get();
+        $devices = Device::whereNull('project_id')->whereNull('employee_id')->whereNull( 'consultant_id')->whereNull('client_id')->get();
         return view('project.addDevices' , compact('project' , 'devices'));
+    }
+    public function makeReciveProjectDevice($id)
+    {
+        $project = Project::find($id);
+
+        if (!$project) {
+            return redirect()->route('project.index')->with('error', 'Project not found!');
+        }
+
+        // No need to fetch devices here as Livewire component will handle this
+
+        return view('project.devicesMakeRecivingOnProject', compact('project'));
     }
 
 

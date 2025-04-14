@@ -27,6 +27,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClientEmployeeController;
 use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\EvaluateController;
+use App\Http\Controllers\LogisticsUserController;
 use Barryvdh\DomPDF\Facade\Pdf;
 Route::get('/', function () {
     $employees_count = \App\Models\Employee::count();
@@ -83,6 +84,9 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::resource('manager', ManagerController::class)
             ->except(['show']);
     });
+    Route::middleware(['role:lo-manager|o-super-admin|o-admin'])->group(function () {
+        Route::resource('logistics', LogisticsUserController::class);
+    });
 
     // 'show' route allows managers as well
     Route::middleware(['role:o-hr|o-super-admin|o-admin|o-manager'])->group(function () {
@@ -93,23 +97,23 @@ Route::middleware(['web', 'auth'])->group(function () {
 
         Route::resource('/employees', EmployeeController::class);
         Route::resource('/evaluations', EvaluateController::class);
-        Route::get('/generate-pdf', function () {
-            $data = [
-                'employeeId' => '12345',
-                'employeeName' => 'John Doe',
-                'evaluatorName' => 'Jane Smith',
-                // Add other data as needed
-            ];
-        
-            $pdf = Pdf::loadView('evaluates.create', $data);
-            return $pdf->download('evaluation.pdf');
-        });
+        // Route::get('/generate-pdf', function () {
+        //     $data = [
+        //         'employeeId' => '12345',
+        //         'employeeName' => 'John Doe',
+        //         'evaluatorName' => 'Jane Smith',
+        //         // Add other data as needed
+        //     ];
+
+        //     $pdf = Pdf::loadView('evaluates.create', $data);
+        //     return $pdf->download('evaluation.pdf');
+        // });
         Route::resource('/asset-request', AssetRequestController::class);
 
         Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
         Route::patch('/asset-request/{id}/approve', [AssetRequestController::class, 'approve'])->name('asset-request.approve');
         Route::patch('/asset-request/{id}/reject', [AssetRequestController::class, 'reject'])->name('asset-request.reject');
-        
+
         Route::resource('/deductions', DeductionController::class);
 
         Route::get('/deductions/employee/{id}', [DeductionController::class , 'showEmployeeDeductions'])->name('deduction.showEmployeeDeduction');
@@ -153,6 +157,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 
 
     Route::get('/project/{id}/add/employees', [ProjectController::class, 'addEmployeeProject'])->name('project.addEmployeeProject');
+    Route::get('/project/{id}/recive/devices', [ProjectController::class, 'makeReciveProjectDevice'])->name('project.device_on_project_details');
     Route::get('/project/{id}/add/devices', [ProjectController::class, 'addDevices'])->name('project.addDevice');
     Route::post('/project/add/devices', [ProjectController::class, 'storeDevices'])->name('project.addDevicesToProject');
 
@@ -186,7 +191,6 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     Route::post('/device/{id}/{clear}', [ReceiveController::class, 'clear'])->name('device.clear');
     Route::get('/position', PositionAdder::class)->name('position.index');
     Route::get('/project', ProjectManage::class)->name('project.index');
-
     Route::get('/sim', SimCardManage::class)->name('sim.index');
 });
 
