@@ -22,28 +22,26 @@
                                     </thead>
                                     <tbody>
                                         @forelse($this->availableDevices as $device)
-                                            <tr wire:key="available-{{ $device->id }}">
-                                                <th scope="row">{{ $device->id }}</th>
-                                                <td>{{ $device->device_name }}</td>
-                                                <td>{{ $device->device_code }}</td>
-                                                <td>
-                                                    <span class="badge badge-success">Available</span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <button
-                                                        wire:click="addDeviceDirectly({{ $device->id }})"
-                                                        class="btn btn-sm btn-primary"
-                                                        title="Add to Project">
-                                                        <i class="icon-plus"></i> Add to Project
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                        <tr wire:key="available-{{ $device->id }}">
+                                            <th scope="row">{{ $device->id }}</th>
+                                            <td>{{ $device->device_name }}</td>
+                                            <td>{{ $device->device_code }}</td>
+                                            <td>
+                                                <span class="badge badge-success">Available</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <button wire:click="addDeviceDirectly({{ $device->id }})"
+                                                    class="btn btn-sm btn-primary" title="Add to Project">
+                                                    <i class="icon-plus"></i> Add to Project
+                                                </button>
+                                            </td>
+                                        </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center">
-                                                    No available devices found.
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                No available devices found.
+                                            </td>
+                                        </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -73,47 +71,45 @@
                         <tbody>
                             @forelse ($devices as $projectDevice)
 
-                                <tr wire:key="{{ $projectDevice->id }}">
-                                    <th scope="row">{{ $projectDevice->device_code }}</th>
-                                    <td>{{ $projectDevice->device_name ?? 'Unknown Device' }}</td>
-                                    <td>
-                                        <span class="badge badge-warning">Pending</span>
-                                    </td>
-                                    <td>{{ $projectDevice->created_at->format('Y-m-d H:i') }}</td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group">
-                                            <button
-                                                wire:click="cancelDevice({{ $projectDevice->id }})"
-                                                wire:confirm="Are you sure you want to cancel this device?"
-                                                class="btn btn-sm btn-danger"
-                                                title="Cancel Device">
-                                                <i class="icon-trash"></i> Cancel
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Add this to your existing table just before the @empty check -->
-@if(count($devices) > 0)
-<tr>
-    <td colspan="5" class="text-center bg-light">
-        <a href="{{ route('receives.create', ['project_id' => $this->project->id]) }}"
-           class="btn btn-primary btn-lg mt-2 mb-2">
-            <i class="icon-file-text"></i> Create Receiving Document
-        </a>
-    </td>
-</tr>
-@endif
+                            <tr wire:key="{{ $projectDevice->id }}">
+                                <th scope="row">{{ $projectDevice->device_code }}</th>
+                                <td>{{ $projectDevice->device_name ?? 'Unknown Device' }}</td>
+                                <td>
+                                    <span class="badge badge-warning">Pending</span>
+                                </td>
+                                <td>{{ $projectDevice->created_at->format('Y-m-d H:i') }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <button wire:click="cancelDevice({{ $projectDevice->id }})"
+                                            wire:confirm="Are you sure you want to cancel this device?"
+                                            class="btn btn-sm btn-danger" title="Cancel Device">
+                                            <i class="icon-trash"></i> Cancel
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-<!-- Rest of your @empty and table content remains the same -->
+
+
+
                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        No pending devices found for this project.
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No pending devices found for this project.
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <tr>
+                        <td colspan="5" class="text-center bg-light">
+                            <a href="{{ route('project.receives.create', ['project_id' => $this->project->id]) }}"
+                                class="btn btn-primary btn-lg mt-2 mb-2">
+                                <i class="icon-file-text"></i> Create Receiving Document
+                            </a>
+                        </td>
+                    </tr>
+
                 </div>
 
             </div>
