@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,6 +25,38 @@ class DeviceController extends Controller
     {
         return view('device.add');
     }
+    public function assignDeviceToEmp()
+    {
+        $devices = Device::all();
+        $employees = Employee::all();
+        return view('device.assignDeviceToEmp', compact('devices', 'employees'));
+    }
+    public function storeAssignDeviceToEmp(Request $request)
+    {
+        $request->validate([
+            'device_id' => 'required|exists:devices,id',
+            'employee_id' => 'required|exists:employees,id',
+        ]);
+
+        $devId = $request->input('device_id');
+        $empId = $request->input('employee_id');
+
+        $device = Device::find($devId);
+        $employee = Employee::find($empId);
+
+        if ($device && $employee) {
+            $device->status = 'taken';
+            $device->client_id = null;
+            $device->consultant_id = null;
+            $device->project_id = null;
+            $device->employee_id = $employee->id;
+            $device->save();
+            return redirect()->route('device.index')->with('success', 'Device assigned to employee successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Device or Employee not found.');
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.
