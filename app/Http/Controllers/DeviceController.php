@@ -200,4 +200,40 @@ class DeviceController extends Controller
     {
         //
     }
+
+    /**
+     * Unassign a device and make it available
+     */
+    public function unassign(Device $device)
+    {
+        $device->update([
+            'status' => 'available',
+            'client_id' => null,
+            'consultant_id' => null,
+            'project_id' => null,
+            'employee_id' => null
+        ]);
+
+        return redirect()->back()->with('success', 'Device has been made available');
+    }
+
+    /**
+     * Assign a device to an employee
+     */
+    public function assign(Request $request, Device $device)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id'
+        ]);
+
+        $device->update([
+            'status' => 'taken',
+            'employee_id' => $request->employee_id,
+            'client_id' => null,
+            'consultant_id' => null,
+            'project_id' => null
+        ]);
+
+        return response()->json(['success' => true]);
+    }
 }

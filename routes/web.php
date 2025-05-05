@@ -180,6 +180,9 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::get('/device/employee/assign', [DeviceController::class, 'assignDeviceToEmp'])->name('device.assignDeviceToEmp');
     Route::post('/device/employee/assign', [DeviceController::class, 'storeAssignDeviceToEmp'])->name('device.storeAssignDeviceToEmp');
+    Route::put('/device/{device}/unassign', [DeviceController::class, 'unassign'])->name('device.unassign');
+    Route::post('/device/{device}/assign', [DeviceController::class, 'assign'])->name('device.assign');
+    Route::get('/employee/search', [EmployeeController::class, 'search'])->name('employee.search');
     Route::post('/resign/employee/{id}/clearance/{clr}', [EmployeeController::class, 'finishResign'])->name('employee.resign-upload-signature');
     Route::post('/clearance/{id}/upload-signature', [ClearanceController::class, 'uploadSignature'])
         ->name('clearance.upload-signature');

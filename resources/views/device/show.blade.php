@@ -10,6 +10,18 @@
     width: 250px;
     height: 250px;
     }
+    .search-results {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .employee-item {
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .employee-item:hover {
+        background-color: #f8f9fa;
+    }
 </style>
 @endsection
 @section('content')
@@ -66,7 +78,7 @@
                                                 @endif
                                             </span>
                                     </li>
-                                    
+
                                     @if ($device->project_id != null)
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
@@ -137,6 +149,16 @@
                             <a href="{{ route('device.edit' , $device->id) }}" class="btn mb-2 btn-info btn-wth-icon icon-wthot-bg  icon-right btn-lg">
                                 <span class="btn-text">Edit</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span> </span>
                             </a>
+                            <button type="button" class="btn btn-success btn-lg mb-2" data-toggle="modal" data-target="#assignEmployeeModal">
+                                Assign to Employee
+                            </button>
+                            <form action="{{ route('device.unassign', $device->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-warning btn-lg mb-2" onclick="return confirm('Are you sure you want to unassign this device?')">
+                                    Make Available
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -144,4 +166,32 @@
         </div>
     </div>
 </div>
+
+<!-- Assign Employee Modal -->
+<div class="modal fade" id="assignEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="assignEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignEmployeeModalLabel">Assign Device to Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <livewire:employee-search :deviceId="$device->id" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('close-modal', () => {
+            $('#assignEmployeeModal').modal('hide');
+        });
+    });
+</script>
+@endpush
+
 @endsection
