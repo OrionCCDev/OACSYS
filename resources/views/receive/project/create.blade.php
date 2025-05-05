@@ -172,35 +172,28 @@
                                 <div class="col-12 mb-30 text-center" style="justify-items: center">
                                     <h6 class="mb-5">Date : <span style="color:#174094 ">{{ now()->format('Y-m-d')
                                             }}</span></h6>
-                                    @if($receiver_type == 'project')
-                                        <h6 class="mb-5">Project : <span style="color:#174094 ">{{ $project->project_name }}</span></h6>
-                                        <h6 class="mb-5">Code : <span style="color:#174094 ">{{ $project->project_code }}</span></h6>
-                                        @if($receiver)
-                                            <h6 class="mb-5">Project Manager : <span style="color:#174094 ">{{ $receiver->name ?? $receiver->company_name }}</span></h6>
-                                        @endif
-                                    @else
-                                        @if ($receiver_type == 'employee')
-                                            <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">{{ $receiver->employee_id }}</span></h6>
-                                            <h6 class="mb-5">Department : <span style="color:#174094 ">{{ $receiver->department->name }}</span></h6>
-                                            @if ($receiver->project_id != null)
-                                                <h6 class="mb-5">Project : <span style="color:#174094 ">{{ $receiver->project->project_code }}</span></h6>
-                                            @endif
-                                        @endif
-                                        @if ($receiver_type != 'employee' && $receiver->project_id != null)
-                                            <h6 class="mb-5">Project : <span style="color:#174094 ">{{ $receiver->project->project_code }}</span></h6>
-                                        @endif
+                                    <h6 class="mb-5">Project : <span style="color:#174094 ">{{ $project->project_name }}</span>
+                                    <h6 class="mb-5">Code : <span style="color:#174094 ">{{ $project->project_code }}</span>
+                                    </h6>
+                                    @if ($receiver_type == 'employee')
+                                    <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">{{ $receiver->employee_id
+                                            }}</span></h6>
+                                    <h6 class="mb-5">Department : <span style="color:#174094 ">{{
+                                            $receiver->department->name }}</span></h6>
+                                    @if ($receiver->project_id != null)
+                                    <h6 class="mb-5">Project : <span style="color:#174094 ">{{
+                                            $receiver->project->project_code }}</span></h6>
+                                    @endif
+                                    @endif
+                                    @if ($receiver_type != 'employee' && $receiver->project_id != null)
+                                    <h6 class="mb-5">Project : <span style="color:#174094 ">{{
+                                            $receiver->project->project_code }}</span></h6>
                                     @endif
                                 </div>
                             </div>
                         </div>
-                        <h4 class="text-center" style="color:#174094;font-size:larger ">
-                            @if($receiver_type == 'project')
-                                I, the undersigned Project Manager,<br>
-                                acknowledge that My project have received the following items And Deliver to the designated receiver under signed
-                            @else
-                                I, the undersigned,<br>
-                                acknowledge that I have received the following items
-                            @endif
+                        <h4 class="text-center" style="color:#174094;font-size:larger ">I, the undersigned Project Manager,<br>
+                            acknowledge that My project have received the following items And Deliver to the designated receiver under signed
                         </h4>
                         <h5 class="pt-20" style="color:#174094 ">Items</h5>
                         <hr>
