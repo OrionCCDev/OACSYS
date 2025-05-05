@@ -289,7 +289,7 @@ class ReceiveController extends Controller
      */
     public function show(Receive $receive)
     {
-        dd($receive);
+
         // simCardsData && devicesData
         // $devicesData = Device::where('receive_id', $receive->id)->get();
         $rcv_id =  $receive->id;
