@@ -259,8 +259,18 @@
                             @endif
                         </div>
                         <div class="row mt-30">
+                            <ul class="invoice-terms-wrap font-14 list-ul">
+                                <li>Receiver name :</li>
+                                <li>Receiver Position :</li>
+                                <li>Receiver Signature :
+                                </li>
+
+                            </ul>
+                        </div>
+                        <hr>
+                        <div class="row mt-30">
                             <div class="col-4 text-center" style="padding-bottom: 70px">
-                                <h6>Receiver Signature</h6>
+                                <h6>Project Stamp</h6>
                             </div>
                             <div class="col-4 text-center" style="padding-bottom: 70px">
                                 <h6>IT Manager</h6>
