@@ -381,4 +381,18 @@ class EmployeeController extends Controller
         $employee->delete();
         return to_route('employees.index')->with('success', 'Employee deleted successfully');
     }
+
+    /**
+     * Search employees by code or name
+     */
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+
+        return Employee::where('employee_id', 'like', "%{$search}%")
+            ->orWhere('name', 'like', "%{$search}%")
+            ->select('id', 'name', 'employee_id as employee_code')
+            ->limit(10)
+            ->get();
+    }
 }
