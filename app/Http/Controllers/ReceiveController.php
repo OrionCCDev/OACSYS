@@ -289,24 +289,31 @@ class ReceiveController extends Controller
      */
     public function show(Receive $receive)
     {
+        $rcv_id = $receive->id;
+        $receive_id = $receive->code;
 
-        // simCardsData && devicesData
-        // $devicesData = Device::where('receive_id', $receive->id)->get();
-        $rcv_id =  $receive->id;
-        $receive_id =  $receive->code;
-        if ($receive->employee_id != null) {
-            $receiver_type = 'employee';
-        } elseif ($receive->client_employee_id != null) {
-            $receiver_type = 'client';
-        } elseif ($receive->consultant_id != null) {
-            $receiver_type = 'consultant';
-        }
-        if ($receiver_type == 'employee') {
-            $receiver = \App\Models\Employee::with(['project', 'department'])->findOrFail($receive->employee_id);
-        } elseif ($receiver_type == 'client') {
-            $receiver = \App\Models\ClientEmployee::with(['project'])->findOrFail($receive->client_employee_id);
-        } elseif ($receiver_type == 'consultant') {
-            $receiver = \App\Models\Consultant::with(['project'])->findOrFail($receive->consultant_id);
+        // Check if this is a project receive first
+        if ($receive->project_id != null) {
+            $receiver_type = 'project';
+            $project = Project::findOrFail($receive->project_id);
+            $receiver = $project->manager ?? $project->client;
+        } else {
+            // Handle regular receives
+            if ($receive->employee_id != null) {
+                $receiver_type = 'employee';
+            } elseif ($receive->client_employee_id != null) {
+                $receiver_type = 'client';
+            } elseif ($receive->consultant_id != null) {
+                $receiver_type = 'consultant';
+            }
+
+            if ($receiver_type == 'employee') {
+                $receiver = \App\Models\Employee::with(['project', 'department'])->findOrFail($receive->employee_id);
+            } elseif ($receiver_type == 'client') {
+                $receiver = \App\Models\ClientEmployee::with(['project'])->findOrFail($receive->client_employee_id);
+            } elseif ($receiver_type == 'consultant') {
+                $receiver = \App\Models\Consultant::with(['project'])->findOrFail($receive->consultant_id);
+            }
         }
 
         $records = DeviceAndSimReceive::where('receive_id', $receive->id)->get();
@@ -314,7 +321,6 @@ class ReceiveController extends Controller
         // Retrieve devices and sim cards data
         $devicesData = Device::whereIn('id', $records->pluck('device_id'))->get();
         $simCardsData = SimCard::whereIn('id', $records->pluck('sim_card_id'))->get();
-
 
         return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData'));
     }
