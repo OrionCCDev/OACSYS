@@ -44,6 +44,7 @@
                             <tr @if ($recv->status !== 'received')
                                 style='background-color: bisque'
                             @endif>
+                            @dd($recv)
                                 <td>{{ $recv->code }}</td>
                                 <td>
                                     @if ($recv->employee_id)
