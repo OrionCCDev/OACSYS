@@ -193,7 +193,7 @@
                             </div>
                         </div>
                         <h4 class="text-center" style="color:#174094;font-size:larger ">I, the undersigned Project Manager,<br>
-                            acknowledge that My project have received the following items
+                            acknowledge that My project have received the following items And Deliver to the designated receiver under signed
                         </h4>
                         <h5 class="pt-20" style="color:#174094 ">Items</h5>
                         <hr>
@@ -260,7 +260,7 @@
                         </div>
                         <div class="row mt-30">
                             <div class="col-4 text-center" style="padding-bottom: 70px">
-                                <h6>Project stamp</h6>
+                                <h6>Receiver Signature</h6>
                             </div>
                             <div class="col-4 text-center" style="padding-bottom: 70px">
                                 <h6>IT Manager</h6>
