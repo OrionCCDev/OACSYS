@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Log;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Device;
 use App\Models\Project;
@@ -16,6 +17,7 @@ use App\Imports\EmployeesImport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\DeviceAndSimClearance;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EmployeeController extends Controller
 {
@@ -167,19 +169,19 @@ class EmployeeController extends Controller
 
                 // Debug information
                 Log::info('Attempting to move image');
-                \Log::info('Target path: ' . public_path('X-Files/Dash/imgs/EmployeeProfilePic'));
-                \Log::info('Image name: ' . $imageName);
+                Log::info('Target path: ' . public_path('X-Files/Dash/imgs/EmployeeProfilePic'));
+                Log::info('Image name: ' . $imageName);
 
                 if ($image->move(public_path('X-Files/Dash/imgs/EmployeeProfilePic'), $imageName)) {
                     $employee->update([
                         'profile_image' => $imageName,
                     ]);
-                    \Log::info('Image moved successfully');
+                    Log::info('Image moved successfully');
                 } else {
-                    \Log::error('Failed to move image');
+                    Log::error('Failed to move image');
                 }
             } catch (\Exception $e) {
-                \Log::error('Image upload error: ' . $e->getMessage());
+                Log::error('Image upload error: ' . $e->getMessage());
                 return back()->with('error', 'Failed to upload image: ' . $e->getMessage());
             }
         }
@@ -191,7 +193,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user->hasRole(['o-hr', 'o-super-admin', 'o-admin','o-manager'])) {
 
                 abort(403, 'Unauthorized access');
@@ -207,6 +209,19 @@ class EmployeeController extends Controller
         $now = $employee->resign_date ? Carbon::parse($employee->resign_date) : Carbon::now();
         $diff = Carbon::parse($employee->hire_date)->diff($now);
         return view('employees.show', compact('employee', 'project', 'diff' ,'hireDate'));
+    }
+
+    public function generatePrintablePdf($id)
+    {
+        $employee = Employee::with(['department', 'position', 'project', 'sim_card'])->findOrFail($id);
+        $hireDate = $employee->hire_date ? Carbon::parse($employee->hire_date)->format('F j, Y') : null;
+        $now = $employee->resign_date ? Carbon::parse($employee->resign_date) : Carbon::now();
+        $diff = $employee->hire_date ? Carbon::parse($employee->hire_date)->diff($now) : null;
+
+        $pdf = Pdf::loadView('employees.employee_print', compact('employee', 'hireDate', 'diff'));
+
+        // Stream the PDF to the browser. This will typically display it inline.
+        return $pdf->stream('employee_' . $employee->employee_id . '_profile.pdf');
     }
 
     /**
