@@ -96,18 +96,8 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::put('/password/update', [ManagerController::class, 'updatePW'])->name('password.Manager.update');
 
         Route::resource('/employees', EmployeeController::class);
+        Route::get('/employees/{id}/print', [EmployeeController::class, 'generatePrintablePdf'])->name('employees.print');
         Route::resource('/evaluations', EvaluateController::class);
-        // Route::get('/generate-pdf', function () {
-        //     $data = [
-        //         'employeeId' => '12345',
-        //         'employeeName' => 'John Doe',
-        //         'evaluatorName' => 'Jane Smith',
-        //         // Add other data as needed
-        //     ];
-
-        //     $pdf = Pdf::loadView('evaluates.create', $data);
-        //     return $pdf->download('evaluation.pdf');
-        // });
         Route::resource('/asset-request', AssetRequestController::class);
 
         Route::post('/request/{id}/upload-signature',[AssetRequestController::class , 'uploadSignature'])->name('asset-request.upload-signature');
@@ -120,7 +110,6 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/deductions/employee/{id}/make', [DeductionController::class , 'createNewDeduct'])->name('deductions.createNewDeduct');
         Route::get('deductions/print/{id}', [DeductionController::class, 'showDeductionReport'])->name('deductions.showDeductionReport');
         Route::post('deductions/upload/signed/{id}', [DeductionController::class, 'uploadSignedDeduction'])->name('deductions.upload-signed');
-        // Route::post('/request/{id}/upload-signature', 'RequestController@uploadSignature')->name('request.upload.signature');
 
     });
 });
