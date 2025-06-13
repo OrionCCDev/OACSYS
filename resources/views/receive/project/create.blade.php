@@ -281,16 +281,18 @@
                         </div>
                         <hr>
                         <ul class="invoice-terms-wrap font-14 list-ul">
-                            <h6>By Signing This paper You Accept The Following Terms and Conditions</h6>
-
-                            <li>Handle all equipment with care to avoid damage.</li>
-                            <li>Use appropriate packaging and protective materials during transportation and storage.
-                            </li>
-
-                            <li>Contact the IT department through the provided channels for any necessary changes or
-                                repairs.</li>
-                            <li>Any damage caused to the equipment due to negligence or misuse will be the
-                                responsibility of the receiver.</li>
+                            <h6>By Signing This paper You Accept The Following Roles</h6>
+                        <li>Do not make any unauthorized modifications or repairs to the equipment.</li>
+                        <li>Handle all equipment with care to avoid damage.</li>
+                        <li>Use appropriate packaging and protective materials during transportation and storage.</li>
+                        <li>For any updates, modifications, or fixes, the equipment must be returned to the IT
+                            department.
+                        </li>
+                        <li>All received equipment must be used exclusively for work-related purposes and personal use is strictly prohibited.</li>
+                        <li>SIM cards provided are for business communications only; personal calls and messages are not permitted.</li>
+                        <li>Any damage caused to the equipment due to negligence or misuse will be the responsibility of
+                            the
+                            receiver.</li>
                         </ul>
                     </section>
                 </div>

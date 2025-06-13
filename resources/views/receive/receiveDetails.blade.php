@@ -207,9 +207,8 @@
                         <li>For any updates, modifications, or fixes, the equipment must be returned to the IT
                             department.
                         </li>
-                        <li>Contact the IT department through the provided channels for any necessary changes or
-                            repairs.
-                        </li>
+                        <li>All received equipment must be used exclusively for work-related purposes and personal use is strictly prohibited.</li>
+                        <li>SIM cards provided are for business communications only; personal calls and messages are not permitted.</li>
                         <li>Any damage caused to the equipment due to negligence or misuse will be the responsibility of
                             the
                             receiver.</li>
