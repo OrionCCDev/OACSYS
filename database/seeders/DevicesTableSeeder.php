@@ -132,15 +132,7 @@ class DevicesTableSeeder extends Seeder
                 "status" => "taken",
                 "health" => "Medium_use"
             ],
-            [
-                "employee_id" => 2778,
-                "device_name" => "Desktop PC Set",
-                "device_type" => "pc",
-                "device_code" => "PC2506091001",
-                "short_description" => "Desktop PC Set - i3-1220P CPU, 8.00GB RAM - includes monitor, keyboard, mouse",
-                "status" => "taken",
-                "health" => "Medium_use"
-            ],
+
             [
                 "employee_id" => 2789,
                 "device_name" => "HP Victus Gaming Laptop",
@@ -339,15 +331,7 @@ class DevicesTableSeeder extends Seeder
                 "status" => "taken",
                 "health" => "Medium_use"
             ],
-            [
-                "employee_id" => 3192,
-                "device_name" => "Lenovo Laptop",
-                "device_type" => "laptop",
-                "device_code" => "LA2506111612",
-                "short_description" => "Black Color Lenovo Laptop - i5-1235U 1, 8.00GB RAM",
-                "status" => "taken",
-                "health" => "Medium_use"
-            ],
+
             [
                 "employee_id" => 3203,
                 "device_name" => "Desktop PC Set",
