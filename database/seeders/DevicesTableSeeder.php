@@ -647,33 +647,51 @@ class DevicesTableSeeder extends Seeder
             ]
         ];
 
+        $this->command->info("Starting corrected device seeding...");
+        $this->command->info("Mapping employee_id field values to primary keys...\n");
+
+        // Pre-build employee mapping for efficiency
+        $this->command->info("Building employee mapping...");
+        $employeeMapping = [];
+        $employees = DB::table('employees')->get(['id', 'employee_id']);
+
+        foreach ($employees as $employee) {
+            if ($employee->employee_id) {
+                $employeeMapping[$employee->employee_id] = $employee->id;
+            }
+        }
+
+        $this->command->info("Found " . count($employeeMapping) . " employees with employee_id values");
+
         $addedCount = 0;
-        $skippedCount = 0;
-        $errorCount = 0;
+        $skippedExistingCount = 0;
+        $skippedMissingEmployeeCount = 0;
+        $missingEmployeeIds = [];
 
         foreach ($devices as $deviceData) {
             try {
-                // Check if employee exists
-                $employeeExists = DB::table('employees')->where('employee_id', $deviceData['employee_id'])->exists();
-
-                if (!$employeeExists) {
-                    $this->command->warn("Employee ID {$deviceData['employee_id']} not found - skipping");
-                    $errorCount++;
-                    continue;
-                }
+                $employeeIdValue = $deviceData['employee_id'];
 
                 // Check if device already exists
-                $deviceExists = DB::table('devices')->where('employee_id', $deviceData['employee_id'])->exists();
-
-                if ($deviceExists) {
-                    $this->command->info("Device for employee_id: {$deviceData['employee_id']} already exists - skipping");
-                    $skippedCount++;
+                if (DB::table('devices')->where('device_code', $deviceData['device_code'])->exists()) {
+                    $this->command->info("Device {$deviceData['device_code']} already exists - skipping");
+                    $skippedExistingCount++;
                     continue;
                 }
 
-                // Insert the device
+                // Map employee_id value to primary key
+                if (!isset($employeeMapping[$employeeIdValue])) {
+                    $this->command->warn("Employee with employee_id '{$employeeIdValue}' not found - skipping device {$deviceData['device_code']}");
+                    $missingEmployeeIds[] = $employeeIdValue;
+                    $skippedMissingEmployeeCount++;
+                    continue;
+                }
+
+                $primaryKey = $employeeMapping[$employeeIdValue];
+
+                // Insert device with correct primary key
                 DB::table('devices')->insert([
-                    'employee_id' => $deviceData['employee_id'],
+                    'employee_id' => $primaryKey, // Use primary key, not employee_id field value
                     'device_name' => $deviceData['device_name'],
                     'device_type' => $deviceData['device_type'],
                     'device_code' => $deviceData['device_code'],
@@ -683,63 +701,55 @@ class DevicesTableSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
 
-                $this->command->info("Added device for employee_id: {$deviceData['employee_id']}");
+                $this->command->info("✓ Added device {$deviceData['device_code']} for employee_id '{$employeeIdValue}' (primary key: {$primaryKey})");
                 $addedCount++;
+
             } catch (\Exception $e) {
-                $this->command->error("Error processing employee_id {$deviceData['employee_id']}: " . $e->getMessage());
-                $errorCount++;
+                $this->command->error("Error processing device {$deviceData['device_code']}: " . $e->getMessage());
             }
         }
 
-        $this->command->info("Seeding completed!");
-        $this->command->info("Added: {$addedCount} devices");
-        $this->command->info("Skipped: {$skippedCount} devices (already exist)");
-        $this->command->info("Errors: {$errorCount} devices (failed to process)");
+        // Summary
+        $this->command->info("\n" . str_repeat("=", 60));
+        $this->command->info("CORRECTED SEEDING COMPLETED!");
+        $this->command->info(str_repeat("=", 60));
+        $this->command->info("✅ Added: {$addedCount} devices");
+        $this->command->info("⏭️ Skipped (already exist): {$skippedExistingCount} devices");
+        $this->command->info("⚠️ Skipped (missing employee): {$skippedMissingEmployeeCount} devices");
+
+        if (!empty($missingEmployeeIds)) {
+            $this->command->warn("\nMissing Employee IDs (" . count($missingEmployeeIds) . "):");
+            $this->command->line(implode(', ', array_unique($missingEmployeeIds)));
+        }
+
+        $this->command->info("\n💡 KEY INSIGHT:");
+        $this->command->info("Your device data contains employee_id FIELD values, not primary keys.");
+        $this->command->info("This seeder now correctly maps them to the actual primary keys.");
     }
 }
 
-// Debug version - check your table structure first
-class DevicesTableDebugger extends Seeder
+// Quick verification seeder
+class VerifyEmployeeMappingSeeder extends Seeder
 {
     public function run(): void
     {
-        // Check table structure
-        $this->command->info("Checking table structures...");
+        $this->command->info("=== EMPLOYEE MAPPING VERIFICATION ===");
 
-        // Check employees table
-        $employeeColumns = DB::select("DESCRIBE employees");
-        $this->command->info("Employees table columns:");
-        foreach ($employeeColumns as $column) {
-            $this->command->line("  - {$column->Field} ({$column->Type})");
+        // Sample employee_id values from your device data
+        $sampleEmployeeIds = ['64', '198', '399', '444', '614', '693', '791', '915', '1504', '2005', '2506', '2545'];
+
+        $this->command->info("Checking mapping for sample employee_id values:\n");
+
+        foreach ($sampleEmployeeIds as $empId) {
+            $employee = DB::table('employees')->where('employee_id', $empId)->first(['id', 'employee_id', 'name']);
+
+            if ($employee) {
+                $this->command->line("✅ employee_id '{$empId}' → primary key {$employee->id} | {$employee->name}");
+            } else {
+                $this->command->line("❌ employee_id '{$empId}' → NOT FOUND");
+            }
         }
 
-        // Check devices table
-        $deviceColumns = DB::select("DESCRIBE devices");
-        $this->command->info("Devices table columns:");
-        foreach ($deviceColumns as $column) {
-            $this->command->line("  - {$column->Field} ({$column->Type})");
-        }
-
-        // Check if specific employee exists
-        $employee915 = DB::table('employees')->where('employee_id', 915)->first();
-        if ($employee915) {
-            $this->command->info("Employee 915 exists: " . json_encode($employee915));
-        } else {
-            $this->command->error("Employee 915 NOT found!");
-        }
-
-        // Check foreign key constraints
-        $constraints = DB::select("
-            SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
-            FROM information_schema.KEY_COLUMN_USAGE
-            WHERE TABLE_SCHEMA = DATABASE()
-            AND TABLE_NAME = 'devices'
-            AND REFERENCED_TABLE_NAME IS NOT NULL
-        ");
-
-        $this->command->info("Foreign key constraints on devices table:");
-        foreach ($constraints as $constraint) {
-            $this->command->line("  - {$constraint->CONSTRAINT_NAME}: {$constraint->COLUMN_NAME} -> {$constraint->REFERENCED_TABLE_NAME}.{$constraint->REFERENCED_COLUMN_NAME}");
-        }
+        $this->command->info("\n=== VERIFICATION COMPLETE ===");
     }
 }
