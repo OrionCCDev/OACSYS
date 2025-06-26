@@ -649,18 +649,30 @@ class DevicesTableSeeder extends Seeder
 
         $addedCount = 0;
         $skippedCount = 0;
+        $errorCount = 0;
 
         foreach ($devices as $deviceData) {
-            // Check if device with this employee_id already exists
-            $existingDevice = Device::where('employee_id', $deviceData['employee_id'])->first();
+            try {
+                // Check if employee exists
+                $employeeExists = DB::table('employees')->where('employee_id', $deviceData['employee_id'])->exists();
 
-            if ($existingDevice) {
-                // Device already exists, skip it
-                $this->command->info("Skipping device for employee_id: {$deviceData['employee_id']} - already exists");
-                $skippedCount++;
-            } else {
-                // Device doesn't exist, create it
-                Device::create([
+                if (!$employeeExists) {
+                    $this->command->warn("Employee ID {$deviceData['employee_id']} not found - skipping");
+                    $errorCount++;
+                    continue;
+                }
+
+                // Check if device already exists
+                $deviceExists = DB::table('devices')->where('employee_id', $deviceData['employee_id'])->exists();
+
+                if ($deviceExists) {
+                    $this->command->info("Device for employee_id: {$deviceData['employee_id']} already exists - skipping");
+                    $skippedCount++;
+                    continue;
+                }
+
+                // Insert the device
+                DB::table('devices')->insert([
                     'employee_id' => $deviceData['employee_id'],
                     'device_name' => $deviceData['device_name'],
                     'device_type' => $deviceData['device_type'],
@@ -673,11 +685,61 @@ class DevicesTableSeeder extends Seeder
 
                 $this->command->info("Added device for employee_id: {$deviceData['employee_id']}");
                 $addedCount++;
+            } catch (\Exception $e) {
+                $this->command->error("Error processing employee_id {$deviceData['employee_id']}: " . $e->getMessage());
+                $errorCount++;
             }
         }
 
         $this->command->info("Seeding completed!");
         $this->command->info("Added: {$addedCount} devices");
         $this->command->info("Skipped: {$skippedCount} devices (already exist)");
+        $this->command->info("Errors: {$errorCount} devices (failed to process)");
+    }
+}
+
+// Debug version - check your table structure first
+class DevicesTableDebugger extends Seeder
+{
+    public function run(): void
+    {
+        // Check table structure
+        $this->command->info("Checking table structures...");
+
+        // Check employees table
+        $employeeColumns = DB::select("DESCRIBE employees");
+        $this->command->info("Employees table columns:");
+        foreach ($employeeColumns as $column) {
+            $this->command->line("  - {$column->Field} ({$column->Type})");
+        }
+
+        // Check devices table
+        $deviceColumns = DB::select("DESCRIBE devices");
+        $this->command->info("Devices table columns:");
+        foreach ($deviceColumns as $column) {
+            $this->command->line("  - {$column->Field} ({$column->Type})");
+        }
+
+        // Check if specific employee exists
+        $employee915 = DB::table('employees')->where('employee_id', 915)->first();
+        if ($employee915) {
+            $this->command->info("Employee 915 exists: " . json_encode($employee915));
+        } else {
+            $this->command->error("Employee 915 NOT found!");
+        }
+
+        // Check foreign key constraints
+        $constraints = DB::select("
+            SELECT CONSTRAINT_NAME, TABLE_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+            FROM information_schema.KEY_COLUMN_USAGE
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = 'devices'
+            AND REFERENCED_TABLE_NAME IS NOT NULL
+        ");
+
+        $this->command->info("Foreign key constraints on devices table:");
+        foreach ($constraints as $constraint) {
+            $this->command->line("  - {$constraint->CONSTRAINT_NAME}: {$constraint->COLUMN_NAME} -> {$constraint->REFERENCED_TABLE_NAME}.{$constraint->REFERENCED_COLUMN_NAME}");
+        }
     }
 }
