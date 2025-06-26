@@ -667,7 +667,6 @@ class DevicesTableSeeder extends Seeder
                     'device_code' => $deviceData['device_code'],
                     'short_description' => $deviceData['short_description'],
                     'status' => $deviceData['status'],
-                    'health' => $deviceData['health'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
