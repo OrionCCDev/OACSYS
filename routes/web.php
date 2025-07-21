@@ -13,7 +13,7 @@ use App\Livewire\DepartmentAdder;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DeviceController;
-use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
