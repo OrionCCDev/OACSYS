@@ -195,6 +195,7 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
 });
 
 // QR Code routes
+
 Route::get('/fixed-qr', [App\Http\Controllers\QrCodeController::class, 'showFixedQr'])->name('fixed.qr');
 Route::get('/qr-redirect', [App\Http\Controllers\QrCodeController::class, 'handleRedirect'])->name('qr.redirect');
 
