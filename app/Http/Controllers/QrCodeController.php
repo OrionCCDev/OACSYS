@@ -25,6 +25,6 @@ class QrCodeController extends Controller
     public function handleRedirect()
     {
         // Change this to your desired redirect target
-        return view();
+        return view('qrcode.qr');
     }
 }
