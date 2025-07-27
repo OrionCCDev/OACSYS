@@ -28,8 +28,11 @@ class DeviceIndex extends Component
 
     public function render()
     {
-        $devices = Device::where('device_name', 'like', '%'.$this->search.'%')
-                        ->orWhere('device_code', 'like', '%'.$this->search.'%')
+        $devices = Device::where(function($query) {
+                            $query->where('device_name', 'like', '%'.$this->search.'%')
+                                  ->orWhere('device_code', 'like', '%'.$this->search.'%');
+                        })
+                        ->orderByRaw("CASE WHEN status = 'available' THEN 0 ELSE 1 END")
                         ->orderBy('updated_at', 'desc')
                         ->paginate(10);
 
