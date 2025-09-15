@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Video Landing Page</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <style>
@@ -407,7 +409,7 @@
 
     <!-- Video Background -->
     <div class="video-container">
-        <video id="bg-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
+        <video id="bg-video" autoplay muted playsinline webkit-playsinline preload="metadata" poster="{{ asset('X-Files/qr-imgs/1.jpg') }}">
             <source src="{{ asset('X-Files/AOJ-2.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -436,7 +438,7 @@
         <div class="content-container">
             <!-- Company Logo -->
             <div class="logo-container">
-                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Company Logo" class="logo">
+                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Company Logo" class="logo" fetchpriority="high">
             </div>
 
             {{--  <!-- Download Button -->
@@ -445,89 +447,7 @@
                 Download Company Profile
             </a>  --}}
 
-            <!-- Image Gallery Slider (autoplay) -->
-            <section class="image-gallery" aria-label="Image gallery">
-                <div class="image-swiper swiper" id="imageSwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/1.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/1.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/2.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/2.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/3.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/3.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/4.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/4.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/5.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/5.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/6.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/6.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/7.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/7.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/8.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/8.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/9.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/9.jpg') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/10.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/10.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/11.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/11.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/12.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/12.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/13.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/13.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/14.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/14.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/15.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/15.png') }}" alt="Project image 1">
-                            </a>
-                        </div>
 
-                    </div>
-                </div>
-            </section>
 
             <!-- Compact Contact Icons -->
             <div class="contact-icons" aria-label="Contact options">
@@ -558,13 +478,13 @@
             </div>
 
             <!-- Video Gallery (Lightbox) -->
-            <section class="video-gallery" aria-label="Video gallery">
+            <section class="video-gallery" aria-label="Media gallery">
                 <div class="video-gallery-title">Projects Gallery</div>
                 <div class="video-swiper swiper" id="videoSwiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide p-3">
                             <a href="{{ asset('X-Files/ORION 3 AUG warehouses (1).mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 1" class="video-thumb">
+                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 1" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
@@ -573,7 +493,7 @@
                         </div>
                         <div class="swiper-slide">
                             <a href="{{ asset('X-Files/ORION ALGHAIL 28 AUG.mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 2" class="video-thumb">
+                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
@@ -582,11 +502,87 @@
                         </div>
                         <div class="swiper-slide">
                             <a href="{{ asset('X-Files/AOJ-2.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 3" class="video-thumb">
+                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
                                 <span class="video-title">Project 3</span>
+                            </a>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/1.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/1.jpg') }}" alt="Project image 1" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/2.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/2.jpg') }}" alt="Project image 2" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/3.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/3.jpg') }}" alt="Project image 3" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/4.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/4.jpg') }}" alt="Project image 4" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/5.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/5.jpg') }}" alt="Project image 5" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/6.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/6.jpg') }}" alt="Project image 6" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/7.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/7.jpg') }}" alt="Project image 7" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/8.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/8.jpg') }}" alt="Project image 8" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/9.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/9.jpg') }}" alt="Project image 9" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/10.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/10.png') }}" alt="Project image 10" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/11.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/11.png') }}" alt="Project image 11" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/12.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/12.png') }}" alt="Project image 12" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/13.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/13.png') }}" alt="Project image 13" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/14.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/14.png') }}" alt="Project image 14" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/15.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/15.png') }}" alt="Project image 15" loading="lazy">
                             </a>
                         </div>
                     </div>
@@ -608,7 +604,7 @@
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loader').classList.add('hidden');
-            }, 500);
+            }, 200);
 
             // Initialize GLightbox for videos
             const initLightbox = () => {
@@ -635,7 +631,7 @@
         (function loadLightbox() {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js';
-            script.async = true;
+            script.defer = true;
             script.onload = () => {
                 try {
                     if (window.GLightbox) {
@@ -659,7 +655,7 @@
         (function loadSwiper() {
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js';
-            script.async = true;
+            script.defer = true;
             script.onload = () => {
                 try {
                     if (window.Swiper) {
@@ -670,7 +666,10 @@
                             centeredSlides: false,
                             freeMode: true,
                             grabCursor: true,
-                            loop: true,
+                            loop: false,
+                            watchSlidesProgress: true,
+                            preloadImages: false,
+                            lazy: { loadPrevNext: true, loadOnTransitionStart: true },
                             autoplay: {
                                 delay: 2500,
                                 disableOnInteraction: false
@@ -687,25 +686,7 @@
                             }
                         });
 
-                        window.imageSwiper?.destroy?.();
-                        window.imageSwiper = new window.Swiper('#imageSwiper', {
-                            slidesPerView: 'auto',
-                            spaceBetween: 14,
-                            centeredSlides: false,
-                            freeMode: true,
-                            grabCursor: true,
-                            loop: true,
-                            autoplay: {
-                                delay: 2200,
-                                disableOnInteraction: false
-                            },
-                            keyboard: { enabled: true },
-                            breakpoints: {
-                                0: { spaceBetween: 12 },
-                                600: { spaceBetween: 14 },
-                                960: { spaceBetween: 18 }
-                            }
-                        });
+                        // Removed second swiper; using only #videoSwiper for combined media
                     }
                 } catch (e) {}
             };
