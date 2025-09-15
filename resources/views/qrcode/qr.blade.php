@@ -123,7 +123,7 @@
           color: #ffffff;
           text-decoration: none;
           border: 1px solid rgba(255, 255, 255, 0.25);
-          background: darkblue;
+          background: rgba(255, 255, 255, 0.4);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
           transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -280,7 +280,7 @@
       }
 
       .video-gallery-title {
-          color: darkblue;
+          color: rgb(255, 255, 255);
           font-size: 22px;
           font-weight: 700;
           letter-spacing: 0.5px;
