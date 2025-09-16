@@ -94,7 +94,11 @@
       .logo:hover {
           transform: scale(1.05);
       }
+      .video-gallery .swiper-slide a img {
+        height: 130px;
+        border-radius: 15px;
 
+    }
       /* Contact Links Container */
       .contact-links {
           display: flex;
@@ -112,6 +116,47 @@
           {{--  margin: 30px 0;  --}}
           align-items: center;
       }
+
+      /* CTA Download Button */
+      .cta-container { display: flex; justify-content: center; margin: 16px 0 10px 0; }
+      .cta-download {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 26px;
+          border-radius: 9999px;
+          color: #fff;
+          text-decoration: none;
+          font-size: 16px;
+          font-weight: 700;
+          background: linear-gradient(90deg, #2563eb, #1e40af);
+          border: 1px solid rgba(255,255,255,0.25);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+      }
+      .cta-download:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,0.35); }
+      .cta-download svg { width: 20px; height: 20px; }
+
+      /* Social Links Row */
+      .social-links { display: inline-flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 8px 0; }
+      .social-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          border-radius: 9999px;
+          color: #ffffff;
+          text-decoration: none;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+      }
+      .social-icon:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.45); box-shadow: 0 10px 32px rgba(0, 0, 0, 0.25); }
+      .social-icon svg { width: 20px; height: 20px; }
 
       .department-row {
           display: flex;
@@ -352,6 +397,9 @@
           max-width: 1100px;
           margin: 0 auto;
       }
+      /* Footer Social Area */
+      .footer-social { position: relative; z-index: 2; padding: 12px 20px 28px 20px; display: flex; justify-content: center; }
+      .footer-social .social-links { margin: 8px 0 0 0; }
 
       .video-gallery-title {
           color: rgb(255, 255, 255);
@@ -520,14 +568,16 @@
 
 
 
+
+
             <!-- Compact Contact Icons -->
             <div class="contact-icons mb-3" aria-label="Contact options">
-                <a href="https://wa.me/971072335531?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener" class="contact-icon" title="WhatsApp" aria-label="WhatsApp">
+                <a href="https://wa.me/971558892742?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener" class="contact-icon" title="WhatsApp" aria-label="WhatsApp">
                     <svg viewBox="0 0 24 24" fill="#25D366" aria-hidden="true">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.297"/>
                     </svg>
                 </a>
-                <a href="tel:+971552420415" class="contact-icon" title="Call" aria-label="Call">
+                <a href="tel:+971558892742" class="contact-icon" title="Call" aria-label="Call">
                     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path fill="#60A5FA" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
@@ -538,44 +588,28 @@
                         <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#FBBF24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                 </a>
-                <a href="/company-profile.pdf" download class="contact-icon contact-icon-label" title="Download Profile" aria-label="Download Profile">
+                <a href="mailto:a.gamal@orioncc.com" class="contact-icon contact-icon-label" title="Email" aria-label="Email">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M12 5v10"/>
-                        <path d="m7 10 5 5 5-5"/>
-                        <path d="M5 19h14"/>
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M22 6 12 13 2 6"/>
                     </svg>
-                    <span>Profile</span>
+                    <span>Email</span>
                 </a>
             </div>
             <!-- Department Contact Rows -->
             <div class="department-contacts">
-                <!-- Commercial Row -->
-                <div class="department-row">
-                    <span class="department-label">Commercial</span>
-                    <div class="department-icons">
-                        <a href="tel:+971552420415" class="department-icon" title="Call Commercial" aria-label="Call Commercial">
-                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                <path fill="#60A5FA" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                            </svg>
-                        </a>
-                        <a href="https://wa.me/971072335531?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20commercial%20services." target="_blank" rel="noopener" class="department-icon" title="WhatsApp Commercial" aria-label="WhatsApp Commercial">
-                            <svg viewBox="0 0 24 24" fill="#25D366" aria-hidden="true">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.297"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+
 
                 <!-- Estimation Row -->
                 <div class="department-row">
-                    <span class="department-label">Estimation</span>
+                    <span class="department-label">For Inquiry</span>
                     <div class="department-icons">
-                        <a href="tel:+971552420415" class="department-icon" title="Call Estimation" aria-label="Call Estimation">
+                        <a href="tel:+971522815730" class="department-icon" title="Call For Inquiry" aria-label="Call For Inquiry">
                             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                 <path fill="#60A5FA" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                             </svg>
                         </a>
-                        <a href="https://wa.me/971072335531?text=Hello%2C%20I%20would%20like%20to%20get%20an%20estimation%20for%20your%20services." target="_blank" rel="noopener" class="department-icon" title="WhatsApp Estimation" aria-label="WhatsApp Estimation">
+                        <a href="https://wa.me/971522815730?text=Hello%2C%20I%20would%20like%20to%20get%20an%20estimation%20for%20your%20services." target="_blank" rel="noopener" class="department-icon" title="WhatsApp Estimation" aria-label="WhatsApp Estimation">
                             <svg viewBox="0 0 24 24" fill="#25D366" aria-hidden="true">
                                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.297"/>
                             </svg>
@@ -584,36 +618,23 @@
                 </div>
 
 
+            </div>
+
+            <!-- Big CTA: Download Our Profile -->
+            <div class="cta-container">
+                <a href="/company-profile.pdf" download class="cta-download" title="Download our profile" aria-label="Download our profile">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v10"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg>
+                    <span>Download our profile</span>
+                </a>
             </div>
             <!-- Video Gallery (Lightbox) -->
             <section class="video-gallery" aria-label="Media gallery">
                 <div class="video-gallery-title">Projects Gallery</div>
                 <div class="video-swiper swiper" id="videoSwiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <style>
-                                .video-gallery .swiper-slide a img {
-                                    height: 130px;
-                                    border-radius: 15px;
 
-                                }
-
-                            </style>
-                            <a href="{{ asset('X-Files/AOJ-2.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/qr-imgs/intro.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
-                                <span class="play-badge" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                                </span>
-                                <span class="video-title">Intro</span>
-                            </a>
-                        </div>
                         <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/1.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/1.jpg') }}" alt="Project image 1" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/ORION 3 AUG warehouses (1).mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                            <a href="{{ asset('X-Files/vid/ORION 3 AUG warehouses (1).mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
                                 <img src="{{ asset('X-Files/qr-imgs/25intro.jpg') }}" alt="Video 1" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
@@ -621,13 +642,9 @@
                                 <span class="video-title">Rakez 20K</span>
                             </a>
                         </div>
+
                         <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/2.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/2.jpg') }}" alt="Project image 2" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/ORION ALGHAIL 28 AUG.mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                            <a href="{{ asset('X-Files/vid/ORION ALGHAIL 28 AUG.mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
                                 <img src="{{ asset('X-Files/qr-imgs/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
@@ -635,71 +652,7 @@
                                 <span class="video-title">Rakez 15K</span>
                             </a>
                         </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/3.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/3.jpg') }}" alt="Project image 3" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/4.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/4.jpg') }}" alt="Project image 4" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/5.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/5.jpg') }}" alt="Project image 5" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/6.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/6.jpg') }}" alt="Project image 6" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/7.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/7.jpg') }}" alt="Project image 7" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/8.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/8.jpg') }}" alt="Project image 8" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/9.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/9.jpg') }}" alt="Project image 9" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/10.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/10.png') }}" alt="Project image 10" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/11.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/11.png') }}" alt="Project image 11" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/12.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/12.png') }}" alt="Project image 12" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/13.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/13.png') }}" alt="Project image 13" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/14.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/14.png') }}" alt="Project image 14" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/15.png') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/15.png') }}" alt="Project image 15" loading="lazy">
-                            </a>
-                        </div>
+
                     </div>
                 </div>
                 <div class="video-nav">
@@ -711,6 +664,24 @@
                     </button>
                 </div>
             </section>
+        </div>
+    </div>
+
+    <!-- Footer Social Links at Bottom -->
+    <div class="footer-social">
+        <div class="social-links" aria-label="Social links">
+            <a href="https://www.facebook.com/orioncontractingcompany" target="_blank" rel="noopener" class="social-icon" title="Facebook" aria-label="Facebook" style="background:#1877F2;border-color:rgba(255,255,255,0.35)">
+                <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-2.9h2v-2.2c0-2 1.2-3.2 3-3.2.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2v1.9h2.3L14 14.9h-2v7A10 10 0 0 0 22 12"/></svg>
+            </a>
+            <a href="https://www.instagram.com/orioncontracting/" target="_blank" rel="noopener" class="social-icon" title="Instagram" aria-label="Instagram" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%,#285AEB 90%);border-color:rgba(255,255,255,0.35)">
+                <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm6-1.8a1.2 1.2 0 1 0 1.2 1.2 1.2 1.2 0 0 0-1.2-1.2z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/orion-contracting-company-llc?_l=en_US" target="_blank" rel="noopener" class="social-icon" title="LinkedIn" aria-label="LinkedIn" style="background:#0A66C2;border-color:rgba(255,255,255,0.35)">
+                <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M20.45 20.45h-3.55V14.8c0-1.34-.02-3.06-1.86-3.06-1.86 0-2.14 1.45-2.14 2.95v5.76H9.35V9h3.4v1.56h.05a3.73 3.73 0 0 1 3.36-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55z"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@orioncontracting9881" target="_blank" rel="noopener" class="social-icon" title="YouTube" aria-label="YouTube" style="background:#FF0000;border-color:rgba(255,255,255,0.35)">
+                <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.75 15.5v-7L15.5 12l-5.75 3.5z"/></svg>
+            </a>
         </div>
     </div>
 
