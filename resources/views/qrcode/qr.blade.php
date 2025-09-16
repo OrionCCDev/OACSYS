@@ -316,21 +316,24 @@
           height: 100%;
           object-fit: cover;
           display: block;
+          max-height: 130px;
       }
 
       .play-badge {
           position: absolute;
           top: 50%;
-          left: 50%;
+          left:0;
           transform: translate(-50%, -50%);
-          display: inline-flex;
+          display: flex;
           align-items: center;
           justify-content: center;
           width: 48px;
           height: 48px;
-          border-radius: 9999px;
+          border-radius: 50%;
           background: rgba(0,0,0,0.55);
           border: 1px solid rgba(255,255,255,0.35);
+          margin: 0;
+          padding: 0;
       }
 
       .play-badge svg { width: 16px; height: 16px; }
@@ -338,7 +341,7 @@
       .video-title {
           position: absolute;
           top: calc(50% + 36px);
-          left: 50%;
+          left: 0;
           transform: translateX(-50%);
           color: #ffffff;
           font-size: 14px;
@@ -396,7 +399,7 @@
           box-shadow: 0 10px 30px rgba(0,0,0,0.25);
           height: 200px;
       }
-      .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px; }
+      .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px; max-height:130px}
       @media (min-width: 600px) { .image-card { height: 230px; } }
       @media (min-width: 960px) { .image-card { height: 260px; } }
     </style>
@@ -483,8 +486,16 @@
                 <div class="video-swiper swiper" id="videoSwiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
+                            <style>
+                                .video-gallery .swiper-slide a img {
+                                    height: 130px;
+                                    border-radius: 15px;
+
+                                }
+
+                            </style>
                             <a href="{{ asset('X-Files/AOJ-2.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/intro.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
+                                <img src="{{ asset('X-Files/qr-imgs/intro.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
@@ -498,7 +509,7 @@
                         </div>
                         <div class="swiper-slide">
                             <a href="{{ asset('X-Files/ORION 3 AUG warehouses (1).mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/25intro.jpg') }}" alt="Video 1" class="video-thumb" loading="lazy">
+                                <img src="{{ asset('X-Files/qr-imgs/25intro.jpg') }}" alt="Video 1" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
@@ -512,7 +523,7 @@
                         </div>
                         <div class="swiper-slide">
                             <a href="{{ asset('X-Files/ORION ALGHAIL 28 AUG.mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
+                                <img src="{{ asset('X-Files/qr-imgs/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
