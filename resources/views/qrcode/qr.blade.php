@@ -482,9 +482,23 @@
                 <div class="video-gallery-title">Projects Gallery</div>
                 <div class="video-swiper swiper" id="videoSwiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide p-3">
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/AOJ-2.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                                <img src="{{ asset('X-Files/intro.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
+                                <span class="play-badge" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <span class="video-title">Intro</span>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/1.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/1.jpg') }}" alt="Project image 1" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
                             <a href="{{ asset('X-Files/ORION 3 AUG warehouses (1).mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 1" class="video-thumb" loading="lazy">
+                                <img src="{{ asset('X-Files/25intro.jpg') }}" alt="Video 1" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
@@ -492,32 +506,17 @@
                             </a>
                         </div>
                         <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/qr-imgs/2.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
+                                <img src="{{ asset('X-Files/qr-imgs/2.jpg') }}" alt="Project image 2" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
                             <a href="{{ asset('X-Files/ORION ALGHAIL 28 AUG.mov') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
+                                <img src="{{ asset('X-Files/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
                                 <span class="play-badge" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
                                 <span class="video-title">Rakez 15K</span>
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/AOJ-2.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
-                                <img src="{{ asset('X-Files/logo-white.png') }}" alt="Video 3" class="video-thumb" loading="lazy">
-                                <span class="play-badge" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                                </span>
-                                <span class="video-title">Project 3</span>
-                            </a>
-                        </div>
-
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/1.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/1.jpg') }}" alt="Project image 1" loading="lazy">
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a href="{{ asset('X-Files/qr-imgs/2.jpg') }}" class="glightbox image-card" data-gallery="images" data-type="image">
-                                <img src="{{ asset('X-Files/qr-imgs/2.jpg') }}" alt="Project image 2" loading="lazy">
                             </a>
                         </div>
                         <div class="swiper-slide">
