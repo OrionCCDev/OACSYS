@@ -5,18 +5,74 @@
             <div class="table-wrap mb-20">
                 <div class="table-responsive">
                     <div class="container">
-                        <div class="row">
-                            <div class="form-row align-items-center">
-                                <div class="col-auto">
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">@Search</div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="form-row align-items-center">
+                                    <!-- Search -->
+                                    <div class="col-auto mb-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">@Search</div>
+                                            </div>
+                                            <input type="text" name="search" wire:model.live='search' class="form-control"
+                                                placeholder="Search by name or code">
                                         </div>
-                                        <input type="text" name="search" wire:model.live='search' class="form-control"
-                                            id="" placeholder="Search">
+                                    </div>
+
+                                    <!-- Device Type Filter -->
+                                    <div class="col-auto mb-2">
+                                        <select wire:model.live="filterType" class="form-control">
+                                            <option value="">All Types</option>
+                                            @foreach($deviceTypes as $type)
+                                                <option value="{{ $type }}">{{ $type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Stored At Filter -->
+                                    <div class="col-auto mb-2">
+                                        <select wire:model.live="filterStoredAt" class="form-control">
+                                            <option value="">All Locations</option>
+                                            @foreach($storedAtOptions as $location)
+                                                <option value="{{ $location }}">{{ ucfirst($location) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Health Filter -->
+                                    <div class="col-auto mb-2">
+                                        <select wire:model.live="filterHealth" class="form-control">
+                                            <option value="">All Health</option>
+                                            @foreach($healthOptions as $health)
+                                                <option value="{{ $health }}">{{ str_replace('_', ' ', $health) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Status Filter -->
+                                    <div class="col-auto mb-2">
+                                        <select wire:model.live="filterStatus" class="form-control">
+                                            <option value="">All Status</option>
+                                            @foreach($statusOptions as $status)
+                                                <option value="{{ $status }}">{{ ucfirst(str_replace('-', ' ', $status)) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Reset Button -->
+                                    <div class="col-auto mb-2">
+                                        <button wire:click="resetFilters" class="btn btn-secondary">
+                                            <i class="fa fa-refresh"></i> Reset
+                                        </button>
+                                    </div>
+
+                                    <!-- Export PDF Button -->
+                                    <div class="col-auto mb-2">
+                                        <button wire:click="exportPdf" class="btn btn-danger">
+                                            <i class="fa fa-file-pdf-o"></i> Export PDF
+                                        </button>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
