@@ -77,7 +77,7 @@ class DeviceIndex extends Component
 
     private function getFilteredDevices()
     {
-        $query = Device::query();
+        $query = Device::with(['employee', 'consultant', 'clientEmployee', 'project']);
 
         // Apply search filter
         if ($this->search) {

@@ -4,55 +4,64 @@
     <meta charset="utf-8">
     <title>Devices Report</title>
     <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 9px;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             border-bottom: 2px solid #333;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 18px;
             color: #2c3e50;
         }
         .header p {
-            margin: 5px 0;
+            margin: 3px 0;
             color: #7f8c8d;
+            font-size: 9px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            font-size: 8px;
         }
         th {
             background-color: #34495e;
             color: white;
-            padding: 10px;
+            padding: 5px 3px;
             text-align: left;
             font-weight: bold;
             border: 1px solid #2c3e50;
+            font-size: 8px;
         }
         td {
-            padding: 8px;
+            padding: 4px 3px;
             border: 1px solid #bdc3c7;
+            font-size: 8px;
+            word-wrap: break-word;
         }
         tr:nth-child(even) {
             background-color: #ecf0f1;
         }
-        tr:hover {
-            background-color: #d5dbdb;
-        }
         .badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 2px;
+            font-size: 7px;
             font-weight: bold;
+            white-space: nowrap;
         }
         .badge-success {
             background-color: #27ae60;
@@ -79,19 +88,24 @@
             color: white;
         }
         .footer {
-            margin-top: 30px;
+            margin-top: 15px;
             text-align: center;
-            font-size: 10px;
+            font-size: 7px;
             color: #7f8c8d;
             border-top: 1px solid #bdc3c7;
-            padding-top: 10px;
+            padding-top: 5px;
         }
-        .summary {
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #ecf0f1;
-            border-left: 4px solid #3498db;
-        }
+        /* Column width optimization for A4 */
+        .col-code { width: 8%; }
+        .col-name { width: 12%; }
+        .col-type { width: 10%; }
+        .col-model { width: 10%; }
+        .col-serial { width: 11%; }
+        .col-health { width: 8%; }
+        .col-status { width: 10%; }
+        .col-owner { width: 12%; }
+        .col-price { width: 9%; }
+        .col-supplier { width: 10%; }
     </style>
 </head>
 <body>
@@ -104,61 +118,71 @@
     <table>
         <thead>
             <tr>
-                <th>#</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Model</th>
-                <th>Serial Number</th>
-                <th>Health</th>
-                <th>Stored At</th>
-                <th>Status</th>
-                <th>Price</th>
-                <th>Supplier</th>
+                <th class="col-code">Code</th>
+                <th class="col-name">Name</th>
+                <th class="col-type">Type</th>
+                <th class="col-model">Model</th>
+                <th class="col-serial">Serial Number</th>
+                <th class="col-health">Health</th>
+                <th class="col-status">Status</th>
+                <th class="col-owner">Owner</th>
+                <th class="col-price">Price</th>
+                <th class="col-supplier">Supplier</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($devices as $index => $device)
+            @foreach($devices as $device)
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td><span class="badge badge-purple">{{ $device->device_code }}</span></td>
-                <td>{{ $device->device_name }}</td>
-                <td>{{ $device->device_type }}</td>
-                <td>{{ $device->device_model ?? 'N/A' }}</td>
-                <td>{{ $device->serial_number ?? 'N/A' }}</td>
-                <td>
+                <td class="col-code"><span class="badge badge-purple">{{ $device->device_code }}</span></td>
+                <td class="col-name">{{ $device->device_name }}</td>
+                <td class="col-type">{{ $device->device_type }}</td>
+                <td class="col-model">{{ $device->device_model ?? 'N/A' }}</td>
+                <td class="col-serial">{{ $device->serial_number ?? 'N/A' }}</td>
+                <td class="col-health">
                     @if($device->health == 'New')
                         <span class="badge badge-success">New</span>
                     @elseif($device->health == 'Mediam_use')
-                        <span class="badge badge-info">Medium Use</span>
+                        <span class="badge badge-info">Med Use</span>
                     @elseif($device->health == 'Bad_use')
                         <span class="badge badge-dark">Bad Use</span>
                     @elseif($device->health == 'Scrap')
                         <span class="badge badge-danger">Scrap</span>
                     @elseif($device->health == 'Need_fix')
-                        <span class="badge badge-warning">Need Fix</span>
+                        <span class="badge badge-warning">Fix</span>
                     @else
                         {{ $device->health }}
                     @endif
                 </td>
-                <td>{{ ucfirst($device->stored_at) }}</td>
-                <td>
+                <td class="col-status">
                     @if($device->status == 'available')
                         <span class="badge badge-success">Available</span>
                     @elseif($device->status == 'taken')
                         <span class="badge badge-info">Taken</span>
                     @elseif($device->status == 'pending-receiving')
-                        <span class="badge badge-warning">Pending Receive</span>
+                        <span class="badge badge-warning">Pend Recv</span>
                     @elseif($device->status == 'pending-cancel')
-                        <span class="badge badge-warning">Pending Clear</span>
+                        <span class="badge badge-warning">Pend Clear</span>
                     @elseif($device->status == 'In-Project-Site')
-                        <span class="badge badge-info">In Project Site</span>
+                        <span class="badge badge-info">Project Site</span>
                     @else
                         {{ ucfirst(str_replace('-', ' ', $device->status)) }}
                     @endif
                 </td>
-                <td>{{ $device->device_price ?? 'N/A' }}</td>
-                <td>{{ $device->supplier_name ?? 'N/A' }}</td>
+                <td class="col-owner">
+                    @if($device->employee)
+                        {{ $device->employee->name }}
+                    @elseif($device->consultant)
+                        {{ $device->consultant->name }}
+                    @elseif($device->clientEmployee)
+                        {{ $device->clientEmployee->name }}
+                    @elseif($device->project)
+                        {{ $device->project->project_name }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td class="col-price">{{ $device->device_price ?? 'N/A' }}</td>
+                <td class="col-supplier">{{ $device->supplier_name ?? 'N/A' }}</td>
             </tr>
             @endforeach
         </tbody>
