@@ -82,10 +82,8 @@ class EmployeeController extends Controller
     public function showHistory($id)
     {
         $employee = Employee::with([
-            'receives.devices',
-            'receives.simCards',
-            'clearance.devices',
-            'clearance.simCards',
+            'receives',
+            'clearance',
             'devices',
             'sim_card'
         ])->find($id);
