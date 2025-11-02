@@ -78,6 +78,63 @@ class EmployeeController extends Controller
         // Logic to display all employee clearances
         return view('employees.clearances', compact('employee'));
     }
+
+    public function showHistory($id)
+    {
+        $employee = Employee::with([
+            'receives',
+            'clearance',
+            'devices',
+            'sim_card'
+        ])->find($id);
+
+        // Get all receives with related devices and sim cards
+        $receives = $employee->receives->map(function($receive) use ($id) {
+            $deviceIds = DB::table('device_and_sim_receives')
+                ->where('receive_id', $receive->id)
+                ->whereNotNull('device_id')
+                ->pluck('device_id')
+                ->toArray();
+
+            $simCardIds = DB::table('device_and_sim_receives')
+                ->where('receive_id', $receive->id)
+                ->whereNotNull('sim_card_id')
+                ->pluck('sim_card_id')
+                ->toArray();
+
+            $receive->devices_list = Device::whereIn('id', $deviceIds)->get();
+            $receive->simcards_list = SimCard::whereIn('id', $simCardIds)->get();
+            $receive->type = 'receive';
+
+            return $receive;
+        });
+
+        // Get all clearances with related devices and sim cards
+        $clearances = $employee->clearance->map(function($clearance) use ($id) {
+            $deviceIds = DB::table('device_and_sim_clearances')
+                ->where('clearance_id', $clearance->id)
+                ->whereNotNull('device_id')
+                ->pluck('device_id')
+                ->toArray();
+
+            $simCardIds = DB::table('device_and_sim_clearances')
+                ->where('clearance_id', $clearance->id)
+                ->whereNotNull('sim_card_id')
+                ->pluck('sim_card_id')
+                ->toArray();
+
+            $clearance->devices_list = Device::whereIn('id', $deviceIds)->get();
+            $clearance->simcards_list = SimCard::whereIn('id', $simCardIds)->get();
+            $clearance->type = 'clearance';
+
+            return $clearance;
+        });
+
+        // Merge and sort by date (most recent first)
+        $history = $receives->merge($clearances)->sortByDesc('created_at');
+
+        return view('employees.history', compact('employee', 'history'));
+    }
     public function showClearanceDetails($id)
     {
         $clr = Clearance::find($id);
