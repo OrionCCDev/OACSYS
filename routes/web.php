@@ -29,7 +29,12 @@ use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\EvaluateController;
 use App\Http\Controllers\LogisticsUserController;
 use Barryvdh\DomPDF\Facade\Pdf;
+// Root route - redirect to login if not authenticated
 Route::get('/', function () {
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+
     $employees_count = \App\Models\Employee::count();
     $project_count = \App\Models\Project::count();
     $department_count = \App\Models\Department::count();
@@ -37,7 +42,7 @@ Route::get('/', function () {
     $laptop_count = \App\Models\Device::where('device_type', 'Laptop')->count();
     $camera_count = \App\Models\Device::where('device_type', 'Camera')->count();
     return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['verified'])->name('dashboard');
 
 Route::get('/import-simcards', function () {
     return view('profile.uploadSimCards');
