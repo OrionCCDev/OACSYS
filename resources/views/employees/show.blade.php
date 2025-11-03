@@ -62,7 +62,7 @@
                     <div class="" id="">
                         <div class="container">
                             <div class="hk-row">
-                                <div class="col-lg-4 col-sm-6">
+                                <div class="col-lg-3 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
@@ -84,7 +84,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-sm-6">
+                                <div class="col-lg-3 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
@@ -111,7 +111,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-sm-6">
+                                <div class="col-lg-3 col-sm-6">
                                     <div class="card card-sm">
                                         <div class="card-body">
                                             <span
@@ -125,6 +125,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6">
+                                    <div class="card card-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <a href="{{ route('employee.history', $employee->id) }}" style="text-decoration: none;">
+                                            <div class="card-body text-center">
+                                                <i class="icon-clock font-40 text-white mb-10"></i>
+                                                <span class="d-block font-11 font-weight-500 text-white text-uppercase">View Full History</span>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
 
