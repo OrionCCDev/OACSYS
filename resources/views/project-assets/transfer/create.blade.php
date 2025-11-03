@@ -2,15 +2,19 @@
 
 @section('content')
 <style>
-    .device-checkbox, .sim-checkbox {
+    .device-checkbox, .sim-checkbox, .select-all-checkbox {
         width: 18px;
         height: 18px;
         cursor: pointer;
         margin: 0;
     }
     
-    .table td {
+    .table td, .table th {
         vertical-align: middle;
+    }
+    
+    .select-all-checkbox {
+        display: inline-block;
     }
 </style>
 <div class="hk-pg-wrapper">
@@ -60,7 +64,10 @@
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="50" class="text-center">Select</th>
+                                                <th width="50" class="text-center">
+                                                    <input type="checkbox" id="select-all-devices" class="select-all-checkbox">
+                                                    <label for="select-all-devices" class="mb-0 ml-1" style="font-size: 11px;">All</label>
+                                                </th>
                                                 <th>Device Name</th>
                                                 <th>Code</th>
                                                 <th>Type</th>
@@ -97,7 +104,10 @@
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="50" class="text-center">Select</th>
+                                                <th width="50" class="text-center">
+                                                    <input type="checkbox" id="select-all-sims" class="select-all-checkbox">
+                                                    <label for="select-all-sims" class="mb-0 ml-1" style="font-size: 11px;">All</label>
+                                                </th>
                                                 <th>SIM Number</th>
                                                 <th>Provider</th>
                                                 <th>Plan</th>
@@ -149,4 +159,52 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select All Devices
+    const selectAllDevices = document.getElementById('select-all-devices');
+    const deviceCheckboxes = document.querySelectorAll('.device-checkbox');
+    
+    if (selectAllDevices) {
+        selectAllDevices.addEventListener('change', function() {
+            deviceCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Update select all state when individual checkboxes change
+        deviceCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = Array.from(deviceCheckboxes).every(cb => cb.checked);
+                const anyChecked = Array.from(deviceCheckboxes).some(cb => cb.checked);
+                selectAllDevices.checked = allChecked;
+                selectAllDevices.indeterminate = anyChecked && !allChecked;
+            });
+        });
+    }
+    
+    // Select All SIM Cards
+    const selectAllSims = document.getElementById('select-all-sims');
+    const simCheckboxes = document.querySelectorAll('.sim-checkbox');
+    
+    if (selectAllSims) {
+        selectAllSims.addEventListener('change', function() {
+            simCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+        
+        // Update select all state when individual checkboxes change
+        simCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = Array.from(simCheckboxes).every(cb => cb.checked);
+                const anyChecked = Array.from(simCheckboxes).some(cb => cb.checked);
+                selectAllSims.checked = allChecked;
+                selectAllSims.indeterminate = anyChecked && !allChecked;
+            });
+        });
+    }
+});
+</script>
 @endsection
