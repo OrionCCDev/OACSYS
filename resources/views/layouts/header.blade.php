@@ -331,10 +331,13 @@
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('sim.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/001-dual.png') }}" alt="" srcset="">Sim Cards</a>
                                         </li>
 
-                                        <li class="nav-item {{ Request::is('project*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                        <li class="nav-item {{ Request::is('project') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('project.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Projects</a>
                                         </li>
-                                
+                                        <li class="nav-item {{ Request::is('project-assets*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('project-assets.index') }}"><img width="40" style="padding-right: 5px" src="{{ asset('X-Files/Dash/imgs/icons/010-planning.png') }}" alt="" srcset="">Project Assets</a>
+                                        </li>
+
                                         {{-- @elseif (Auth::user()->hasRole('o-hr') ) --}}
 
                                         {{-- <li class="nav-item {{ Request::is('department*') ? 'active' : '' }}" style="margin-bottom: 7px">

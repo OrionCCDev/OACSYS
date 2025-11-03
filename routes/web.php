@@ -165,6 +165,31 @@ Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyR
 
     Route::get('/client', ClientManage::class)->name('client.index');
 
+    // Project Asset Management Routes
+    Route::prefix('project-assets')->name('project-assets.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ProjectAssetController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\ProjectAssetController::class, 'show'])->name('show');
+
+        // Receive Routes
+        Route::get('/{projectId}/receive/create', [\App\Http\Controllers\ProjectAssetController::class, 'createReceive'])->name('receive.create');
+        Route::post('/{projectId}/receive/store', [\App\Http\Controllers\ProjectAssetController::class, 'storeReceive'])->name('receive.store');
+        Route::get('/receive/{receiveId}/finish', [\App\Http\Controllers\ProjectAssetController::class, 'finishReceive'])->name('receive.finish');
+        Route::post('/receive/{receiveId}/complete', [\App\Http\Controllers\ProjectAssetController::class, 'completeReceive'])->name('receive.complete');
+
+        // Clearance Routes
+        Route::get('/{projectId}/clearance/create', [\App\Http\Controllers\ProjectAssetController::class, 'createClearance'])->name('clearance.create');
+        Route::post('/{projectId}/clearance/store', [\App\Http\Controllers\ProjectAssetController::class, 'storeClearance'])->name('clearance.store');
+        Route::get('/clearance/{clearanceId}/finish', [\App\Http\Controllers\ProjectAssetController::class, 'finishClearance'])->name('clearance.finish');
+        Route::post('/clearance/{clearanceId}/complete', [\App\Http\Controllers\ProjectAssetController::class, 'completeClearance'])->name('clearance.complete');
+
+        // Transfer Routes
+        Route::get('/{projectId}/transfer/create', [\App\Http\Controllers\ProjectAssetController::class, 'createTransfer'])->name('transfer.create');
+        Route::post('/{projectId}/transfer/store', [\App\Http\Controllers\ProjectAssetController::class, 'storeTransfer'])->name('transfer.store');
+        Route::get('/transfer/{transferId}/finish', [\App\Http\Controllers\ProjectAssetController::class, 'finishTransfer'])->name('transfer.finish');
+        Route::post('/transfer/{transferId}/complete', [\App\Http\Controllers\ProjectAssetController::class, 'completeTransfer'])->name('transfer.complete');
+        Route::get('/transfer/{transferId}/view', [\App\Http\Controllers\ProjectAssetController::class, 'viewTransfer'])->name('transfer.view');
+    });
+
 });
 Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     // Route::resource('department' , DepartmentController::class );
