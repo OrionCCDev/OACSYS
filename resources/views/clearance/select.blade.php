@@ -42,14 +42,12 @@
                                     <div class="card-deck row">
                                         @foreach($devices as $device)
                                             <div class="item card mb-3 p-3 col-4" onclick="toggleCheckbox(event)">
+                                                <input type="checkbox" name="devices[]" value="{{ $device->id }}" class="device-checkbox" style="position: absolute; opacity: 0; pointer-events: none;">
                                                 <img class="card-img-top" src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" alt="Card image cap">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ $device->device_name }}</h5>
                                                     <p class="card-text">{{ $device->device_type }}</p>
                                                     <p class="card-text">{{ $device->device_code }}</p>
-                                                    <label>
-                                                        <input type="checkbox" name="devices[]" value="{{ $device->id }}" class="device-checkbox" style="display: none;">
-                                                    </label>
                                                     <div class="overlay">
                                                         <i class="fa fa-check"></i>
                                                     </div>
@@ -63,14 +61,12 @@
                                     <div class="card-deck row">
                                         @foreach($simCards as $simCard)
                                             <div class="item card mb-3 p-3 col-4" onclick="toggleCheckbox(event)">
+                                                <input type="checkbox" name="simCards[]" value="{{ $simCard->id }}" class="simcard-checkbox" style="position: absolute; opacity: 0; pointer-events: none;">
                                                 <img class="card-img-top" src="{{ asset('X-Files/Dash/imgs/simcard.png') }}" alt="Card image cap">
 
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ $simCard->sim_number }}</h5>
                                                     <p class="card-text">{{ $simCard->sim_plan }}</p>
-                                                    <label>
-                                                        <input type="checkbox" name="simCards[]" value="{{ $simCard->id }}" class="simcard-checkbox" style="display: none;">
-                                                    </label>
                                                     <div class="overlay">
                                                         <i class="fa fa-check"></i>
                                                     </div>
