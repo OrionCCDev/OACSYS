@@ -14,7 +14,9 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>$</th>
+                            <th style="width: 50px; text-align: center; vertical-align: middle;">
+                                <input type="checkbox" id="selectAll">
+                            </th>
                             <th>img</th>
                             <th>Code</th>
                             <th>Name</th>
@@ -25,16 +27,17 @@
                     <tbody>
                         @foreach($devices as $device)
                         <tr>
-                            <td>
+                            <td style="text-align: center; vertical-align: middle;">
                                 <input type="checkbox"
                                     wire:model.live="selectedDevices"
-                                    value="{{ $device->id }}">
+                                    value="{{ $device->id }}"
+                                    style="width: 18px; height: 18px; cursor: pointer;">
                             </td>
-                            <td> <img src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" alt="" srcset="" width="75" height="75"></td>
-                            <td>{{ $device->device_code }}</td>
-                            <td>{{ $device->device_name }}</td>
-                            <td>{{ $device->device_type }}</td>
-                            {{-- <td>{{ $device->status }}</td> --}}
+                            <td style="vertical-align: middle;"> <img src="{{ asset('X-Files/Dash/imgs/devices/' . $device->main_image) }}" alt="" srcset="" width="75" height="75"></td>
+                            <td style="vertical-align: middle;">{{ $device->device_code }}</td>
+                            <td style="vertical-align: middle;">{{ $device->device_name }}</td>
+                            <td style="vertical-align: middle;">{{ $device->device_type }}</td>
+                            {{-- <td style="vertical-align: middle;">{{ $device->status }}</td> --}}
                         </tr>
                         @endforeach
                     </tbody>
