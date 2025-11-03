@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .device-checkbox, .sim-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        margin: 0;
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+</style>
 <div class="hk-pg-wrapper">
     <div class="container mt-xl-50 mt-sm-30 mt-15">
         <div class="hk-pg-header align-items-top">
@@ -48,7 +60,7 @@
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="50">Select</th>
+                                                <th width="50" class="text-center">Select</th>
                                                 <th>Device Name</th>
                                                 <th>Code</th>
                                                 <th>Type</th>
@@ -58,8 +70,8 @@
                                         <tbody>
                                             @forelse($projectDevices as $index => $device)
                                             <tr>
-                                                <td>
-                                                    <input type="checkbox" name="devices[]" value="{{ $device->id }}" class="form-check-input">
+                                                <td class="text-center">
+                                                    <input type="checkbox" name="devices[]" value="{{ $device->id }}" class="device-checkbox">
                                                 </td>
                                                 <td>{{ $device->device_name }}</td>
                                                 <td>{{ $device->device_code }}</td>
@@ -85,7 +97,7 @@
                                     <table class="table table-sm table-bordered">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th width="50">Select</th>
+                                                <th width="50" class="text-center">Select</th>
                                                 <th>SIM Number</th>
                                                 <th>Provider</th>
                                                 <th>Plan</th>
@@ -95,8 +107,8 @@
                                         <tbody>
                                             @forelse($projectSimCards as $index => $sim)
                                             <tr>
-                                                <td>
-                                                    <input type="checkbox" name="sim_cards[]" value="{{ $sim->id }}" class="form-check-input">
+                                                <td class="text-center">
+                                                    <input type="checkbox" name="sim_cards[]" value="{{ $sim->id }}" class="sim-checkbox">
                                                 </td>
                                                 <td>{{ $sim->sim_number }}</td>
                                                 <td>{{ $sim->sim_provider }}</td>
