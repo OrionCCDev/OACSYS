@@ -12,7 +12,40 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @php
+            $manifestPath = public_path('build/manifest.json');
+            $hotPath = public_path('hot');
+            $hasManifest = file_exists($manifestPath) || file_exists($hotPath);
+            
+            // If manifest doesn't exist, try to load assets directly from build directory
+            $cssPath = null;
+            $jsPath = null;
+            if (!$hasManifest) {
+                $buildDir = public_path('build/assets');
+                if (is_dir($buildDir)) {
+                    // Look for app.css and app.js files (entry points)
+                    $cssFiles = glob($buildDir . '/app-*.css');
+                    if (!empty($cssFiles)) {
+                        $cssPath = asset('build/assets/' . basename($cssFiles[0]));
+                    }
+                    $jsFiles = glob($buildDir . '/app-*.js');
+                    if (!empty($jsFiles)) {
+                        $jsPath = asset('build/assets/' . basename($jsFiles[0]));
+                    }
+                }
+            }
+        @endphp
+        
+        @if ($hasManifest)
+            @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @elseif ($cssPath || $jsPath)
+            @if ($cssPath)
+                <link rel="stylesheet" href="{{ $cssPath }}">
+            @endif
+            @if ($jsPath)
+                <script src="{{ $jsPath }}" defer></script>
+            @endif
+        @endif
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
