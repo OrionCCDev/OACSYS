@@ -620,13 +620,13 @@
 
             </div>
 
-            <!-- Big CTA: Download Our Profile -->
+            {{--  <!-- Big CTA: Download Our Profile -->
             <div class="cta-container">
                 <a href="/company-profile.pdf" download class="cta-download" title="Download our profile" aria-label="Download our profile">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v10"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg>
                     <span>Download our profile</span>
                 </a>
-            </div>
+            </div>  --}}
             <!-- Video Gallery (Lightbox) -->
             <section class="video-gallery" aria-label="Media gallery">
                 <div class="video-gallery-title">Projects Gallery</div>
@@ -650,6 +650,34 @@
                                     <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                                 </span>
                                 <span class="video-title">Rakez 15K</span>
+                            </a>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/vid/Orion Contracting - Armed Vehicles Project.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                                <img src="{{ asset('X-Files/qr-imgs/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
+                                <span class="play-badge" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <span class="video-title">Armed Vehicles Project</span>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/vid/1127.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                                <img src="{{ asset('X-Files/qr-imgs/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
+                                <span class="play-badge" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <span class="video-title">Alhamra Real estate </span>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="{{ asset('X-Files/vid/1127.mp4') }}" class="glightbox video-card" data-gallery="videos" data-type="video" data-width="1280" data-height="720">
+                                <img src="{{ asset('X-Files/qr-imgs/15k.png') }}" alt="Video 2" class="video-thumb" loading="lazy">
+                                <span class="play-badge" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <span class="video-title">Alhamra Real estate </span>
                             </a>
                         </div>
 
