@@ -154,6 +154,8 @@
                         mentioned
                         <br>
                         devices and Items has been returned to the company
+                        <br>
+                        I formally request immediate removal from all company-related communication channels including but not limited to: WhatsApp groups, email distribution lists, Telegram channels, Slack workspaces, and any other internal communication platforms. I understand that continued access to these channels after my departure date could expose me to confidential business information and create potential legal liability. I request written confirmation of this removal.
                     </h3>
                     <h5 class="mt-3" style="color:#174094 ">Items</h5>
                     <hr>
