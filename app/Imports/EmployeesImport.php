@@ -5,8 +5,8 @@ namespace App\Imports;
 use Carbon\Carbon;
 use App\Models\Employee;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class EmployeesImport implements ToCollection

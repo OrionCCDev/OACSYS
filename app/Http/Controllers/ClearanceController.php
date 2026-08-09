@@ -124,7 +124,7 @@ class ClearanceController extends Controller
 
         if ($request->hasFile('signature')) {
 
-            $imageName = time() . '.' . $request->signature->extension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->signature->extension();
 
             $destinationPath = public_path('X-Files/Dash/imgs/clearance');
             $request->signature->move($destinationPath, $imageName);
@@ -168,7 +168,7 @@ class ClearanceController extends Controller
 
         if ($request->hasFile('signature')) {
 
-            $imageName = time() . '.' . $request->signature->extension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->signature->extension();
             $request->signature->storeAs('public/X-Files/Dash/imgs/clearance', $imageName);
             // Update clearance with signature path
             $clearance->clear_image = $imageName;

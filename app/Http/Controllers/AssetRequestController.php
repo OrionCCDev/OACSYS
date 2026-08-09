@@ -37,7 +37,7 @@ class AssetRequestController extends Controller
             'signature' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $image = $request->file('signature');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
         $destinationPath = public_path('X-Files/Dash/imgs/request');
         $request->signature->move($destinationPath, $imageName);
         $requestAsset->image = $imageName;

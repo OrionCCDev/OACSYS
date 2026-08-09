@@ -3,7 +3,7 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/edlb2bdo7yna/public_html/orionacsys.com
     - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp .env.example $DEPLOYPATH/.env 2>/dev/null || true
+    - '[ -f $DEPLOYPATH/.env ] || /bin/cp .env.example $DEPLOYPATH/.env'
     - cd $DEPLOYPATH
     - composer install --no-dev --optimize-autoloader
     - php artisan config:clear

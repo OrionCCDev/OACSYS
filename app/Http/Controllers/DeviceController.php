@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use App\Models\Employee;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
 {
@@ -160,7 +159,10 @@ class DeviceController extends Controller
         if ($request->hasFile('main_image')) {
             // Delete old image if it exists and is not the default image
             if ($device->main_image && $device->main_image != 'default_device.png') {
-                Storage::delete('public/X-Files/Dash/imgs/devices/' . $device->main_image);
+                $oldImagePath = public_path('X-Files/Dash/imgs/devices/' . $device->main_image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
 
             // Store new image

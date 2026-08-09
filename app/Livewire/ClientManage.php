@@ -37,10 +37,10 @@ class ClientManage extends Component
     public function addNewclient()
     {
         $this->validateOnly('client_name');
+        $this->validateOnly('client_image');
         $client = Client::create(['name' => $this->client_name]);
         if ($this->client_image) {
-            // dd($this->client_image);
-            $imageName = time() . '.' . $this->client_image->extension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $this->client_image->extension();
             // $destinationPath = public_path('X-Files/Dash/imgs/clients/' . $imageName);
             $this->client_image->move(public_path('X-Files/Dash/imgs/clients/' . $imageName));
             // $this->client_image->storeAs('/clients', $imageName , 'public_uploads');
@@ -116,7 +116,7 @@ class ClientManage extends Component
                 unlink(public_path('X-Files/Dash/imgs/clients/' . $client->image));
             }
 
-            $imageName = time() . '.' . $this->edtableImage->extension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $this->edtableImage->extension();
             // $this->edtableImage->storeAs('/clients', $imageName , 'public_uploads');
             $this->edtableImage->move(public_path('X-Files/Dash/imgs/clients/' . $imageName));
 

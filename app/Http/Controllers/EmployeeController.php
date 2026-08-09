@@ -222,7 +222,7 @@ class EmployeeController extends Controller
         if ($request->hasFile('employee_image')) {
             try {
                 $image = $request->file('employee_image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
 
                 // Debug information
                 Log::info('Attempting to move image');
@@ -344,7 +344,7 @@ class EmployeeController extends Controller
         $finalClearance = Clearance::find($clr);
         if ($request->hasFile('signature')) {
             $signature = $request->file('signature');
-            $signatureName = time() . '.' . $signature->getClientOriginalExtension();
+            $signatureName = \Illuminate\Support\Str::uuid() . '.' . $signature->getClientOriginalExtension();
             $signature->move(public_path('X-Files/Dash/imgs/clearance'), $signatureName);
             $finalClearance->update([
                 'clear_image' => $signatureName,

@@ -65,14 +65,15 @@ Route::post('/import-simcards', function (Request $request) {
 
 Route::get('/import-employees', function () {
     return view('profile.uploadExcel');
-});
-
-Route::post('/simcards/import', [SimCardController::class, 'import'])->name('simcards.import');
+})->middleware(['auth', 'role:o-super-admin|o-admin']);
 
 Route::post('/import-employees', function (Request $request) {
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+    ]);
     Excel::import(new EmployeesImport, $request->file('file'));
     return redirect()->back()->with('success', 'Employees imported successfully');
-});
+})->middleware(['auth', 'role:o-super-admin|o-admin']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

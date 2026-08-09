@@ -170,7 +170,7 @@ class ProjectAssetController extends Controller
             // Upload signature
             if ($request->hasFile('receiving_signature')) {
                 $image = $request->file('receiving_signature');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
 
                 $receive->receive_image = $imageName;
@@ -321,7 +321,7 @@ class ProjectAssetController extends Controller
             // Upload signature
             if ($request->hasFile('clearing_signature')) {
                 $image = $request->file('clearing_signature');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('X-Files/Dash/imgs/clearance'), $imageName);
 
                 $clearance->clear_image = $imageName;
@@ -480,7 +480,7 @@ class ProjectAssetController extends Controller
             // Upload signature
             if ($request->hasFile('transfer_signature')) {
                 $image = $request->file('transfer_signature');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('X-Files/Dash/imgs/transfers'), $imageName);
 
                 // Update all transfers with the same transfer code

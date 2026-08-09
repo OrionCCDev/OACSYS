@@ -182,7 +182,7 @@ class ReceiveController extends Controller
         // Process the image
         if ($request->hasFile('receiving_signature')) {
             $image = $request->file('receiving_signature');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
 
             $receive->receive_image = $imageName;
@@ -242,6 +242,10 @@ class ReceiveController extends Controller
 
     public function clear($id, $clearId, Request $request)
     {
+        $request->validate([
+            'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
         $clr = \App\Models\Clearance::findOrFail($clearId);
         $device = Device::with(['employee.department', 'consultant', 'clientEmployee', 'project'])->findOrFail($id);
         $device->status = 'available';
@@ -251,15 +255,15 @@ class ReceiveController extends Controller
         $device->employee_id  = null;
         $device->receive_id   = null;
         $device->save();
-        $request->validate([
-            'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
-        ]);
-        $imageName = time() . '.' . $request->clearing_signature->extension();
+
+        $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->clearing_signature->extension();
         $destinationPath = public_path('X-Files/Dash/imgs/clearance');
-        $request->receiving_signature->move($destinationPath, $imageName);
+        $request->clearing_signature->move($destinationPath, $imageName);
         $clr->clear_image = $imageName;
         $clr->status = 'finished';
         $clr->save();
+
+        return redirect()->route('device.index')->with('success', 'Device cleared successfully.');
     }
     /**
      * Store a newly created resource in storage.
@@ -351,7 +355,7 @@ class ReceiveController extends Controller
             }
         }
 
-        $imageName = time() . '.' . $request->receiving_signature->extension();
+        $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->receiving_signature->extension();
         $destinationPath = public_path('X-Files/Dash/imgs/receives');
         $request->receiving_signature->move($destinationPath, $imageName);
         $rcv->receive_image = $imageName;

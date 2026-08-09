@@ -18,6 +18,7 @@ class DeductionController extends Controller
     public function showDeductionReport($id)
     {
         $deduction = Deduction::with('employee.devices','employee.department','employee.position','device')->findOrFail($id);
+        $this->authorizeManagerForEmployee($deduction->employee);
 
         return view('deductions.deduction_report' , compact('deduction'));
     }
@@ -27,7 +28,8 @@ class DeductionController extends Controller
         $request->validate([
             'signed_deduction' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $deduction = Deduction::findOrFail($id);
+        $deduction = Deduction::with('employee')->findOrFail($id);
+        $this->authorizeManagerForEmployee($deduction->employee);
             // Remove old image if exists
         if ($deduction->image) {
             $oldImagePath = public_path('X-Files/Dash/imgs/deductions/' . $deduction->image);
@@ -35,7 +37,7 @@ class DeductionController extends Controller
                 unlink($oldImagePath);
             }
         }
-        $imageName = time() . '.' . $request->signed_deduction->extension();
+        $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->signed_deduction->extension();
         $destinationPath = public_path('X-Files/Dash/imgs/deductions');
         $request->signed_deduction->move($destinationPath, $imageName);
         $deduction->image = $imageName;
@@ -54,6 +56,7 @@ class DeductionController extends Controller
     public function createNewDeduct($id)
     {
         $employee = Employee::with('devices' , 'department' , 'position' , 'deductions' , 'sim_card')->findOrFail($id);
+        $this->authorizeManagerForEmployee($employee);
         return view('deductions.create' , compact('employee'));
     }
 
@@ -68,6 +71,7 @@ class DeductionController extends Controller
     {
 
         $employee = Employee::with('deductions')->findOrFail($id);
+        $this->authorizeManagerForEmployee($employee);
         // if ($employee->deductions->isEmpty()) {
         //     // Handle empty case
         //     return view('deductions.employee_deductions', [
@@ -109,6 +113,7 @@ class DeductionController extends Controller
      */
     public function destroy(Deduction $deduction)
     {
+        $this->authorizeManagerForEmployee($deduction->employee);
         $deduction->delete();
         if ($deduction->image) {
             $oldImagePath = public_path('X-Files/Dash/imgs/deductions/' . $deduction->image);
@@ -117,5 +122,17 @@ class DeductionController extends Controller
             }
         }
         return redirect()->back()->with('success', 'Deduction deleted successfully');
+    }
+
+    /**
+     * An o-manager may only act on deductions belonging to employees they manage.
+     * Other roles reaching this controller (o-hr, o-super-admin, o-admin) are unrestricted.
+     */
+    private function authorizeManagerForEmployee(?Employee $employee): void
+    {
+        $user = auth()->user();
+        if ($employee && $user->hasRole(['o-manager']) && $employee->manager_id != $user->employee_profile_id) {
+            abort(403, 'Unauthorized access');
+        }
     }
 }
