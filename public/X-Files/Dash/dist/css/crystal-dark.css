@@ -48,6 +48,19 @@ body, .hk-wrapper, .hk-pg-wrapper, p, span, div, td, th, li, label {
   font-family: var(--font-sans);
 }
 
+/* thin accent bar across the very top of every page */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sapphire-deep), var(--sapphire), var(--sapphire-bright), var(--sapphire));
+  z-index: 1100;
+  pointer-events: none;
+}
+
 /* style.css hardcodes .hk-wrapper background:#fff - left unoverridden this
    showed through as a solid white patch anywhere .hk-pg-wrapper's own
    (intentionally transparent, see below) background didn't get covered
@@ -619,14 +632,157 @@ hr { border-color: var(--panel-border) !important; }
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(125, 196, 255, 0.1);
+  background: rgba(125, 196, 255, 0.08);
+  border: 2px solid rgba(125, 196, 255, 0.35);
+  box-shadow: 0 0 12px rgba(125, 196, 255, 0.35), inset 0 0 8px rgba(125, 196, 255, 0.15);
   color: var(--sapphire-bright);
+}
+
+/* ---------- equipment condition ---------- */
+
+.crystal-condition-card {
+  padding: 20px 22px;
+  background: var(--panel);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+}
+
+.crystal-condition-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.crystal-condition-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.crystal-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 6px var(--emerald);
+  animation: crystal-pulse 2s ease-in-out infinite;
+}
+
+@keyframes crystal-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.crystal-condition-bar {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.crystal-condition-seg + .crystal-condition-seg {
+  border-left: 1px solid rgba(5, 7, 12, 0.4);
+}
+
+.crystal-condition-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.crystal-condition-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.crystal-condition-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.crystal-condition-emerald { background: var(--emerald); }
+.crystal-condition-sapphire { background: var(--sapphire-bright); }
+.crystal-condition-citrine { background: var(--citrine); }
+.crystal-condition-ruby { background: var(--ruby); }
+.crystal-condition-faint { background: var(--ink-faint); }
+
+/* ---------- recent activity ---------- */
+
+.crystal-activity-card {
+  padding: 6px 22px;
+  background: var(--panel);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+}
+
+.crystal-activity-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 14px;
+  row-gap: 2px;
+  padding: 14px 0;
+  text-decoration: none;
+  border-bottom: 1px solid var(--panel-border);
+}
+.crystal-activity-row:last-child { border-bottom: none; }
+.crystal-activity-row:hover { text-decoration: none; }
+.crystal-activity-row:hover .crystal-activity-title { color: var(--sapphire-bright); }
+
+.crystal-activity-code {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--sapphire-bright);
+}
+
+.crystal-activity-time {
+  grid-column: 3;
+  grid-row: 1;
+  font-size: 12px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.crystal-activity-title {
+  grid-column: 1 / span 3;
+  grid-row: 2;
+  font-weight: 600;
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.crystal-activity-subtitle {
+  grid-column: 1 / span 3;
+  grid-row: 3;
+  font-size: 13px;
+  color: var(--ink-faint);
 }
 
 .crystal-stat-label {

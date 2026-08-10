@@ -180,6 +180,45 @@
                     </div>
                 </div>
 
+                <div class="crystal-section-label">Equipment Condition</div>
+                <div class="crystal-condition-card">
+                    <div class="crystal-condition-head">
+                        <span>{{ $devices_tracked }} devices tracked, all categories</span>
+                        <span class="crystal-condition-updated"><span class="crystal-live-dot"></span>Live</span>
+                    </div>
+                    @if($devices_tracked > 0)
+                        <div class="crystal-condition-bar">
+                            @foreach($healthBreakdown as $row)
+                                <span class="crystal-condition-seg crystal-condition-{{ $row['color'] }}" style="width: {{ $row['percent'] }}%" title="{{ $row['label'] }}: {{ $row['percent'] }}%"></span>
+                            @endforeach
+                        </div>
+                        <div class="crystal-condition-legend">
+                            @foreach($healthBreakdown as $row)
+                                <span class="crystal-condition-legend-item">
+                                    <span class="crystal-condition-dot crystal-condition-{{ $row['color'] }}"></span>
+                                    {{ $row['label'] }} {{ $row['percent'] }}%
+                                </span>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="crystal-stat-note mb-0">No devices recorded yet.</p>
+                    @endif
+                </div>
+
+                <div class="crystal-section-label">Recent Activity</div>
+                <div class="crystal-activity-card">
+                    @forelse($recentActivity as $item)
+                        <a href="{{ $item['url'] }}" class="crystal-activity-row">
+                            <span class="crystal-activity-code">{{ $item['code'] }}</span>
+                            <span class="crystal-activity-title">{{ $item['title'] }}</span>
+                            <span class="crystal-activity-subtitle">{{ $item['subtitle'] }}</span>
+                            <span class="crystal-activity-time">{{ $item['time_label'] }}</span>
+                        </a>
+                    @empty
+                        <p class="crystal-stat-note mb-0">No activity recorded yet.</p>
+                    @endforelse
+                </div>
+
             @elseif(Auth::user()->hasRole('o-manager'))
 
                 <div class="crystal-section-label">Dispatch</div>

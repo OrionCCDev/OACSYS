@@ -43,7 +43,64 @@ Route::get('/', function () {
     $camera_count = \App\Models\Device::where('device_type', 'Camera')->count();
     $employees_new_this_month = \App\Models\Employee::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
     $project_new_this_month = \App\Models\Project::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
-    return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count', 'employees_new_this_month', 'project_new_this_month'));
+
+    $healthCounts = \App\Models\Device::selectRaw('health, count(*) as total')->groupBy('health')->pluck('total', 'health');
+    $devices_tracked = $healthCounts->sum();
+    $healthBreakdown = collect([
+        'New' => ['label' => 'New', 'color' => 'emerald'],
+        'Mediam_use' => ['label' => 'Medium use', 'color' => 'sapphire'],
+        'Bad_use' => ['label' => 'Bad use', 'color' => 'citrine'],
+        'Need_fix' => ['label' => 'Need fix', 'color' => 'ruby'],
+        'Scrap' => ['label' => 'Scrap', 'color' => 'faint'],
+    ])->map(function ($meta, $key) use ($healthCounts, $devices_tracked) {
+        $count = $healthCounts->get($key, 0);
+        return $meta + [
+            'count' => $count,
+            'percent' => $devices_tracked > 0 ? round($count / $devices_tracked * 100) : 0,
+        ];
+    })->filter(fn ($row) => $row['count'] > 0)->values();
+
+    $recentReceives = \App\Models\Receive::with(['employee', 'clientEmployee', 'consultant', 'devices'])
+        ->latest()->take(6)->get()->map(function ($r) {
+            $person = $r->employee ?? $r->clientEmployee ?? $r->consultant;
+            $parts = array_filter([
+                $r->devices->count() ? $r->devices->count() . ' device' . ($r->devices->count() > 1 ? 's' : '') : null,
+            ]);
+            return [
+                'code' => $r->code,
+                'title' => 'Receiving issued' . ($parts ? ' — ' . implode(', ', $parts) : ''),
+                'subtitle' => $person->name ?? 'Unknown',
+                'time' => $r->created_at,
+                'url' => route('receive.pdf', $r->id),
+            ];
+        });
+
+    $recentClearances = \App\Models\Clearance::with(['employee', 'clientEmployee', 'consultant', 'devices', 'simCards'])
+        ->latest('updated_at')->take(6)->get()->map(function ($c) {
+            $person = $c->employee ?? $c->clientEmployee ?? $c->consultant;
+            $isResignation = in_array($c->status, ['pending_resign', 'resigned']);
+            $isDone = in_array($c->status, ['finished', 'resigned']);
+            $parts = array_filter([
+                $c->devices->count() ? $c->devices->count() . ' device' . ($c->devices->count() > 1 ? 's' : '') : null,
+                $c->simCards->count() ? $c->simCards->count() . ' SIM' . ($c->simCards->count() > 1 ? 's' : '') : null,
+            ]);
+            $title = ($isResignation ? 'Resignation clearance' : 'Clearance') . ($isDone ? ' completed' : ' opened');
+            return [
+                'code' => $c->clear_code,
+                'title' => $title . ($parts ? ' — ' . implode(', ', $parts) : ''),
+                'subtitle' => $person->name ?? 'Unknown',
+                'time' => $c->updated_at,
+                'url' => route('clearance.show', $c->id),
+            ];
+        });
+
+    $recentActivity = $recentReceives->concat($recentClearances)->sortByDesc('time')->take(8)->values()->map(function ($item) {
+        $time = $item['time'];
+        $item['time_label'] = $time->isToday() ? $time->format('H:i') : ($time->isYesterday() ? 'Yesterday' : $time->diffForHumans());
+        return $item;
+    });
+
+    return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count', 'employees_new_this_month', 'project_new_this_month', 'devices_tracked', 'healthBreakdown', 'recentActivity'));
 })->middleware(['verified'])->name('dashboard');
 
 Route::get('/import-simcards', function () {
