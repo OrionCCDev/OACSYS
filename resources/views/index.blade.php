@@ -3,7 +3,6 @@
 @php
     $nameParts = preg_split('/\s+/', trim(Auth::user()->name));
     $initials = strtoupper(mb_substr($nameParts[0] ?? '', 0, 1) . mb_substr($nameParts[1] ?? '', 0, 1));
-    $roleLabel = ucwords(str_replace('-', ' ', Auth::user()->orion_role_lvl ?? 'user'));
     $department = Auth::user()->employee?->department?->name;
 @endphp
 <!-- Main Content -->
@@ -22,7 +21,6 @@
                 <span class="crystal-context-value">{{ $department }}</span>
             </div>
             @endif
-            <span class="crystal-role-pill">{{ $roleLabel }}</span>
             <span class="crystal-avatar">{{ $initials }}</span>
         </div>
 

@@ -112,6 +112,46 @@ a:hover { color: var(--ink); }
 }
 .navbar-search-alt .input-group > input::placeholder { color: var(--ink-faint); }
 
+.crystal-navbar-icon {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(125, 196, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  color: var(--ink-dim) !important;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.crystal-navbar-icon:hover {
+  background: rgba(125, 196, 255, 0.16);
+  border-color: var(--panel-border-strong);
+  color: var(--sapphire-bright) !important;
+}
+
+.crystal-nav-icon {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: rgba(125, 196, 255, 0.06);
+  color: var(--sapphire-bright);
+}
+.nav-item.active > .nav-link > .crystal-nav-icon {
+  background: rgba(125, 196, 255, 0.16);
+}
+.crystal-nav-icon-sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
 /* notification / user dropdown (retired from header.blade.php inline block) */
 .dropdown-notifications .badge-wrap .badge { background: var(--ruby) !important; }
 .dropdown-notifications .pulse { background: var(--ruby); }
