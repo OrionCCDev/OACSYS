@@ -48,6 +48,14 @@ body, .hk-wrapper, .hk-pg-wrapper, p, span, div, td, th, li, label {
   font-family: var(--font-sans);
 }
 
+/* style.css hardcodes .hk-wrapper background:#fff - left unoverridden this
+   showed through as a solid white patch anywhere .hk-pg-wrapper's own
+   (intentionally transparent, see below) background didn't get covered
+   by a card/table. */
+.hk-wrapper {
+  background: transparent !important;
+}
+
 .hk-pg-title, h1, h2, h3, .display-4 {
   font-family: var(--font-display);
   letter-spacing: 0.01em;
