@@ -126,7 +126,7 @@
     <link rel="icon" href="{{ asset('X-Files/Dash/logo-blue.webp') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700&display=swap');
 
         * {
             padding: 0;
@@ -134,22 +134,35 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #05070c;
+            background-image:
+                radial-gradient(ellipse 900px 600px at 12% -10%, rgba(61, 90, 224, 0.28), transparent 60%),
+                radial-gradient(ellipse 700px 500px at 100% 10%, rgba(125, 196, 255, 0.14), transparent 55%),
+                radial-gradient(ellipse 900px 700px at 50% 110%, rgba(61, 90, 224, 0.18), transparent 60%);
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #e8edf7;
         }
 
         .login-container {
             width: 100%;
-            max-width: 450px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            background: rgba(18, 26, 42, 0.55);
+            backdrop-filter: blur(22px) saturate(150%);
+            -webkit-backdrop-filter: blur(22px) saturate(150%);
+            border: 1px solid rgba(125, 196, 255, 0.16);
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             overflow: hidden;
             padding: 40px;
         }
@@ -160,14 +173,16 @@
         }
 
         .form-header h2 {
-            font-size: 28px;
-            color: #333;
-            font-weight: 600;
+            font-family: 'Big Shoulders Display', 'IBM Plex Sans', sans-serif;
+            font-size: 30px;
+            color: #e8edf7;
+            font-weight: 700;
+            letter-spacing: 0.01em;
             margin-bottom: 10px;
         }
 
         .form-header p {
-            color: #666;
+            color: #a7b3c9;
             font-size: 14px;
         }
 
@@ -180,7 +195,7 @@
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
-            color: #555;
+            color: #a7b3c9;
             font-weight: 500;
         }
 
@@ -193,23 +208,24 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #764ba2;
+            color: #7dc4ff;
             font-size: 16px;
         }
 
         .form-control {
             width: 100%;
             padding: 14px 15px 14px 45px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(125, 196, 255, 0.22);
+            border-radius: 8px;
             font-size: 14px;
-            color: #333;
+            color: #e8edf7;
             transition: all 0.3s;
         }
 
         .form-control:focus {
-            border-color: #764ba2;
-            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2);
+            border-color: #7dc4ff;
+            box-shadow: 0 0 0 3px rgba(125, 196, 255, 0.18);
             outline: none;
         }
 
@@ -218,7 +234,7 @@
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #666;
+            color: #a7b3c9;
             cursor: pointer;
             font-size: 16px;
         }
@@ -234,7 +250,7 @@
             display: flex;
             align-items: center;
             font-size: 14px;
-            color: #666;
+            color: #a7b3c9;
         }
 
         .remember-me input {
@@ -243,34 +259,33 @@
 
         .forgot-link {
             font-size: 14px;
-            color: #764ba2;
+            color: #7dc4ff;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         .forgot-link:hover {
             text-decoration: underline;
-            color: #667eea;
+            color: #e8edf7;
         }
 
         .btn-login {
             display: block;
             width: 100%;
             padding: 14px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #3d5ae0, #7dc4ff);
             color: white;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .btn-login:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 25px rgba(61, 90, 224, 0.45);
         }
 
         .btn-login:active {
@@ -281,11 +296,11 @@
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: #666;
+            color: #a7b3c9;
         }
 
         .signup-link a {
-            color: #764ba2;
+            color: #7dc4ff;
             font-weight: 500;
             text-decoration: none;
         }
@@ -302,55 +317,17 @@
         }
 
         .company-logo {
-            max-width: 217px;
-            max-height: 114px;
+            max-width: 200px;
+            max-height: 105px;
             object-fit: contain;
-            /* Removing previous animations since we're using Card3d.js now */
-            /* animation: logoAnimation 1.5s ease-in-out; */
-            /* Alternative animations - uncomment one to use */
-            /* animation: logoPulse 2s infinite; */
-            /* animation: logoSpin 2s ease-in-out; */
             transition: transform 0.6s ease-out;
             border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
         }
-
-        /* Removing previous animation keyframes since we're using Card3d.js now */
-        /*
-        @keyframes logoAnimation {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes logoPulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes logoSpin {
-            0% {
-                transform: rotateY(0deg);
-            }
-            100% {
-                transform: rotateY(360deg);
-            }
-        }
-        */
 
         .error-message {
-            color: #e53e3e;
+            color: #f0685c;
             font-size: 13px;
             margin-top: 5px;
         }
@@ -375,82 +352,6 @@
     </style>
 </head>
 <body>
-    <div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-     </div>
-     <style>
-        body {
-            margin: auto;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow: auto;
-            background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
-            animation: gradient 15s ease infinite;
-            background-size: 400% 400%;
-            background-attachment: fixed;
-        }
-
-        @keyframes gradient {
-            0% {
-                background-position: 0% 0%;
-            }
-            50% {
-                background-position: 100% 100%;
-            }
-            100% {
-                background-position: 0% 0%;
-            }
-        }
-
-        .wave {
-            background: rgb(255 255 255 / 25%);
-            border-radius: 1000% 1000% 0 0;
-            position: fixed;
-            width: 200%;
-            height: 12em;
-            animation: wave 10s -3s linear infinite;
-            transform: translate3d(0, 0, 0);
-            opacity: 0.8;
-            bottom: 0;
-            left: 0;
-            z-index: -1;
-        }
-
-        .wave:nth-of-type(2) {
-            bottom: -1.25em;
-            animation: wave 18s linear reverse infinite;
-            opacity: 0.8;
-        }
-
-        .wave:nth-of-type(3) {
-            bottom: -2.5em;
-            animation: wave 20s -1s reverse infinite;
-            opacity: 0.9;
-        }
-
-        @keyframes wave {
-            2% {
-                transform: translateX(1);
-            }
-
-            25% {
-                transform: translateX(-25%);
-            }
-
-            50% {
-                transform: translateX(-50%);
-            }
-
-            75% {
-                transform: translateX(-25%);
-            }
-
-            100% {
-                transform: translateX(1);
-            }
-        }
-     </style>
     <div class="login-container">
         <x-auth-session-status class="error-message" :status="session('status')" />
 

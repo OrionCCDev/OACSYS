@@ -30,16 +30,11 @@
 
     <!-- Custom CSS -->
     <link href="{{ asset('X-Files/Dash/dist/css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('X-Files/Dash/dist/css/crystal-dark.css') }}" rel="stylesheet" type="text/css">
     @yield('custom_css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @livewireStyles()
     <style>
-        .hk-wrapper .hk-navbar.navbar-dark {
-            background-color: #0f5874 !important;
-        }
-        .hk-wrapper.hk-vertical-nav .hk-nav.hk-nav-dark {
-            background-color: #114e67 !important;
-        }
         .dropdown-notifications .badge-indicator {
         position: absolute;
         top: 5px;
@@ -71,20 +66,10 @@
 
     .notifications-time {
         font-size: 12px;
-        color: #6c757d;
     }
 
     .notification-number-requests {
-
-
             animation: flash 1s infinite;
-
-        }
-
-        @keyframes flash {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
         }
     </style>
 </head>
