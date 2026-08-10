@@ -79,9 +79,9 @@
             @elseif($data['clearance']->status == 'pending_resign')
 
             @endif
-            <button onclick="printClearance()" class="btn btn-info mr-3">
+            <a href="{{ route('clearance.pdf', $data['clearance']->id) }}" target="_blank" class="btn btn-info mr-3">
                 Print Clearance
-            </button>
+            </a>
             <a href="{{ route('clearance.index') }}" class="btn btn-sky mr-3">
                 Back
             </a>

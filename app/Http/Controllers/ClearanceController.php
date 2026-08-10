@@ -7,9 +7,11 @@ use App\Models\SimCard;
 use App\Models\Employee;
 use App\Models\Clearance;
 use App\Models\Consultant;
+use App\Support\PdfFonts;
 use Illuminate\Http\Request;
 use App\Models\ClientEmployee;
 use App\Models\DeviceAndSimClearance;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClearanceController extends Controller
 {
@@ -214,6 +216,32 @@ class ClearanceController extends Controller
         ];
 
         return view('clearance.show', compact('data'));
+    }
+
+    /**
+     * Branded, print-ready PDF of the clearance / resignation document.
+     */
+    public function pdf(Clearance $clearance)
+    {
+        $clearance->load(['employee.department', 'clientEmployee', 'consultant', 'devices', 'simCards']);
+
+        $receiver = $clearance->employee ?? $clearance->clientEmployee ?? $clearance->consultant;
+        $receiver_type = $clearance->employee_id ? 'employee' : ($clearance->client_employee_id ? 'client' : 'consultant');
+        $isResignation = in_array($clearance->status, ['pending_resign', 'resigned']);
+
+        $pdf = Pdf::loadView('pdf.clearance', [
+            'clearance' => $clearance,
+            'receiver' => $receiver,
+            'receiver_type' => $receiver_type,
+            'isResignation' => $isResignation,
+            'devicesData' => $clearance->devices,
+            'simCardsData' => $clearance->simCards,
+        ]);
+        PdfFonts::register($pdf->getDomPDF());
+
+        $prefix = $isResignation ? 'resignation-' : 'clearance-';
+
+        return $pdf->stream($prefix . $clearance->clear_code . '.pdf');
     }
 
     /**

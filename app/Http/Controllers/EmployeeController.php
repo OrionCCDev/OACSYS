@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\DeviceAndSimClearance;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\PdfFonts;
 
 class EmployeeController extends Controller
 {
@@ -276,6 +277,7 @@ class EmployeeController extends Controller
         $diff = $employee->hire_date ? Carbon::parse($employee->hire_date)->diff($now) : null;
 
         $pdf = Pdf::loadView('employees.employee_print', compact('employee', 'hireDate', 'diff'));
+        PdfFonts::register($pdf->getDomPDF());
 
         // Stream the PDF to the browser. This will typically display it inline.
         return $pdf->stream('employee_' . $employee->employee_id . '_profile.pdf');

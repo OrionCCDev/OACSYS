@@ -6,11 +6,13 @@ use App\Models\Device;
 use App\Models\Project;
 use App\Models\Receive;
 use App\Models\SimCard;
+use App\Support\PdfFonts;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\DeviceAndSimReceive;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReceiveController extends Controller
 {
@@ -289,20 +291,17 @@ class ReceiveController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Resolve who a receive was made out to, and its device/SIM line items.
+     * Shared by the on-screen view and the PDF export so the two can't drift apart.
      */
-    public function show(Receive $receive)
+    private function receiveDetails(Receive $receive): array
     {
-        $rcv_id = $receive->id;
-        $receive_id = $receive->code;
-
-        // Check if this is a project receive first
         if ($receive->project_id != null) {
             $receiver_type = 'project';
             $project = Project::findOrFail($receive->project_id);
             $receiver = $project->manager ?? $project->client;
         } else {
-            // Handle regular receives
+            $receiver_type = null;
             if ($receive->employee_id != null) {
                 $receiver_type = 'employee';
             } elseif ($receive->client_employee_id != null) {
@@ -317,16 +316,48 @@ class ReceiveController extends Controller
                 $receiver = \App\Models\ClientEmployee::with(['project'])->findOrFail($receive->client_employee_id);
             } elseif ($receiver_type == 'consultant') {
                 $receiver = \App\Models\Consultant::with(['project'])->findOrFail($receive->consultant_id);
+            } else {
+                $receiver = null;
             }
         }
 
         $records = DeviceAndSimReceive::where('receive_id', $receive->id)->get();
-
-        // Retrieve devices and sim cards data
         $devicesData = Device::whereIn('id', $records->pluck('device_id'))->get();
         $simCardsData = SimCard::whereIn('id', $records->pluck('sim_card_id'))->get();
 
+        return compact('receiver', 'receiver_type', 'devicesData', 'simCardsData');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Receive $receive)
+    {
+        $rcv_id = $receive->id;
+        $receive_id = $receive->code;
+
+        extract($this->receiveDetails($receive));
+
         return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData'));
+    }
+
+    /**
+     * Branded, print-ready PDF of the receiving document.
+     */
+    public function pdf(Receive $receive)
+    {
+        extract($this->receiveDetails($receive));
+
+        $pdf = Pdf::loadView('pdf.receive', [
+            'receive' => $receive,
+            'receiver' => $receiver,
+            'receiver_type' => $receiver_type,
+            'devicesData' => $devicesData,
+            'simCardsData' => $simCardsData,
+        ]);
+        PdfFonts::register($pdf->getDomPDF());
+
+        return $pdf->stream('receiving-' . $receive->code . '.pdf');
     }
 
     /**

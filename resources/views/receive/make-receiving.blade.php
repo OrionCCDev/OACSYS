@@ -136,7 +136,7 @@
 
                     {{-- <a href="{{ route('device.index') }}" style="margin-right: 15px"
                         class="btn btn-primary btn-rounded ">Back To Devices List</a> --}}
-                    <button onclick="printReceiving()" class="btn btn-info btn-rounded ">
+                    <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" class="btn btn-info btn-rounded ">
                         <span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer">
@@ -145,7 +145,7 @@
                                 </path>
                                 <rect x="6" y="14" width="12" height="8"></rect>
                             </svg></span>
-                    </button>
+                    </a>
                 </div>
             </div>
             <!-- /Title -->
@@ -452,7 +452,7 @@
 
                     <a href="{{ route('device.index') }}" style="margin-right: 15px"
                         class="btn btn-primary btn-rounded ">Back To Devices List</a>
-                    <button onclick="printReceiving()" class="btn btn-info btn-rounded ">
+                    <a href="{{ route('receive.pdf', $rcv_id) }}" target="_blank" class="btn btn-info btn-rounded ">
 
                         <span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -462,7 +462,7 @@
                                 </path>
                                 <rect x="6" y="14" width="12" height="8"></rect>
                             </svg></span>
-                    </button>
+                    </a>
 
                 </div>
             </div>
