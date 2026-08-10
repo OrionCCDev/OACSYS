@@ -1,314 +1,208 @@
 @extends('layouts.app')
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script>
-    var _seed = 42;
-    Math.random = function() {
-        _seed = _seed * 16807 % 2147483647;
-        return (_seed - 1) / 2147483646;
-    };
-
-    function createRadialBarChart(elementId, seriesValue, label) {
-        var options = {
-            series: [seriesValue],
-            chart: {
-                height: 350,
-                type: 'radialBar',
-                toolbar: {
-                    show: false
-                },
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 800,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 2000 // 2 seconds delay
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 350
-                    }
-                }
-            },
-            plotOptions: {
-                radialBar: {
-                    startAngle: -135,
-                    endAngle: 225,
-                    hollow: {
-                        margin: 0,
-                        size: '70%',
-                        background: '#fff',
-                        position: 'front',
-                        dropShadow: {
-                            enabled: true,
-                            top: 3,
-                            left: 0,
-                            blur: 4,
-                            opacity: 0.5
-                        }
-                    },
-                    track: {
-                        background: '#fff',
-                        strokeWidth: '67%',
-                        margin: 0, // margin is in pixels
-                        dropShadow: {
-                            enabled: true,
-                            top: -3,
-                            left: 0,
-                            blur: 4,
-                            opacity: 0.7
-                        }
-                    },
-                    dataLabels: {
-                        show: true,
-                        name: {
-                            offsetY: -10,
-                            show: true,
-                            color: '#888',
-                            fontSize: '17px'
-                        },
-                        value: {
-                            formatter: function(val) {
-                                return parseInt(val);
-                            },
-                            color: '#111',
-                            fontSize: '36px',
-                            show: true,
-                        }
-                    }
-                }
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'dark',
-                    type: 'horizontal',
-                    shadeIntensity: 0.5,
-                    gradientToColors: ['#ABE5A1'],
-                    inverseColors: true,
-                    opacityFrom: 1,
-                    opacityTo: 1,
-                    stops: [0, 50]
-                }
-            },
-            stroke: {
-                lineCap: 'round'
-            },
-            labels: [label],
-        };
-
-        var chart = new ApexCharts(document.querySelector("#" + elementId), options);
-        chart.render();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        createRadialBarChart('chart1', {{ $employees_count }}, 'Employees');
-        createRadialBarChart('chart2', {{ $project_count }}, 'Projects');
-        createRadialBarChart('chart3', {{ $department_count }}, 'Departments');
-        createRadialBarChart('chart4', {{ $routers_count }}, 'Routers');
-        createRadialBarChart('chart5', {{ $laptop_count }}, 'Laotops');
-        createRadialBarChart('chart6', {{ $camera_count }}, 'Cameras');
-        // Add more charts as needed
-    });
-</script>
-@endsection
 @section('content')
+@php
+    $nameParts = preg_split('/\s+/', trim(Auth::user()->name));
+    $initials = strtoupper(mb_substr($nameParts[0] ?? '', 0, 1) . mb_substr($nameParts[1] ?? '', 0, 1));
+    $roleLabel = ucwords(str_replace('-', ' ', Auth::user()->orion_role_lvl ?? 'user'));
+    $department = Auth::user()->employee?->department?->name;
+@endphp
 <!-- Main Content -->
 <div class="hk-pg-wrapper">
     <!-- Container -->
     <div class="container mt-xl-50 mt-sm-30 mt-15">
-        <!-- Title -->
-        <div class="hk-pg-header align-items-top">
-            <div>
-                <h2 class="hk-pg-title font-weight-600 mb-10">System Management</h2>
-                {{-- <p>Questions about onboarding lead data? <a href="#">Learn more.</a></p> --}}
+
+        <div class="crystal-context-row">
+            <div class="crystal-context-item">
+                <span class="crystal-context-label">Signed in as</span>
+                <span class="crystal-context-value">{{ Auth::user()->name }}</span>
             </div>
-            {{-- <div class="d-flex w-500p">
-                <select class="form-control custom-select custom-select-sm mr-15">
-                    <option selected="">Latest Products</option>
-                    <option value="1">CRM</option>
-                    <option value="2">Projects</option>
-                    <option value="3">Statistics</option>
-                </select>
-                <select class="form-control custom-select custom-select-sm mr-15">
-                    <option selected="">USA</option>
-                    <option value="1">USA</option>
-                    <option value="2">India</option>
-                    <option value="3">Australia</option>
-                </select>
-                <select class="form-control custom-select custom-select-sm">
-                    <option selected="">December</option>
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="1">April</option>
-                    <option value="2">May</option>
-                    <option value="3">June</option>
-                    <option value="1">July</option>
-                    <option value="2">August</option>
-                    <option value="3">September</option>
-                    <option value="1">October</option>
-                    <option value="2">November</option>
-                    <option value="3">December</option>
-                </select>
-            </div> --}}
+            @if($department)
+            <div class="crystal-context-item">
+                <span class="crystal-context-label">Department</span>
+                <span class="crystal-context-value">{{ $department }}</span>
+            </div>
+            @endif
+            <span class="crystal-role-pill">{{ $roleLabel }}</span>
+            <span class="crystal-avatar">{{ $initials }}</span>
         </div>
-        <!-- /Title -->
-        <style>
-            .card-body {
-                background: #4168c2;
-                color: white !important;
-                text-align: center
-            }
 
-            .card.card-sm {
-                border: 2px solid black;
-            }
+        <div class="hk-pg-header crystal-masthead">
+            <div>
+                <h1 class="crystal-masthead-title">System Management</h1>
+                <p class="crystal-masthead-subtitle">Equipment, SIM, and personnel operations across the company.</p>
+            </div>
+            <div class="crystal-masthead-time">
+                <span class="crystal-date" id="crystalDate"></span>
+                <span class="crystal-clock" id="crystalClock"></span>
+            </div>
+        </div>
 
-            .card-body .d-flex div span {
-                color: white !important;
-            }
-        </style>
-        <!-- Row -->
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="hk-row">
-                    @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin'))
-                    <div class="col-sm-12">
-                        <div class="row">
-                            <div class="col-12 col-md-4 my-15">
-                                <a href="{{ route('receive.create') }}"
-                                    style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
-                                    class="btn btn-gradient-primary btn-wth-icon btn-lg">
-                                    <span class="icon-label"><span class="feather-icon"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 35px">Make
-                                        Receiving</span></a>
-                            </div>
-                            <div class="col-12 col-md-4 my-15">
-                                <a href="{{ route('clearance.index') }}"
-                                    style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
-                                    class="btn btn-gradient-info btn-wth-icon btn-lg"> <span class="icon-label"><span
-                                            class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 35px">Make
-                                        Clearance</span></a>
-                            </div>
-                            <div class="col-12 col-md-4 my-15">
-                                <button style="width: 100%;height:150px"
-                                    class="btn btn-gradient-danger btn-wth-icon btn-lg"> <span class="icon-label"><span
-                                            class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 25px">Make a
-                                        Resignation</span></button>
-                            </div>
-                            <div class="col-12 col-md-4 my-15">
-                                <a href="{{ url('import-simcards') }}"
-                                    style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
-                                    class="btn btn-gradient-success  btn-wth-icon btn-lg">
-                                    <span class="icon-label"><span class="feather-icon"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 25px">Upload
-                                        Sim From Excel</span></a>
-                            </div>
-                            <div class="col-12 col-md-4 my-15">
-                                <a href="{{ url('import-employees') }}"
-                                    style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
-                                    class="btn btn-gradient-warning  btn-wth-icon btn-lg">
-                                    <span class="icon-label"><span class="feather-icon"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 25px">Upload
-                                        Employees From Excel</span></a>
-                            </div>
+        <div class="hk-row">
+            @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin'))
 
-
-                        </div>
+                <div class="crystal-section-label">Dispatch</div>
+                <div class="row">
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ route('receive.create') }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16.5 9.4 7.55 4.24"></path>
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                    <polyline points="3.29 7 12 12 20.71 7"></polyline>
+                                    <line x1="12" y1="22" x2="12" y2="12"></line>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Issue Equipment</span>
+                            <span class="crystal-tile-subtitle">Start a new receiving</span>
+                        </a>
                     </div>
-                    <div class="col-sm-12 mt-100">
-                        <div class=" row">
-                            <div class="  col-md-3">
-
-                                <div id="chart1"></div>
-
-                            </div>
-                            <div class="  col-md-3">
-
-                                <div id="chart2"></div>
-
-                            </div>
-                            <div class="  col-md-3">
-
-                                <div id="chart3"></div>
-
-                            </div>
-                            <div class="  col-md-3">
-
-                                <div id="chart4"></div>
-
-                            </div>
-                            <div class="  col-md-3">
-
-                                <div id="chart5"></div>
-
-                            </div>
-                            <div class="  col-md-3">
-
-                                <div id="chart6"></div>
-
-                            </div>
-
-                        </div>
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ route('clearance.index') }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Process Clearance</span>
+                            <span class="crystal-tile-subtitle">Record a return</span>
+                        </a>
                     </div>
-                    @elseif(Auth::user()->hasRole('o-manager'))
-                    <div class="col-sm-12">
-                        <div class="row">
-                            <div class="col-12 col-md-4 my-15">
-                                <a href="{{ route('manager.show' , ['manager' => Auth::user()->employee_profile_id]) }}"
-                                    style="width: 100%;height:150px;display:flex;justify-content: center;align-items: center;"
-                                    class="btn btn-gradient-primary btn-wth-icon btn-lg">
-                                    <span class="icon-label"><span class="feather-icon"><svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-credit-card">
-                                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                                            </svg></span> </span><span class="btn-text" style="font-size: 35px">Show My
-                                        Profile</span></a>
-                            </div>
-
-                        </div>
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ route('employees.index') }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="18" y1="8" x2="23" y2="13"></line>
+                                    <line x1="23" y1="8" x2="18" y2="13"></line>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Process Resignation</span>
+                            <span class="crystal-tile-subtitle">Offboard an employee</span>
+                        </a>
                     </div>
-                    @endif
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ url('import-simcards') }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Import SIM Roster</span>
+                            <span class="crystal-tile-subtitle">Bulk upload from Excel</span>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ url('import-employees') }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Import Employee Roster</span>
+                            <span class="crystal-tile-subtitle">Bulk upload from Excel</span>
+                        </a>
+                    </div>
                 </div>
 
-            </div>
+                <div class="crystal-section-label">Fleet &amp; Headcount</div>
+                <div class="row">
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            </span>
+                            <span class="crystal-stat-label">Employees</span>
+                            <span class="crystal-stat-number">{{ $employees_count }}</span>
+                            @if($employees_new_this_month > 0)
+                                <span class="crystal-stat-delta crystal-up">+{{ $employees_new_this_month }} this month</span>
+                            @else
+                                <span class="crystal-stat-note">headcount</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            </span>
+                            <span class="crystal-stat-label">Projects</span>
+                            <span class="crystal-stat-number">{{ $project_count }}</span>
+                            @if($project_new_this_month > 0)
+                                <span class="crystal-stat-delta crystal-up">+{{ $project_new_this_month }} this month</span>
+                            @else
+                                <span class="crystal-stat-note">in progress</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path></svg>
+                            </span>
+                            <span class="crystal-stat-label">Departments</span>
+                            <span class="crystal-stat-number">{{ $department_count }}</span>
+                            <span class="crystal-stat-note">active</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="10" rx="2" ry="2"></rect><line x1="6" y1="18" x2="6.01" y2="18"></line><line x1="10" y1="18" x2="10.01" y2="18"></line></svg>
+                            </span>
+                            <span class="crystal-stat-label">Routers</span>
+                            <span class="crystal-stat-number">{{ $routers_count }}</span>
+                            <span class="crystal-stat-note">in fleet</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="21" x2="22" y2="21"></line></svg>
+                            </span>
+                            <span class="crystal-stat-label">Laptops</span>
+                            <span class="crystal-stat-number">{{ $laptop_count }}</span>
+                            <span class="crystal-stat-note">in fleet</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2 my-10">
+                        <div class="crystal-stat">
+                            <span class="crystal-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                            </span>
+                            <span class="crystal-stat-label">Cameras</span>
+                            <span class="crystal-stat-number">{{ $camera_count }}</span>
+                            <span class="crystal-stat-note">in fleet</span>
+                        </div>
+                    </div>
+                </div>
+
+            @elseif(Auth::user()->hasRole('o-manager'))
+
+                <div class="crystal-section-label">Dispatch</div>
+                <div class="row">
+                    <div class="col-12 col-md-4 my-10">
+                        <a href="{{ route('manager.show', ['manager' => Auth::user()->employee_profile_id]) }}" class="crystal-tile">
+                            <span class="crystal-tile-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
+                            <span class="crystal-tile-title">Show My Profile</span>
+                            <span class="crystal-tile-subtitle">View your record</span>
+                        </a>
+                    </div>
+                </div>
+
+            @endif
         </div>
-        <!-- /Row -->
+
     </div>
     <!-- /Container -->
 
@@ -317,22 +211,26 @@
         <footer class="footer">
             <div class="row">
                 <div class="col-md-6 col-sm-12">
-                    <p>Designed by<a href="https://orioncc.com/" class="text-dark" target="_blank">IT-Department</a> ©
-                        2024</p>
+                    <p>Designed by <a href="https://orioncc.com/" class="text-dark" target="_blank">IT-Department</a> &copy; 2024</p>
                 </div>
-                {{-- <div class="col-md-6 col-sm-12">
-                    <p class="d-inline-block">Follow us</p>
-                    <a href="#" class="d-inline-block btn btn-icon btn-icon-only btn-indigo btn-icon-style-4"><span
-                            class="btn-icon-wrap"><i class="fa fa-facebook"></i></span></a>
-                    <a href="#" class="d-inline-block btn btn-icon btn-icon-only btn-indigo btn-icon-style-4"><span
-                            class="btn-icon-wrap"><i class="fa fa-twitter"></i></span></a>
-                    <a href="#" class="d-inline-block btn btn-icon btn-icon-only btn-indigo btn-icon-style-4"><span
-                            class="btn-icon-wrap"><i class="fa fa-google-plus"></i></span></a>
-                </div> --}}
             </div>
         </footer>
     </div>
     <!-- /Footer -->
 </div>
 <!-- /Main Content -->
+<script>
+    (function () {
+        var dateEl = document.getElementById('crystalDate');
+        var clockEl = document.getElementById('crystalClock');
+        if (!dateEl || !clockEl) return;
+        function tick() {
+            var now = new Date();
+            dateEl.textContent = now.toLocaleDateString(undefined, { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).toUpperCase();
+            clockEl.textContent = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        }
+        tick();
+        setInterval(tick, 30000);
+    })();
+</script>
 @endsection

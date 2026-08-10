@@ -41,7 +41,9 @@ Route::get('/', function () {
     $routers_count = \App\Models\Device::where('device_type', 'Router')->count();
     $laptop_count = \App\Models\Device::where('device_type', 'Laptop')->count();
     $camera_count = \App\Models\Device::where('device_type', 'Camera')->count();
-    return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count'));
+    $employees_new_this_month = \App\Models\Employee::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+    $project_new_this_month = \App\Models\Project::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+    return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count', 'employees_new_this_month', 'project_new_this_month'));
 })->middleware(['verified'])->name('dashboard');
 
 Route::get('/import-simcards', function () {
