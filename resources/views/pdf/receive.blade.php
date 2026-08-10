@@ -4,6 +4,7 @@
     $pdfTitle = 'Receiving ' . $receive->code;
     $documentType = 'Receiving';
     $documentCode = '#' . $receive->code;
+    $colorScheme = 'sapphire';
 @endphp
 
 @section('content')
@@ -75,6 +76,7 @@
 @endif
 
 <div class="section-label">Terms and Conditions</div>
+<div class="terms-box">
 <ul class="terms">
     <li>Do not make any unauthorized modifications or repairs to the equipment.</li>
     <li>Handle all equipment with care to avoid damage.</li>
@@ -84,6 +86,7 @@
     <li>SIM cards provided are for business communications only; personal calls and messages are not permitted.</li>
     <li>Any damage caused to the equipment due to negligence or misuse is the responsibility of the receiver.</li>
 </ul>
+</div>
 
 <table class="sigblock">
     <tr>

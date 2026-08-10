@@ -5,7 +5,7 @@
 <title>{{ $pdfTitle ?? 'Document' }}</title>
 <style>
     @page {
-        margin: 100px 40px 70px 40px;
+        margin: 108px 40px 70px 40px;
     }
     * { box-sizing: border-box; }
     body {
@@ -17,13 +17,26 @@
     }
     .mono { font-family: 'Mono', monospace; }
 
-    /* ---- fixed running header / footer ---- */
-    #doc-header {
+    /* ---- accent color schemes (one per document type) ---- */
+    .scheme-sapphire { --accent: #2F4CDB; --accent-dark: #1E36B0; --accent-tint: #EAF0FF; --accent-tint-strong: #D7E2FF; }
+    .scheme-emerald  { --accent: #0E9F6E; --accent-dark: #0B7A55; --accent-tint: #E7F8F1; --accent-tint-strong: #CFF1E2; }
+    .scheme-ruby     { --accent: #D6483D; --accent-dark: #AD332A; --accent-tint: #FCEBE9; --accent-tint-strong: #F8D4D1; }
+
+    /* ---- top band + fixed running header / footer ---- */
+    #doc-topband {
         position: fixed;
-        top: -80px;
+        top: -108px;
         left: 0px;
         right: 0px;
-        height: 60px;
+        height: 6px;
+        background: var(--accent);
+    }
+    #doc-header {
+        position: fixed;
+        top: -88px;
+        left: 0px;
+        right: 0px;
+        height: 68px;
     }
     #doc-header table { width: 100%; border-collapse: collapse; }
     #doc-header .brand-cell { vertical-align: middle; }
@@ -44,22 +57,28 @@
         text-align: right;
         vertical-align: middle;
     }
-    #doc-header .doctype {
-        font-size: 9px;
-        letter-spacing: 0.12em;
+    .doctype-badge {
+        display: inline-block;
+        font-size: 8.5px;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #A9611F;
-        font-weight: 600;
+        color: var(--accent-dark);
+        background: var(--accent-tint);
+        border: 0.75px solid var(--accent-tint-strong);
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
     }
     #doc-header .doccode {
         font-size: 13px;
         font-weight: 600;
         color: #171E27;
+        margin-top: 5px;
     }
     #doc-header .rule {
         margin-top: 10px;
         border: none;
-        border-top: 1.6px solid #171E27;
+        border-top: 1.6px solid var(--accent);
     }
 
     #doc-footer {
@@ -75,18 +94,21 @@
     }
     #doc-footer table { width: 100%; }
     #doc-footer .right { text-align: right; }
+    #doc-footer .mono { color: var(--accent-dark); }
 
     /* ---- shared content components ---- */
     h1.doc-title {
-        font-size: 17px;
+        font-size: 19px;
         font-weight: 700;
         margin: 6px 0 2px;
         color: #171E27;
+        border-left: 4px solid var(--accent);
+        padding-left: 10px;
     }
     p.doc-lede {
         font-size: 9.5px;
         color: #5B6672;
-        margin: 0 0 16px;
+        margin: 4px 0 16px 14px;
         max-width: 440px;
     }
 
@@ -95,6 +117,7 @@
         border-collapse: collapse;
         margin-bottom: 16px;
         border: 0.75px solid #D8DEE2;
+        border-left: 3px solid var(--accent);
     }
     table.meta td {
         padding: 7px 12px;
@@ -112,15 +135,15 @@
         font-weight: 600;
     }
     table.meta td.v { font-weight: 500; }
-    table.meta td.divider { background: #F3F5F6; font-weight: 700; }
+    table.meta td.divider { background: var(--accent-tint); font-weight: 700; color: var(--accent-dark); }
 
     .section-label {
         font-size: 8.5px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #8992A0;
+        color: var(--accent-dark);
         font-weight: 700;
-        border-bottom: 0.75px solid #171E27;
+        border-bottom: 1.5px solid var(--accent);
         padding-bottom: 4px;
         margin: 18px 0 8px;
     }
@@ -135,18 +158,26 @@
         font-size: 8px;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        color: #5B6672;
-        background: #F3F5F6;
+        color: var(--accent-dark);
+        background: var(--accent-tint);
         padding: 6px 8px;
-        border-bottom: 1px solid #C2CAD0;
+        border-bottom: 1px solid var(--accent-tint-strong);
     }
     table.items td {
         padding: 6px 8px;
         border-bottom: 0.75px solid #E9ECEE;
         font-size: 9.5px;
     }
+    table.items tbody tr:nth-child(even) td { background: #FAFBFC; }
     table.items tr { page-break-inside: avoid; }
 
+    .terms-box {
+        background: #FAFBFC;
+        border: 0.75px solid #E9ECEE;
+        border-left: 3px solid var(--accent);
+        border-radius: 4px;
+        padding: 10px 14px;
+    }
     ul.terms {
         margin: 0;
         padding-left: 14px;
@@ -169,7 +200,7 @@
         text-align: center;
     }
     table.sigblock .line {
-        border-top: 0.75px solid #171E27;
+        border-top: 1.5px solid var(--accent);
         margin-top: 40px;
         padding-top: 5px;
         font-size: 8px;
@@ -189,7 +220,9 @@
 </style>
 @stack('pdf-styles')
 </head>
-<body>
+<body class="scheme-{{ $colorScheme ?? 'sapphire' }}">
+
+    <div id="doc-topband"></div>
 
     <div id="doc-header">
         <table>
@@ -208,7 +241,7 @@
                     </table>
                 </td>
                 <td class="doctype-cell" style="width:40%">
-                    <div class="doctype">{{ $documentType ?? 'Document' }}</div>
+                    <span class="doctype-badge">{{ $documentType ?? 'Document' }}</span>
                     <div class="doccode mono">{{ $documentCode ?? '' }}</div>
                 </td>
             </tr>

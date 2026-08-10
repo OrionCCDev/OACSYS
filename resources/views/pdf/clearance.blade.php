@@ -4,6 +4,7 @@
     $pdfTitle = ($isResignation ? 'Resignation Clearance ' : 'Clearance ') . $clearance->clear_code;
     $documentType = $isResignation ? 'Resignation Clearance' : 'Clearance';
     $documentCode = '#' . $clearance->clear_code;
+    $colorScheme = $isResignation ? 'ruby' : 'emerald';
 @endphp
 
 @section('content')
@@ -78,6 +79,7 @@
 @endif
 
 <div class="section-label">Terms and Conditions</div>
+<div class="terms-box">
 <ul class="terms">
     <li>All items above have been inspected and are accepted back into Orion Contracting Company inventory.</li>
     <li>Any pre-existing damage or missing accessories should be noted separately from this form.</li>
@@ -88,6 +90,7 @@
     <li>Returned devices remain Orion Contracting Company property and may be reissued to other staff.</li>
     @endif
 </ul>
+</div>
 
 <table class="sigblock">
     <tr>
