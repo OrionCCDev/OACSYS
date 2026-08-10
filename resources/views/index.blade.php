@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="hk-row">
+        <div>
             @if (Auth::user()->hasRole('o-super-admin') || Auth::user()->hasRole('o-admin'))
 
                 <div class="crystal-section-label">Dispatch</div>
