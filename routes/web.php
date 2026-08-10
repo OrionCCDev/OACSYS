@@ -101,7 +101,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 
         Route::put('/password/update', [ManagerController::class, 'updatePW'])->name('password.Manager.update');
 
-        Route::resource('/employees', EmployeeController::class);
+        Route::resource('/employees', EmployeeController::class)->only(['show']);
         Route::get('/employees/{id}/print', [EmployeeController::class, 'generatePrintablePdf'])->name('employees.print');
         Route::resource('/evaluations', EvaluateController::class);
         Route::resource('/asset-request', AssetRequestController::class);
@@ -211,7 +211,7 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     Route::get('/employee/clearance/details/{id}', [EmployeeController::class, 'showClearanceDetails'])->name('employee.clearance.detail');
     Route::get('/employee/clearances/{id}', [EmployeeController::class, 'showClearances'])->name('employee.clearances');
     Route::get('/employee/history/{id}', [EmployeeController::class, 'showHistory'])->name('employee.history');
-    Route::get('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');
+    Route::post('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');
     Route::get('/clearance/{clearance}/pdf', [ClearanceController::class, 'pdf'])->name('clearance.pdf');
     Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
     Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');

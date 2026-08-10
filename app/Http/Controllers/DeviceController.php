@@ -99,7 +99,7 @@ class DeviceController extends Controller
         ]);
         if ($request->hasFile('main_image')) {
             $mainImage = $request->file('main_image');
-            $mainImageName = time() . '_' . $mainImage->getClientOriginalName();
+            $mainImageName = \Illuminate\Support\Str::uuid() . '.' . $mainImage->getClientOriginalExtension();
             $mainImage->move(public_path('X-Files/Dash/imgs/devices'), $mainImageName);
             $device->main_image = $mainImageName;
             $device->save();
@@ -167,7 +167,7 @@ class DeviceController extends Controller
 
             // Store new image
             $mainImage = $request->file('main_image');
-            $mainImageName = time() . '_' . $mainImage->getClientOriginalName();
+            $mainImageName = \Illuminate\Support\Str::uuid() . '.' . $mainImage->getClientOriginalExtension();
             $mainImage->move(public_path('X-Files/Dash/imgs/devices'), $mainImageName);
             $validated['main_image'] = $mainImageName;
         }
@@ -213,7 +213,8 @@ class DeviceController extends Controller
             'client_id' => null,
             'consultant_id' => null,
             'project_id' => null,
-            'employee_id' => null
+            'employee_id' => null,
+            'receive_id' => null,
         ]);
 
         return redirect()->back()->with('success', 'Device has been made available');

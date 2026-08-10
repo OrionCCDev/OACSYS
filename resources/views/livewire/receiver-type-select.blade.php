@@ -339,5 +339,14 @@
             window.Livewire.emit('historyStateChanged', event.state);
         }
     });
+
+    window.Livewire.on('deviceAddError', (event) => {
+        const message = (event && event.message) ? event.message : (Array.isArray(event) && event[0] ? event[0].message : 'That item is no longer available.');
+        if (window.Swal) {
+            Swal.fire({ icon: 'error', title: 'Unavailable', text: message });
+        } else {
+            alert(message);
+        }
+    });
 </script>
 </div>

@@ -4,7 +4,6 @@
 
 @endpush
 @section('content')
-{{-- @dd($devicesData , $receiver , $receiver_type) --}}
 <div class="hk-pg-wrapper">
     <!-- Container -->
     <div class="container mt-xl-50 mt-sm-30 mt-15">
@@ -81,9 +80,9 @@
                         </div>
                     </div>
                     <a href="{{ route('device.index') }}" style="margin-right: 15px" class="btn btn-primary btn-rounded ">Back To Devices List</a>
-                    <form action="" method="post">
+                    <form action="{{ route('clearance.cancel', $newClearance->id) }}" method="post"
+                        onsubmit="return confirm('Cancel this clearance and put the device back? This cannot be undone.');">
                         @csrf
-                        @method('DELETE')
 
                         <button
                              class="btn btn-danger btn-rounded" style="margin-right: 15px">
@@ -116,7 +115,6 @@
                                                 <th>Name</th>
                                                 <th>Img</th>
                                                 <th>Type</th>
-                                                <th>Manage</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -131,16 +129,13 @@
                                                     width="50" height="50" alt="icon">
                                                 </td>
                                                 <td>{{ $dvc->device_type }}</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-rounded">Add</button>
-                                                </td>
 
 
                                             </tr>
                                             @endforeach
                                             @if ($simCards)
                                             <tr>
-                                                <td colspan="5">
+                                                <td colspan="4">
                                                     <h5 class="hk-sec-title">Sim Cards</h5>
                                                     <p class="mb-25">Sim Cards</p>
                                                     <div class="table-wrap">
@@ -150,7 +145,6 @@
                                                                     <tr>
                                                                         <th>Code</th>
                                                                         <th>Number</th>
-                                                                        <th>Manage</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -158,9 +152,6 @@
                                                                     <tr>
                                                                         <td>{{ $sim->sim_serial }}</td>
                                                                         <td>{{ $sim->sim_number }}</td>
-                                                                        <td>
-                                                                            <button class="btn btn-primary btn-rounded">Add</button>
-                                                                        </td>
                                                                         </tr>
                                                                     @endforeach
                                                                 </tbody>

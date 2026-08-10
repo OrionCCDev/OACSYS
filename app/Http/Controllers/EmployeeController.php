@@ -295,56 +295,62 @@ class EmployeeController extends Controller
 
     public function preResign($id)
     {
-        $employee = Employee::with('devices', 'department', 'position', 'sim_card', 'project', 'clearance')->find($id);
-        // dd($employee);
-        if ($employee->clearance->where('status', 'pending_resign')->count() > 0) {
-            $clearanceResign = $employee->clearance->where('status', 'pending_resign')->first();
-        } elseif ($employee->clearance->where('status', 'resigned')->count() > 0) {
-            $clearanceResign = $employee->clearance->where('status', 'resigned')->first();
-        } else {
+        $employee = Employee::with('devices', 'department', 'position', 'sim_card', 'project', 'clearance')->findOrFail($id);
+
+        $clearanceResign = DB::transaction(function () use ($employee) {
+            // Lock any existing pending/finished resignation clearance for this employee so a
+            // double-click or two simultaneous requests can't both pass this check and each
+            // create their own clearance + duplicated device/sim pivot rows.
+            $existing = Clearance::where('employee_id', $employee->id)
+                ->whereIn('status', ['pending_resign', 'resigned'])
+                ->lockForUpdate()
+                ->first();
+
+            if ($existing) {
+                return $existing;
+            }
+
             $clearanceResign = Clearance::create([
                 'employee_id' => $employee->id,
                 'status' => 'pending_resign',
             ]);
-            // Create a new DeviceAndSimClearance
-            $deviceAndSimClearance = DeviceAndSimClearance::create([
-                'clearance_id' => $clearanceResign->id,
-            ]);
 
-            // Attach all devices assigned to the employee
             foreach ($employee->devices as $device) {
-                $deviceAndSimClearance = DeviceAndSimClearance::create([
+                DeviceAndSimClearance::create([
                     'clearance_id' => $clearanceResign->id,
                     'device_id' => $device->id,
                 ]);
             }
             foreach ($employee->sim_card as $simCard) {
-                $deviceAndSimClearance = DeviceAndSimClearance::create([
+                DeviceAndSimClearance::create([
                     'clearance_id' => $clearanceResign->id,
                     'sim_card_id' => $simCard->id,
                 ]);
             }
 
-            // Attach all SIM cards assigned to the employee
-            // foreach ($employee->sim_card as $simCard) {
-            //     DB::table('device_and_sim_clearances')->insert([
-            //         'sim_card_id' => $simCard->id,
-            //         'clearance_id' => $deviceAndSimClearance->id,
-            //     ]);
-            // }
-        }
+            return $clearanceResign;
+        });
 
         return view('employees.resign', compact('employee', 'clearanceResign'));
     }
 
     public function finishResign($id, $clr, Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'signature' => 'required|mimes:png,jpg,jpeg,webp,pdf|max:2048',
         ]);
-        $employee = Employee::with('devices', 'sim_card')->find($id);
-        $finalClearance = Clearance::find($clr);
-        if ($request->hasFile('signature')) {
+        $employee = Employee::with('devices', 'sim_card')->findOrFail($id);
+        $finalClearance = Clearance::findOrFail($clr);
+
+        if ((int) $finalClearance->employee_id !== (int) $employee->id) {
+            abort(403, 'This clearance does not belong to this employee.');
+        }
+
+        if (!$request->hasFile('signature')) {
+            return back()->with('error', 'A signature file is required to finish this resignation.');
+        }
+
+        DB::transaction(function () use ($request, $employee, $finalClearance) {
             $signature = $request->file('signature');
             $signatureName = \Illuminate\Support\Str::uuid() . '.' . $signature->getClientOriginalExtension();
             $signature->move(public_path('X-Files/Dash/imgs/clearance'), $signatureName);
@@ -352,37 +358,40 @@ class EmployeeController extends Controller
                 'clear_image' => $signatureName,
                 'status' => 'resigned',
             ]);
-            // foreach ($employee->devices as $device) {
-
-            //     DB::table('device_and_sim_clearances')->create([
-            //         'device_id' => $device->id,
-            //         'clearance_id' => $finalClearance->id,
-            //     ]);
-            // }
-            // foreach ($employee->sim_card() as $sim) {
-
-            //     DB::table('device_and_sim_clearances')->create([
-            //         'sim_card_id' => $sim->id,
-            //         'clearance_id' => $finalClearance->id,
-            //     ]);
-            // }
 
             $employee->update([
                 'resign_date' => now(),
                 'project_id' => null,
                 'type' => 'resigned',
             ]);
+            // Only frees devices/sims tied to the employee directly (employee_id).
+            // Devices/sims parked against a project (project_id, no employee_id) are
+            // shared project assets, not this person's individually - see the
+            // project-manager check below for the one case where that matters here.
             $employee->devices()->update([
                 'status' => 'available',
                 'employee_id' => null,
                 'project_id' => null,
+                'receive_id' => null,
             ]);
             $employee->sim_card()->update([
                 'employee_id' => null,
+                'project_id' => null,
                 'status' => 'available',
             ]);
+        });
+
+        $managedProjects = Project::where('manager_id', $employee->id)->pluck('project_name');
+        if ($managedProjects->isNotEmpty()) {
+            return to_route('employees.index')->with(
+                'error',
+                'Resignation completed, but this employee manages ' . $managedProjects->count() .
+                ' project(s) (' . $managedProjects->implode(', ') . ') with their own assigned equipment. ' .
+                'That equipment was NOT released automatically - reassign the project manager and its devices separately.'
+            );
         }
-        return to_route('employees.index');
+
+        return to_route('employees.index')->with('success', 'Resignation completed.');
     }
 
     /**
@@ -433,7 +442,7 @@ class EmployeeController extends Controller
             }
 
             $image = $request->file('employee_image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
 
             if ($image->move(public_path('X-Files/Dash/imgs/EmployeeProfilePic'), $imageName)) {
                 $employee->update(['profile_image' => $imageName]);
@@ -448,9 +457,24 @@ class EmployeeController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * Deleting an employee cascades in the database: receives.employee_id is
+     * ON DELETE CASCADE, so their whole receiving history would be destroyed
+     * along with them, and any device/sim still assigned to them would be
+     * orphaned (owner FK nulled, but status left as "taken"). Rather than try
+     * to work around the cascade in code, refuse the delete until the
+     * employee has no assigned assets and no receiving history - point staff
+     * at the resignation flow instead, since that's what actually produces a
+     * clean clearance record.
      */
     public function destroy(Employee $employee)
     {
+        $hasAssets = $employee->devices()->count() > 0 || $employee->sim_card()->count() > 0;
+        $hasHistory = $employee->receives()->count() > 0;
+
+        if ($hasAssets || $hasHistory) {
+            return back()->with('error', 'This employee still has assigned equipment or receiving history on record. Process their resignation/clearance first, then delete.');
+        }
 
         $employee->delete();
         return to_route('employees.index')->with('success', 'Employee deleted successfully');

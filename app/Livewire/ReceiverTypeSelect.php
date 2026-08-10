@@ -103,23 +103,8 @@ class ReceiverTypeSelect extends Component
             ->items();
     }
 
-    public function removeFromSelectedSimcards($simId)
-    {
-        $this->selectedSimcards = array_diff($this->selectedSimcards, [$simId]);
-        $this->selectedSimcardsDetails = Simcard::whereIn('id', $this->selectedSimcards)->get();
-    }
     public function removeSimFromSelection($simId)
     {
-        // $sim = SimCard::find($simId);
-        // if ($sim) {
-        //     $sim->update([
-        //         'employee_id' => null,
-        //         'client_employee_id' => null,
-        //         'consultant_id' => null,
-        //         'status' => 'available'
-        //     ]);
-        //     $this->loadSimcards();
-        // }
         $sim = SimCard::find($simId);
         if ($sim) {
             $sim->update([
@@ -170,29 +155,16 @@ class ReceiverTypeSelect extends Component
     }
     public function addSimToSelection($simId)
     {
-        // $sim = SimCard::find($simId);
-        // if ($sim && $this->selectedPerson) {
-        //     $this->selectedSimcards[] = $simId;
-        //     if($this->selectedType == 'employee') {
-        //         $sim->update([
-        //             'employee_id' => $this->selectedPerson,
-        //             'status' => 'taken'
-        //         ]);
-        //     }elseif($this->selectedType == 'client') {
-        //         $sim->update([
-        //             'client_employee_id' => $this->selectedPerson,
-        //             'status' => 'taken'
-        //         ]);
-        //     }elseif($this->selectedType == 'consultant') {
-        //         $sim->update([
-        //             'consultant_id' => $this->selectedPerson,
-        //             'status' => 'taken'
-        //         ]);
-        //     }
-
-        //     $this->loadSimcards(); // Refresh the simcards list
-        // }
         $sim = SimCard::find($simId);
+        if (!$sim) {
+            return;
+        }
+
+        if ($sim->status !== 'available' || $sim->employee_id !== null || $sim->client_employee_id !== null || $sim->consultant_id !== null) {
+            $this->dispatch('deviceAddError', ['message' => 'That SIM card is no longer available.']);
+            return;
+        }
+
         if ($sim && $this->selectedPerson) {
             // Ensure we don't add duplicates
             if (!in_array($simId, $this->selectedSimcards)) {
@@ -235,15 +207,20 @@ class ReceiverTypeSelect extends Component
     }
     public function addDeviceToSelection($deviceId)
     {
-
         if (!$this->selectedPerson) {
             return;
         }
 
         if (!in_array($deviceId, $this->selectedDevices)) {
+            $device = Device::find($deviceId);
+
+            if (!$device || $device->status !== 'available'
+                || $device->employee_id !== null || $device->client_id !== null || $device->consultant_id !== null) {
+                $this->dispatch('deviceAddError', ['message' => 'That device is no longer available.']);
+                return;
+            }
 
             $this->selectedDevices[] = $deviceId;
-            $device = Device::find($deviceId);
             $device->status = 'pending-receiving';
 
             switch ($this->selectedType) {
@@ -260,6 +237,38 @@ class ReceiverTypeSelect extends Component
 
             $device->save();
             $this->dispatch('deviceAdded');
+        }
+    }
+
+    /**
+     * Revert whatever's currently in $selectedDevices/$selectedSimcards back to available,
+     * undoing the immediate DB mutation addDeviceToSelection()/addSimToSelection() make.
+     * Must be called BEFORE clearing those arrays, whenever the recipient or type changes -
+     * otherwise the device/sim stays stuck at pending-receiving/pending-receive forever,
+     * pointed at whichever person was selected before the change.
+     */
+    private function revertPendingSelections(): void
+    {
+        if (!empty($this->selectedDevices)) {
+            Device::whereIn('id', $this->selectedDevices)
+                ->where('status', 'pending-receiving')
+                ->update([
+                    'status' => 'available',
+                    'employee_id' => null,
+                    'client_id' => null,
+                    'consultant_id' => null,
+                ]);
+        }
+
+        if (!empty($this->selectedSimcards)) {
+            SimCard::whereIn('id', $this->selectedSimcards)
+                ->where('status', 'pending-receive')
+                ->update([
+                    'status' => 'available',
+                    'employee_id' => null,
+                    'client_employee_id' => null,
+                    'consultant_id' => null,
+                ]);
         }
     }
     public function cancelReceiving($receiveId)
@@ -333,7 +342,11 @@ class ReceiverTypeSelect extends Component
     }
     public function updatedSelectedPerson()
     {
-                // Clear all selections when changing receiver
+        // Revert whatever was already flipped to pending-receiving/pending-receive under the
+        // PREVIOUS person before clearing selections, or those devices/sims get stranded.
+        $this->revertPendingSelections();
+
+        // Clear all selections when changing receiver
         $this->selectedDevices = [];
         $this->selectedSimcards = [];
         $this->selectedSimcardsDetails = [];
@@ -350,10 +363,15 @@ class ReceiverTypeSelect extends Component
 
     public function updateReceivers()
     {
+        // Same reasoning as updatedSelectedPerson(): revert before clearing, not after.
+        $this->revertPendingSelections();
+
         $this->selectedPerson = '';
         $this->selectedPersonName = null;
         $this->personDevices = collect([]);
-        $this->selectedDevices = []; // Add this line to clear selected devices
+        $this->selectedDevices = [];
+        $this->selectedSimcards = [];
+        $this->selectedSimcardsDetails = [];
         $this->receivers = match ($this->selectedType) {
             'employee' => Employee::with(['devices.receive'])->orderBy('name', 'asc')->get(),
             'client' => ClientEmployee::with(['devices.receive'])->orderBy('name', 'asc')->get(),
@@ -372,59 +390,59 @@ class ReceiverTypeSelect extends Component
 
     public function makeReceiving()
     {
-
         $devices = !empty($this->selectedDevices) ? implode(',', $this->selectedDevices) : 'none';
         $receiverId = $this->selectedPerson;
         $receiverType = $this->selectedType;
 
-        $recv = Receive::create([
-            'status' => 'pending',
-            'client_employee_id' => $this->selectedType === 'client' ? $this->selectedPerson : null,
-            'employee_id' => $this->selectedType === 'employee' ? $this->selectedPerson : null,
-            'consultant_id' => $this->selectedType === 'consultant' ? $this->selectedPerson : null,
-        ]);
+        $recv = DB::transaction(function () {
+            $recv = Receive::create([
+                'status' => 'pending',
+                'client_employee_id' => $this->selectedType === 'client' ? $this->selectedPerson : null,
+                'employee_id' => $this->selectedType === 'employee' ? $this->selectedPerson : null,
+                'consultant_id' => $this->selectedType === 'consultant' ? $this->selectedPerson : null,
+            ]);
 
-        if (!empty($this->selectedDevices)) {
-            foreach ($this->selectedDevices as $deviceId) {
-                DB::table('device_and_sim_receives')->insert([
-                    'receive_id' => $recv->id,
-                    'device_id' => $deviceId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            // Set status as pending for selected devices
-            foreach ($this->selectedDevices as $deviceId) {
-                Device::where('id', $deviceId)->update(['status' => 'pending-receiving']);
-            }
-        }
-
-        if (!empty($this->selectedSimcards)) {
-            foreach ($this->selectedSimcards as $simId) {
-                $updateData = ['status' => 'pending-receive'];
-
-                switch ($this->selectedType) {
-                    case 'employee':
-                        $updateData['employee_id'] = $this->selectedPerson;
-                        break;
-                    case 'client':
-                        $updateData['client_employee_id'] = $this->selectedPerson;
-                        break;
-                    case 'consultant':
-                        $updateData['consultant_id'] = $this->selectedPerson;
-                        break;
+            if (!empty($this->selectedDevices)) {
+                foreach ($this->selectedDevices as $deviceId) {
+                    DB::table('device_and_sim_receives')->insert([
+                        'receive_id' => $recv->id,
+                        'device_id' => $deviceId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
                 }
 
-                SimCard::where('id', $simId)->update($updateData);
-                DB::table('device_and_sim_receives')->insert([
-                    'receive_id' => $recv->id,
-                    'sim_card_id' => $simId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                Device::whereIn('id', $this->selectedDevices)->update(['status' => 'pending-receiving']);
             }
-        }
+
+            if (!empty($this->selectedSimcards)) {
+                foreach ($this->selectedSimcards as $simId) {
+                    $updateData = ['status' => 'pending-receive'];
+
+                    switch ($this->selectedType) {
+                        case 'employee':
+                            $updateData['employee_id'] = $this->selectedPerson;
+                            break;
+                        case 'client':
+                            $updateData['client_employee_id'] = $this->selectedPerson;
+                            break;
+                        case 'consultant':
+                            $updateData['consultant_id'] = $this->selectedPerson;
+                            break;
+                    }
+
+                    SimCard::where('id', $simId)->update($updateData);
+                    DB::table('device_and_sim_receives')->insert([
+                        'receive_id' => $recv->id,
+                        'sim_card_id' => $simId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+            return $recv;
+        });
 
         return redirect()->route('receive.make', [
             'devices' => $devices,
@@ -434,74 +452,6 @@ class ReceiverTypeSelect extends Component
             'rcv_id' => $recv->id,
             'simCards' => !empty($this->selectedSimcards) ? implode(',', $this->selectedSimcards) : 'none'
         ]);
-        // $devices = implode(',', $this->selectedDevices);
-        // $receiverId = $this->selectedPerson;
-        // $receiverType = $this->selectedType;
-
-
-        // $recv = Receive::create([
-        //     'status' => 'pending',
-        //     'client_employee_id' => $this->selectedType === 'client' ? $this->selectedPerson : null,
-        //     'employee_id' => $this->selectedType === 'employee' ? $this->selectedPerson : null,
-        //     'consultant_id' => $this->selectedType === 'consultant' ? $this->selectedPerson : null,
-        // ]);
-
-        // if ($this->selectedDevices) {
-        //     foreach ($this->selectedDevices as $deviceId) {
-        //         DB::table('device_and_sim_receives')->insert(
-        //             [
-        //                 'receive_id' => $recv->id,
-        //                 'device_id' => $deviceId,
-        //                 'created_at' => now(),
-        //                 'updated_at' => now(),
-        //             ]
-        //         );
-        //     }
-        // }
-
-
-
-        // // dd($this->selectedSimcards);
-        // if (is_array($this->selectedSimcards) && !empty($this->selectedSimcards)) {
-        //     foreach ($this->selectedSimcards as $simId) {
-        //         $updateData = ['status' => 'pending-receive'];
-
-        //         switch ($this->selectedType) {
-        //             case 'employee':
-        //                 $updateData['employee_id'] = $this->selectedPerson;
-        //                 break;
-        //             case 'client':
-        //                 $updateData['client_employee_id'] = $this->selectedPerson;
-        //                 break;
-        //             case 'consultant':
-        //                 $updateData['consultant_id'] = $this->selectedPerson;
-        //                 break;
-        //         }
-
-        //         SimCard::where('id', $simId)->update($updateData);
-        //         DB::table('device_and_sim_receives')->insert(
-        //             [
-        //                 'receive_id' => $recv->id,
-        //                 'sim_card_id' => $simId,
-        //                 'created_at' => now(),
-        //                 'updated_at' => now(),
-        //             ]
-        //         );
-        //     }
-        // }
-        // // Set status as pending for selected devices
-        // foreach ($this->selectedDevices as $deviceId) {
-        //     Device::where('id', $deviceId)->update(['status' => 'pending-receiving']);
-        // }
-        // // dd($this->selectedSimcards);
-        // return redirect()->route('receive.make', [
-        //     'receive_id' => $recv->code,
-        //     'rcv_id' => $recv->id,
-        //     'devices' => $devices,
-        //     'receiver_id' => $receiverId,
-        //     'receiver_type' => $receiverType,
-        //     'simCards' => !empty($this->selectedSimcards) ? implode(',', $this->selectedSimcards) : 'none'
-        // ]);
     }
     public function getSimCards()
     {

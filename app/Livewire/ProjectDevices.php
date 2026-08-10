@@ -92,27 +92,35 @@ class ProjectDevices extends Component
     public function addDeviceDirectly($deviceId)
     {
         try {
-            // Check if device exists
             $device = Device::findOrFail($deviceId);
 
-            // Check if device is already in project with any status
+            // Refuse to grab a device that's currently assigned to someone/something else -
+            // this used to skip that check entirely and could silently hijack a device away
+            // from whoever/whatever already had it.
+            $ownedElsewhere = $device->status !== 'available'
+                || $device->employee_id !== null
+                || $device->client_id !== null
+                || $device->consultant_id !== null
+                || ($device->project_id !== null && (int) $device->project_id !== (int) $this->project->id);
+
+            if ($ownedElsewhere) {
+                $this->dispatch('showToastError', ['message' => 'Device is already assigned elsewhere and cannot be added directly.']);
+                return;
+            }
+
             $existingDevice = ProjectDevice::where('project_id', $this->project->id)
                                 ->where('device_id', $deviceId)
                                 ->first();
 
-            // First, create or update the ProjectDevice relationship
             if ($existingDevice) {
-                // If device exists but not in pending status, update its status
-                if ($existingDevice->status !== 'pending-project-device') {
-                    $existingDevice->status = 'pending-project-device';
-                    $existingDevice->save();
-                    $this->dispatch('showToastUpdate');
-                } else {
+                if ($existingDevice->status === 'pending-project-device') {
                     $this->dispatch('showToastError', ['message' => 'Device already assigned to this project with pending status']);
-                    return; // Exit early if already in pending status
+                    return;
                 }
+                $existingDevice->status = 'pending-project-device';
+                $existingDevice->save();
+                $this->dispatch('showToastUpdate');
             } else {
-                // Add new device to project
                 ProjectDevice::create([
                     'project_id' => $this->project->id,
                     'device_id' => $deviceId,
@@ -121,43 +129,13 @@ class ProjectDevices extends Component
                 $this->dispatch('showToastAdd');
             }
 
-            // Now try multiple ways to update the Device record
-            try {
-                // Method 1: Direct property assignment
-                $updatedDevice = Device::find($deviceId); // Re-fetch to avoid any cache issues
-                $updatedDevice->status = 'pending-project-device';
-                $updatedDevice->project_id = $this->project->id;
-                $result = $updatedDevice->save();
+            $device->update([
+                'status' => 'pending-project-device',
+                'project_id' => $this->project->id,
+            ]);
+            $this->dispatch('showToastDeviceUpdated');
 
-                if (!$result) {
-                    // Method 2: Try using update if method 1 fails
-                    $updateResult = Device::where('id', $deviceId)
-                        ->update([
-                            'status' => 'pending-project-device',
-                            'project_id' => $this->project->id
-                        ]);
-
-                    if (!$updateResult) {
-                        // Method 3: Use DB facade directly
-                        \DB::table('devices')
-                            ->where('id', $deviceId)
-                            ->update([
-                                'status' => 'pending-project-device',
-                                'project_id' => $this->project->id
-                            ]);
-                    }
-                }
-
-                // Add success message for device update
-                $this->dispatch('showToastDeviceUpdated');
-            } catch (\Exception $deviceUpdateError) {
-                // Log specific device update error
-                $this->dispatch('showToastError', ['message' => 'Error updating device: ' . $deviceUpdateError->getMessage()]);
-            }
-
-            // Refresh the devices list
             $this->loadDevices();
-
         } catch (\Exception $e) {
             $this->dispatch('showToastError', ['message' => 'Error in process: ' . $e->getMessage()]);
         }
