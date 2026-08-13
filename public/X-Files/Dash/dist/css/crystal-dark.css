@@ -311,6 +311,20 @@ section.hk-sec-wrapper {
   border-radius: 10px;
 }
 
+/* Plain checkboxes dropped into a .table-responsive table cell (no
+   .form-check wrapper) were computing position:absolute from somewhere in
+   the vendor CSS chain with no single rule I could pin down as the source.
+   Whatever it is, an unwrapped checkbox in a <td> has no reason to be
+   anything but static - absolute positioning here is what let it drift out
+   of its row once a scrolling container actually had enough rows to scroll.
+   Scoped to .table-responsive specifically: clearance/select.blade.php uses
+   a deliberately absolute+hidden checkbox (inline style, not this class) to
+   drive its own clickable-card selection UI outside of any table, and must
+   not be touched by this. */
+.table-responsive input[type="checkbox"] {
+  position: static !important;
+}
+
 /* ---------- alerts ---------- */
 /* vendor .alert-* variants are pale light-mode backgrounds with dark text -
    completely unreadable/washed-out against the dark theme if left alone. */
