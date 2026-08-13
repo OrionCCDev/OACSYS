@@ -69,12 +69,28 @@
                     </div>
                     @endif
 
-                    <!-- Signature Upload -->
+                    <!-- Print Step -->
                     <div class="row mt-4">
+                        <div class="col-md-8 offset-md-2">
+                            <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="mb-2 mb-md-0">
+                                    <strong>Step 1 &mdash; Print &amp; Sign:</strong> Print this document and get it
+                                    physically signed by the Receiver, IT Manager, and Department Manager. Then scan
+                                    or photograph the signed paper and upload it below.
+                                </div>
+                                <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" class="btn btn-info">
+                                    <i class="fa fa-print"></i> Print Receiving Document
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signature Upload -->
+                    <div class="row mt-2">
                         <div class="col-md-8 offset-md-2">
                             <div class="card">
                                 <div class="card-header bg-primary text-white">
-                                    <h5 class="mb-0">Upload Receiving Signature</h5>
+                                    <h5 class="mb-0">Step 2 &mdash; Upload Signed Document</h5>
                                 </div>
                                 <div class="card-body">
                                     <form action="{{ route('department-assets.receive.complete', $receive->id) }}" method="POST" enctype="multipart/form-data">
