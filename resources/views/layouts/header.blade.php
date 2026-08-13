@@ -28,6 +28,9 @@
     <link href="{{ asset('X-Files/Dash/vendors/jquery-toast-plugin/dist/jquery.toast.min.css') }}" rel="stylesheet"
         type="text/css">
 
+    <!-- Font Awesome (bundled with the template but never linked - fa-* icons across the app were invisible) -->
+    <link href="{{ asset('X-Files/Dash/dist/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
     <!-- Custom CSS -->
     <link href="{{ asset('X-Files/Dash/dist/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('X-Files/Dash/dist/css/crystal-dark.css') }}" rel="stylesheet" type="text/css">

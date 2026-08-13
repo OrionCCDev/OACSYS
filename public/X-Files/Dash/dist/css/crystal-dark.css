@@ -280,6 +280,18 @@ section.hk-sec-wrapper {
   background: rgba(0, 0, 0, 0.22);
 }
 
+/* .thead-light/.thead-dark are more specific than the generic rule above and
+   otherwise win with their vendor-default light-gray background. */
+.table .thead-light th {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: var(--ink) !important;
+  border-color: var(--panel-border-strong) !important;
+}
+.table .thead-dark th {
+  background-color: var(--bg-elevated) !important;
+  color: var(--ink) !important;
+}
+
 .table td {
   color: var(--ink-dim);
   border-color: var(--panel-border) !important;
@@ -298,6 +310,25 @@ section.hk-sec-wrapper {
   border: 1px solid var(--panel-border);
   border-radius: 10px;
 }
+
+/* ---------- alerts ---------- */
+/* vendor .alert-* variants are pale light-mode backgrounds with dark text -
+   completely unreadable/washed-out against the dark theme if left alone. */
+
+.alert {
+  background: var(--panel-solid) !important;
+  border: 1px solid var(--panel-border-strong) !important;
+  color: var(--ink) !important;
+  border-left-width: 3px !important;
+}
+.alert .alert-link { color: var(--sapphire-bright) !important; }
+
+.alert-primary, .alert-info { border-left-color: var(--sapphire-bright) !important; }
+.alert-success { border-left-color: var(--emerald) !important; }
+.alert-warning { border-left-color: var(--citrine) !important; }
+.alert-danger { border-left-color: var(--ruby) !important; }
+.alert-secondary, .alert-light { border-left-color: var(--panel-border-strong) !important; color: var(--ink-dim) !important; }
+.alert-dark { background: var(--bg-elevated) !important; }
 
 /* ---------- buttons ---------- */
 
