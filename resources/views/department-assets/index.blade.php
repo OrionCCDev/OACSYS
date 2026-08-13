@@ -32,7 +32,26 @@
                                     <td>{{ $department->devices->count() }}</td>
                                     <td>{{ $department->simCards->count() }}</td>
                                     <td>
-                                        <a href="{{ route('department-assets.show', $department->id) }}" class="btn btn-sm btn-info">View</a>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ route('department-assets.show', $department->id) }}" class="btn btn-sm btn-primary" title="View Assets">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            @if($department->manager)
+                                            <a href="{{ route('department-assets.receive.create', $department->id) }}" class="btn btn-sm btn-success" title="Receive Assets">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            <a href="{{ route('department-assets.clearance.create', $department->id) }}" class="btn btn-sm btn-danger" title="Clear Assets">
+                                                <i class="fa fa-upload"></i>
+                                            </a>
+                                            @else
+                                            <button type="button" class="btn btn-sm btn-secondary" disabled title="Assign a department manager first">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" disabled title="Assign a department manager first">
+                                                <i class="fa fa-upload"></i>
+                                            </button>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
