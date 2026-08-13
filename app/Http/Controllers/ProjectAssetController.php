@@ -34,7 +34,7 @@ class ProjectAssetController extends Controller
      */
     public function show($id)
     {
-        $project = Project::with(['devices', 'simCards', 'manager', 'client', 'receives', 'transfersFrom', 'transfersTo'])
+        $project = Project::with(['devices', 'simCards', 'manager', 'client', 'receives', 'clearances', 'transfersFrom', 'transfersTo'])
             ->findOrFail($id);
 
         $assetsCount = $project->getAssetsCount();

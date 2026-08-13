@@ -204,6 +204,49 @@
                 </section>
             </div>
         </div>
+
+        <!-- Clearance History -->
+        <div class="row mt-4">
+            <div class="col-xl-12">
+                <section class="hk-sec-wrapper">
+                    <h5 class="hk-sec-title">Clearance History</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Clearance Code</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($project->clearances as $clearance)
+                                <tr>
+                                    <td>{{ $clearance->clear_code }}</td>
+                                    <td>{{ $clearance->created_at->format('Y-m-d H:i') }}</td>
+                                    <td>
+                                        @if($clearance->status == 'finished')
+                                            <span class="badge badge-success">Finished</span>
+                                        @else
+                                            <span class="badge badge-warning">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('clearance.show', $clearance->id) }}" class="btn btn-sm btn-info">View</a>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">No clearance history</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

@@ -49,7 +49,6 @@ class ReceiveController extends Controller
         $device->save();
 
         $newClearance = new \App\Models\Clearance();
-        $newClearance->device_id = $device->id;
         if ($device->employee_id != null) {
             $newClearance->employee_id = $device->employee_id;
             $hisDevices  = Device::where('employee_id', $device->employee_id)->get();
@@ -296,6 +295,7 @@ class ReceiveController extends Controller
      */
     private function receiveDetails(Receive $receive): array
     {
+        $project = null;
         if ($receive->project_id != null) {
             $receiver_type = 'project';
             $project = Project::findOrFail($receive->project_id);
@@ -325,7 +325,7 @@ class ReceiveController extends Controller
         $devicesData = Device::whereIn('id', $records->pluck('device_id'))->get();
         $simCardsData = SimCard::whereIn('id', $records->pluck('sim_card_id'))->get();
 
-        return compact('receiver', 'receiver_type', 'devicesData', 'simCardsData');
+        return compact('receiver', 'receiver_type', 'devicesData', 'simCardsData', 'project');
     }
 
     /**
@@ -338,7 +338,7 @@ class ReceiveController extends Controller
 
         extract($this->receiveDetails($receive));
 
-        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData'));
+        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData', 'project'));
     }
 
     /**
@@ -352,6 +352,7 @@ class ReceiveController extends Controller
             'receive' => $receive,
             'receiver' => $receiver,
             'receiver_type' => $receiver_type,
+            'project' => $project,
             'devicesData' => $devicesData,
             'simCardsData' => $simCardsData,
         ]);

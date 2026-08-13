@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Project;
 use App\Models\SimCard;
 use App\Models\Employee;
 use App\Models\Clearance;
@@ -204,10 +205,42 @@ class ClearanceController extends Controller
             ]);
     }
     /**
+     * Resolve who a clearance was made out to. Shared by the on-screen view
+     * and the PDF export so the two can't drift apart - mirrors
+     * ReceiveController::receiveDetails().
+     */
+    private function clearanceDetails(Clearance $clearance): array
+    {
+        $project = null;
+        if ($clearance->project_id != null) {
+            $receiver_type = 'project';
+            $project = Project::findOrFail($clearance->project_id);
+            $receiver = $project->manager ?? $project->client;
+        } elseif ($clearance->employee_id != null) {
+            $receiver_type = 'employee';
+            $receiver = $clearance->employee;
+        } elseif ($clearance->client_employee_id != null) {
+            $receiver_type = 'client';
+            $receiver = $clearance->clientEmployee;
+        } elseif ($clearance->consultant_id != null) {
+            $receiver_type = 'consultant';
+            $receiver = $clearance->consultant;
+        } else {
+            $receiver_type = null;
+            $receiver = null;
+        }
+
+        return compact('receiver', 'receiver_type', 'project');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Clearance $clearance)
     {
+        $clearance->load(['employee.department', 'clientEmployee', 'consultant', 'devices', 'simCards']);
+        extract($this->clearanceDetails($clearance));
+
         $data = [
             'clearance' => $clearance,
             'employee' => $clearance->employee,
@@ -215,6 +248,9 @@ class ClearanceController extends Controller
             'clientEmployee' => $clearance->clientEmployee,
             'devices' => $clearance->devices,
             'simCards' => $clearance->simCards,
+            'receiver' => $receiver,
+            'receiver_type' => $receiver_type,
+            'project' => $project,
         ];
 
         return view('clearance.show', compact('data'));
@@ -226,15 +262,15 @@ class ClearanceController extends Controller
     public function pdf(Clearance $clearance)
     {
         $clearance->load(['employee.department', 'clientEmployee', 'consultant', 'devices', 'simCards']);
+        extract($this->clearanceDetails($clearance));
 
-        $receiver = $clearance->employee ?? $clearance->clientEmployee ?? $clearance->consultant;
-        $receiver_type = $clearance->employee_id ? 'employee' : ($clearance->client_employee_id ? 'client' : 'consultant');
         $isResignation = in_array($clearance->status, ['pending_resign', 'resigned']);
 
         $pdf = Pdf::loadView('pdf.clearance', [
             'clearance' => $clearance,
             'receiver' => $receiver,
             'receiver_type' => $receiver_type,
+            'project' => $project,
             'isResignation' => $isResignation,
             'devicesData' => $clearance->devices,
             'simCardsData' => $clearance->simCards,

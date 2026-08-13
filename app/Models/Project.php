@@ -32,6 +32,10 @@ class Project extends Model
         return $this->hasMany(Receive::class);
     }
 
+    public function clearances(){
+        return $this->hasMany(Clearance::class);
+    }
+
     public function simCards(){
         return $this->hasMany(SimCard::class);
     }

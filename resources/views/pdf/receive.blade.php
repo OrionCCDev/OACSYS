@@ -15,6 +15,22 @@
     and agree to the terms and conditions on this document.
 </p>
 
+@if ($receiver_type == 'project')
+<table class="meta">
+    <tr>
+        <td class="k">Date</td>
+        <td class="v">{{ now()->format('Y-m-d') }}</td>
+        <td class="k">Project</td>
+        <td class="v">{{ $project->project_name ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="k">Project Code</td>
+        <td class="v mono">{{ $project->project_code ?? '-' }}</td>
+        <td class="k">Project Manager</td>
+        <td class="v">{{ $receiver->name ?? '-' }}</td>
+    </tr>
+</table>
+@else
 <table class="meta">
     <tr>
         <td class="k">Date</td>
@@ -37,6 +53,7 @@
     </tr>
     @endif
 </table>
+@endif
 
 @if ($devicesData->count() > 0)
 <div class="section-label">Devices</div>
@@ -92,7 +109,11 @@
     <tr>
         <td><div class="line">Receiver Signature</div></td>
         <td><div class="line">IT Manager</div></td>
+        @if ($receiver_type == 'project')
+        <td><div class="line">Project Manager{{ ($receiver->name ?? null) ? ' — ' . $receiver->name : '' }}</div></td>
+        @else
         <td><div class="line">Top Management</div></td>
+        @endif
     </tr>
 </table>
 
