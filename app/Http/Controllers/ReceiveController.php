@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Models\Project;
 use App\Models\Receive;
 use App\Models\SimCard;
+use App\Models\Department;
 use App\Support\PdfFonts;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -296,10 +297,15 @@ class ReceiveController extends Controller
     private function receiveDetails(Receive $receive): array
     {
         $project = null;
+        $department = null;
         if ($receive->project_id != null) {
             $receiver_type = 'project';
             $project = Project::findOrFail($receive->project_id);
             $receiver = $project->manager ?? $project->client;
+        } elseif ($receive->department_id != null) {
+            $receiver_type = 'department';
+            $department = Department::findOrFail($receive->department_id);
+            $receiver = $department->manager;
         } else {
             $receiver_type = null;
             if ($receive->employee_id != null) {
@@ -325,7 +331,7 @@ class ReceiveController extends Controller
         $devicesData = Device::whereIn('id', $records->pluck('device_id'))->get();
         $simCardsData = SimCard::whereIn('id', $records->pluck('sim_card_id'))->get();
 
-        return compact('receiver', 'receiver_type', 'devicesData', 'simCardsData', 'project');
+        return compact('receiver', 'receiver_type', 'devicesData', 'simCardsData', 'project', 'department');
     }
 
     /**
@@ -338,7 +344,7 @@ class ReceiveController extends Controller
 
         extract($this->receiveDetails($receive));
 
-        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData', 'project'));
+        return view('receive.make-receiving', compact('receive', 'receiver', 'rcv_id', 'simCardsData', 'receive_id', 'receiver_type', 'devicesData', 'project', 'department'));
     }
 
     /**
@@ -353,6 +359,7 @@ class ReceiveController extends Controller
             'receiver' => $receiver,
             'receiver_type' => $receiver_type,
             'project' => $project,
+            'department' => $department,
             'devicesData' => $devicesData,
             'simCardsData' => $simCardsData,
         ]);

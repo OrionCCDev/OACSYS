@@ -55,6 +55,7 @@ class ProjectAssetController extends Controller
             ->whereNull('consultant_id')
             ->whereNull('client_id')
             ->whereNull('project_id')
+            ->whereNull('department_id')
             ->get();
 
         $availableSimCards = SimCard::where('status', 'available')
@@ -62,6 +63,7 @@ class ProjectAssetController extends Controller
             ->whereNull('consultant_id')
             ->whereNull('client_employee_id')
             ->whereNull('project_id')
+            ->whereNull('department_id')
             ->get();
 
         return view('project-assets.receive.create', compact('project', 'availableDevices', 'availableSimCards'));
@@ -587,7 +589,8 @@ class ProjectAssetController extends Controller
             && $device->employee_id === null
             && $device->client_id === null
             && $device->consultant_id === null
-            && $device->project_id === null;
+            && $device->project_id === null
+            && $device->department_id === null;
     }
 
     private function simCardIsAvailable(SimCard $simCard): bool
@@ -596,6 +599,7 @@ class ProjectAssetController extends Controller
             && $simCard->employee_id === null
             && $simCard->consultant_id === null
             && $simCard->client_employee_id === null
-            && $simCard->project_id === null;
+            && $simCard->project_id === null
+            && $simCard->department_id === null;
     }
 }

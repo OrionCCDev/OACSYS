@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\SimCard;
 use App\Models\Employee;
 use App\Models\Clearance;
+use App\Models\Department;
 use App\Models\Consultant;
 use App\Support\PdfFonts;
 use Illuminate\Http\Request;
@@ -212,10 +213,15 @@ class ClearanceController extends Controller
     private function clearanceDetails(Clearance $clearance): array
     {
         $project = null;
+        $department = null;
         if ($clearance->project_id != null) {
             $receiver_type = 'project';
             $project = Project::findOrFail($clearance->project_id);
             $receiver = $project->manager ?? $project->client;
+        } elseif ($clearance->department_id != null) {
+            $receiver_type = 'department';
+            $department = Department::findOrFail($clearance->department_id);
+            $receiver = $department->manager;
         } elseif ($clearance->employee_id != null) {
             $receiver_type = 'employee';
             $receiver = $clearance->employee;
@@ -230,7 +236,7 @@ class ClearanceController extends Controller
             $receiver = null;
         }
 
-        return compact('receiver', 'receiver_type', 'project');
+        return compact('receiver', 'receiver_type', 'project', 'department');
     }
 
     /**
@@ -251,6 +257,7 @@ class ClearanceController extends Controller
             'receiver' => $receiver,
             'receiver_type' => $receiver_type,
             'project' => $project,
+            'department' => $department,
         ];
 
         return view('clearance.show', compact('data'));
@@ -271,6 +278,7 @@ class ClearanceController extends Controller
             'receiver' => $receiver,
             'receiver_type' => $receiver_type,
             'project' => $project,
+            'department' => $department,
             'isResignation' => $isResignation,
             'devicesData' => $clearance->devices,
             'simCardsData' => $clearance->simCards,

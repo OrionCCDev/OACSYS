@@ -250,6 +250,24 @@ Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyR
         Route::get('/transfer/{transferId}/view', [\App\Http\Controllers\ProjectAssetController::class, 'viewTransfer'])->name('transfer.view');
     });
 
+    // Department Asset Management Routes
+    Route::prefix('department-assets')->name('department-assets.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\DepartmentAssetController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\DepartmentAssetController::class, 'show'])->name('show');
+
+        // Receive Routes
+        Route::get('/{departmentId}/receive/create', [\App\Http\Controllers\DepartmentAssetController::class, 'createReceive'])->name('receive.create');
+        Route::post('/{departmentId}/receive/store', [\App\Http\Controllers\DepartmentAssetController::class, 'storeReceive'])->name('receive.store');
+        Route::get('/receive/{receiveId}/finish', [\App\Http\Controllers\DepartmentAssetController::class, 'finishReceive'])->name('receive.finish');
+        Route::post('/receive/{receiveId}/complete', [\App\Http\Controllers\DepartmentAssetController::class, 'completeReceive'])->name('receive.complete');
+
+        // Clearance Routes
+        Route::get('/{departmentId}/clearance/create', [\App\Http\Controllers\DepartmentAssetController::class, 'createClearance'])->name('clearance.create');
+        Route::post('/{departmentId}/clearance/store', [\App\Http\Controllers\DepartmentAssetController::class, 'storeClearance'])->name('clearance.store');
+        Route::get('/clearance/{clearanceId}/finish', [\App\Http\Controllers\DepartmentAssetController::class, 'finishClearance'])->name('clearance.finish');
+        Route::post('/clearance/{clearanceId}/complete', [\App\Http\Controllers\DepartmentAssetController::class, 'completeClearance'])->name('clearance.complete');
+    });
+
 });
 Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     // Route::resource('department' , DepartmentController::class );

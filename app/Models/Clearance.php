@@ -45,4 +45,12 @@ class Clearance extends Model
     public function employee(){
         return $this->belongsTo(Employee::class , 'employee_id' , 'id');
     }
+
+    public function project(){
+        return $this->belongsTo(Project::class);
+    }
+
+    public function department(){
+        return $this->belongsTo(Department::class);
+    }
 }

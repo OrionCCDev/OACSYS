@@ -38,6 +38,9 @@ class Employee extends Model implements HasMedia
     public function manage_project(){
         return $this->hasOne(Project::class , 'id' , 'project_manager_id');
     }
+    public function manage_department(){
+        return $this->hasOne(Department::class , 'id' , 'department_manager_id');
+    }
     public function manager(){
         return $this->belongsTo(Employee::class , 'manager_id' , 'id');
     }

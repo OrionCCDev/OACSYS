@@ -33,6 +33,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Manager</div>
+                                                        </div>
+                                                        <select wire:model.lazy='department_manager' class="form-control custom-select">
+                                                            <option value="">No manager yet</option>
+                                                            @foreach ($managers as $manager)
+                                                            <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
                                                     <button type="submit" class="btn btn-primary mb-2">Save</button>
                                                 </div>
                                             </div>
@@ -107,6 +120,7 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Department Name</th>
+                                                <th>Manager</th>
 
                                                 <th>Handle</th>
                                             </tr>
@@ -119,6 +133,29 @@
                                                 @if ($edtId == $department->id)
                                                 <td>
                                                     <input type="text" wire:model='edtName' value="{{ $edtName }}">
+                                                    @error('edtName')
+                                                    <div class="alert alert-danger" role="alert">
+                                                        {{ $message }}
+                                                    </div>
+                                                    @enderror
+                                                </td>
+                                                <td>
+                                                    <select wire:model='edtManager' class="form-control custom-select">
+                                                        <option value="">No manager</option>
+                                                        @foreach ($managers as $manager)
+                                                        <option value="{{ $manager->id }}" {{ $manager->id == $edtManager ? 'selected' : '' }}>{{ $manager->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                @else
+
+                                                <td>{{ $department->name }}</td>
+                                                <td>{{ $department->manager->name ?? '—' }}</td>
+                                                @endif
+
+
+                                                <td>
+                                                    @if ($edtId == $department->id)
                                                     <button wire:click="update({{ $department->id }})"
                                                         class="btn btn-warning btn-wth-icon btn-rounded icon-right btn-sm"><span
                                                             class="btn-text">Update</span> <span
@@ -136,33 +173,19 @@
                                                         class="btn btn-danger btn-wth-icon btn-rounded icon-right btn-sm"><span
                                                             class="btn-text">Cancel</span> <span class="icon-label"><i
                                                                 class="fa fa-times"></i> </span></button>
-                                                    @error('edtName')
-                                                    <div class="alert alert-danger" role="alert">
-                                                        {{ $message }}
-                                                    </div>
-                                                    @enderror
-                                                </td>
-                                                @else
-
-                                                <td>{{ $department->name }}</td>
-                                                @endif
-
-
-                                                <td>
+                                                    @else
                                                     <button wire:click='edt({{ $department->id }})'
                                                         class="btn btn-info mr-25 " data-toggle="tooltip"
                                                         data-original-title="Edit">
                                                         <i class="icon-pencil"></i>
                                                     </button>
-                                                    {{-- <a href="#" class="" data-toggle="tooltip"
-                                                        data-original-title="Delete"> <i
-                                                            class="icon-trash txt-danger"></i> </a> --}}
 
 
                                                     <button type="button" class="btn btn-danger" data-toggle="modal"
                                                         data-target="#exampleModalCenter{{ $department->id }}">
                                                         <i class="icon-trash txt-danger"></i>
                                                     </button>
+                                                    @endif
 
                                                     <div class="modal fade" id="exampleModalCenter{{ $department->id }}"
                                                         tabindex="-1" role="dialog"

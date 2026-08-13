@@ -24,6 +24,9 @@ class Device extends Model implements HasMedia
     public function project(){
         return $this->belongsTo(Project::class);
     }
+    public function department(){
+        return $this->belongsTo(Department::class);
+    }
     public function receive(){
         return $this->belongsTo(Receive::class);
     }

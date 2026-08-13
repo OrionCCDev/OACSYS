@@ -58,6 +58,14 @@ class Receive extends Model implements HasMedia
     }
 
     /**
+     * Get the department that owns the receive.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
      * Get all devices associated with this receive.
      */
     public function devicesProject()

@@ -35,6 +35,21 @@
         <td class="v">{{ $receiver->name ?? '-' }}</td>
     </tr>
 </table>
+@elseif ($receiver_type == 'department')
+<table class="meta">
+    <tr>
+        <td class="k">Date</td>
+        <td class="v">{{ now()->format('Y-m-d') }}</td>
+        <td class="k">Department</td>
+        <td class="v">{{ $department->name ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="k">Department Manager</td>
+        <td class="v">{{ $receiver->name ?? '-' }}</td>
+        <td class="k">Orion ID</td>
+        <td class="v mono">{{ $receiver->employee_id ?? '-' }}</td>
+    </tr>
+</table>
 @else
 <table class="meta">
     <tr>
@@ -115,6 +130,8 @@
         <td><div class="line">IT Manager</div></td>
         @if ($receiver_type == 'project')
         <td><div class="line">Project Manager{{ ($receiver->name ?? null) ? ' — ' . $receiver->name : '' }}</div></td>
+        @elseif ($receiver_type == 'department')
+        <td><div class="line">Department Manager{{ ($receiver->name ?? null) ? ' — ' . $receiver->name : '' }}</div></td>
         @else
         <td><div class="line">Top Management</div></td>
         @endif
