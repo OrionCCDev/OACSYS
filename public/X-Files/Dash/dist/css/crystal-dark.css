@@ -325,6 +325,23 @@ section.hk-sec-wrapper {
   position: static !important;
 }
 
+/* center + size + theme-accent the selection checkboxes themselves - plain
+   native checkboxes were left at default browser size, top-left-aligned in
+   a much wider "Select" cell. */
+.table-responsive td:has(> input[type="checkbox"]),
+.table-responsive th:has(> input[type="checkbox"]) {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table-responsive input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--sapphire-bright);
+  cursor: pointer;
+}
+
 /* ---------- alerts ---------- */
 /* vendor .alert-* variants are pale light-mode backgrounds with dark text -
    completely unreadable/washed-out against the dark theme if left alone. */
