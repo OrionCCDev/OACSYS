@@ -191,6 +191,13 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('receive.show', $receive->id) }}" class="btn btn-sm btn-info">View</a>
+                                        @if($receive->status == 'pending')
+                                        <form action="{{ route('receive.destroy', $receive->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this receive? Any devices or SIM cards on it will be freed back to available.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
@@ -234,6 +241,13 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('clearance.show', $clearance->id) }}" class="btn btn-sm btn-info">View</a>
+                                        @if($clearance->status == 'pending')
+                                        <form action="{{ route('clearance.destroy', $clearance->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this clearance? Any devices or SIM cards on it will be returned to their prior status.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

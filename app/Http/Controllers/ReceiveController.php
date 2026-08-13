@@ -435,6 +435,8 @@ class ReceiveController extends Controller
                         'client_id' => null,
                         'consultant_id' => null,
                         'employee_id' => null,
+                        'project_id' => null,
+                        'department_id' => null,
                         'receive_id' => null
                     ]);
             }
@@ -446,7 +448,9 @@ class ReceiveController extends Controller
                         'status' => 'available',
                         'client_employee_id' => null,
                         'consultant_id' => null,
-                        'employee_id' => null
+                        'employee_id' => null,
+                        'project_id' => null,
+                        'department_id' => null,
                     ]);
             }
         }
@@ -457,6 +461,6 @@ class ReceiveController extends Controller
         // Delete the receive record
         $receive->delete();
 
-        return redirect()->route('device.index');
+        return redirect()->back()->with('success', 'Receive deleted and assets returned to available.');
     }
 }

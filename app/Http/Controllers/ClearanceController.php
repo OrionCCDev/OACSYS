@@ -67,7 +67,7 @@ class ClearanceController extends Controller
 
         foreach ($devices as $device) {
             $hasPersonalOwner = $device->employee_id || $device->client_id || $device->consultant_id;
-            $device->update(['status' => $hasPersonalOwner ? 'taken' : 'In-Project-Site']);
+            $device->update(['status' => ($hasPersonalOwner || $device->department_id) ? 'taken' : 'In-Project-Site']);
         }
 
         // Sim cards have no project-site equivalent status - 'taken' covers both cases.
@@ -315,6 +315,6 @@ class ClearanceController extends Controller
 
         DeviceAndSimClearance::where('clearance_id', $clearance->id)->delete();
         $clearance->delete();
-        return to_route('clearance.index');
+        return redirect()->back()->with('success', 'Clearance deleted and assets returned to their prior status.');
     }
 }

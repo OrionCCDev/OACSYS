@@ -125,9 +125,9 @@
         <td><div class="line">Receiver Signature</div></td>
         <td><div class="line">IT Manager</div></td>
         @if ($receiver_type == 'project')
-        <td><div class="line">Project Manager{{ ($receiver->name ?? null) ? ' — ' . $receiver->name : '' }}</div></td>
+        <td><div class="line">Project Manager</div></td>
         @elseif ($receiver_type == 'department')
-        <td><div class="line">Department Manager{{ ($receiver->name ?? null) ? ' — ' . $receiver->name : '' }}</div></td>
+        <td><div class="line">Department Manager</div></td>
         @else
         <td><div class="line">Top Management</div></td>
         @endif
