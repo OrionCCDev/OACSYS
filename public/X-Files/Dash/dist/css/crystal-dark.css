@@ -21,6 +21,7 @@
   --emerald: #3ecf8e;
   --citrine: #f0b858;
   --ruby: #f0685c;
+  --lime: #caff00;
 
   --ink: #e8edf7;
   --ink-dim: #a7b3c9;
@@ -235,7 +236,7 @@ section.hk-sec-wrapper {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-.hk-sec-title { color: var(--ink) !important; }
+.hk-sec-title { color: var(--lime) !important; }
 
 /* ---------- cards ---------- */
 
