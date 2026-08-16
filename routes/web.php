@@ -101,7 +101,7 @@ Route::get('/', function () {
     });
 
     return view('index', compact('employees_count', 'project_count', 'department_count', 'routers_count', 'laptop_count', 'camera_count', 'employees_new_this_month', 'project_new_this_month', 'devices_tracked', 'healthBreakdown', 'recentActivity'));
-})->middleware(['verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/import-simcards', function () {
     return view('profile.uploadSimCards');
