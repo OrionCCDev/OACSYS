@@ -40,6 +40,27 @@
             <div class="row">
                 <div class="col-12">
                     <h2 class="my-3 text-center" style="font-size: 65px;font-weight: 800">{{ $device->device_name }}</h2>
+
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-12 col-md-8">
+                            @if($lastActivity)
+                            <div class="alert {{ $lastActivityType == 'receive' ? 'alert-success' : 'alert-warning' }} text-center mb-0">
+                                <strong>Last Activity:</strong>
+                                {{ $lastActivityType == 'receive' ? 'Received' : 'Cleared' }}
+                                on {{ $lastActivity->created_at->format('Y-m-d H:i') }}
+                                &mdash;
+                                <a href="{{ route($lastActivityType == 'receive' ? 'receive.show' : 'clearance.show', $lastActivity->id) }}" class="alert-link">
+                                    View {{ $lastActivityType == 'receive' ? 'Receiving' : 'Clearance' }} Document
+                                </a>
+                            </div>
+                            @else
+                            <div class="alert alert-secondary text-center mb-0">
+                                No receive or clearance activity recorded yet for this device.
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="card card-profile-feed">

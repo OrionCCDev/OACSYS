@@ -148,7 +148,23 @@ class DeviceController extends Controller
             ->sortByDesc('created_at')
             ->values();
 
-        return view('device.show', compact('device', 'receiveHistory', 'clearanceHistory'));
+        // Whichever of the two most recent records actually happened last -
+        // shown up top so a QR scan surfaces it without scrolling past history tables.
+        $lastReceive = $receiveHistory->first();
+        $lastClearance = $clearanceHistory->first();
+        $lastActivityType = null;
+        $lastActivity = null;
+        if ($lastReceive && (!$lastClearance || $lastReceive->created_at->greaterThan($lastClearance->created_at))) {
+            $lastActivity = $lastReceive;
+            $lastActivityType = 'receive';
+        } elseif ($lastClearance) {
+            $lastActivity = $lastClearance;
+            $lastActivityType = 'clearance';
+        }
+
+        return view('device.show', compact(
+            'device', 'receiveHistory', 'clearanceHistory', 'lastActivity', 'lastActivityType'
+        ));
     }
 
     /**
