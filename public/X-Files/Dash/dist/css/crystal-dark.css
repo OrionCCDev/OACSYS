@@ -75,6 +75,10 @@ body::before {
   letter-spacing: 0.01em;
 }
 
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: var(--lime) !important;
+}
+
 /* .hk-navbar wraps to 2 rows below Bootstrap's xl breakpoint (navbar-expand-xl),
    but .hk-pg-wrapper's top padding is a fixed 57px sized for a single row -
    below that width, page content starts underneath the fixed navbar. */
@@ -223,7 +227,7 @@ a:hover { color: var(--ink); }
 
 .hk-pg-wrapper .hk-pg-header .hk-pg-title,
 .hk-pg-title {
-  color: var(--ink) !important;
+  color: var(--lime) !important;
 }
 
 .hk-sec-wrapper,
@@ -437,6 +441,9 @@ label, .form-group label { color: var(--ink-dim); }
 .dropdown-menu .dropdown-header,
 .dropdown-menu .dropdown-item-text {
   color: var(--ink-dim) !important;
+}
+.dropdown-menu .dropdown-header {
+  color: var(--lime) !important;
 }
 .dropdown-menu .dropdown-item:hover, .dropdown-menu .dropdown-item:focus {
   background: rgba(125, 196, 255, 0.1) !important;
