@@ -198,6 +198,14 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/device', DeviceController::class);
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
     Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
+
+    Route::prefix('device-transfer')->name('device-transfer.')->group(function () {
+        Route::get('/create', [\App\Http\Controllers\DeviceTransferController::class, 'create'])->name('create');
+        Route::get('/{clearance}/{receive}/finish', [\App\Http\Controllers\DeviceTransferController::class, 'finish'])->name('finish');
+        Route::post('/clearance/{clearance}/complete', [\App\Http\Controllers\DeviceTransferController::class, 'completeClearance'])->name('clearance.complete');
+        Route::post('/receive/{receive}/complete', [\App\Http\Controllers\DeviceTransferController::class, 'completeReceive'])->name('receive.complete');
+    });
+
     Route::resource('/simCard', SimCardController::class);
     // Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}', [ReceiveController::class, 'make'])->name('receive.make');
 

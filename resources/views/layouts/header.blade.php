@@ -326,6 +326,9 @@
                                         <li class="nav-item {{ Request::is('department-assets*') ? 'active' : '' }}" style="margin-bottom: 7px">
                                             <a class="nav-link" style="font-size: 20px" href="{{ route('department-assets.index') }}"><span class="crystal-nav-icon crystal-nav-icon-sm"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></span>Department Assets</a>
                                         </li>
+                                        <li class="nav-item {{ Request::is('device-transfer*') ? 'active' : '' }}" style="margin-bottom: 7px">
+                                            <a class="nav-link" style="font-size: 20px" href="{{ route('device-transfer.create') }}"><span class="crystal-nav-icon crystal-nav-icon-sm"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg></span>Transfer Devices</a>
+                                        </li>
 
                                         {{-- @elseif (Auth::user()->hasRole('o-hr') ) --}}
 
