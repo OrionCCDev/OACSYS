@@ -12,18 +12,18 @@
     }
 
     html, body {
-        width: 40mm;
+        width: 50mm;
         height: 30mm;
     }
 
     table.frame {
-        width: 40mm;
+        width: 50mm;
         height: 30mm;
         border-collapse: collapse;
     }
 
     table.frame td {
-        width: 40mm;
+        width: 50mm;
         height: 30mm;
         text-align: center;
         vertical-align: middle;

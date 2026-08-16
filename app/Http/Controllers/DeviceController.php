@@ -203,8 +203,9 @@ class DeviceController extends Controller
         $pdf = Pdf::loadView('device.qr-label-pdf', compact('device', 'qrDataUri'));
         PdfFonts::register($pdf->getDomPDF());
 
-        // 40mm x 30mm in points (1mm = 2.83464567pt) - the Phomemo M110/M120 label size.
-        $pdf->setPaper([0, 0, 113.386, 85.039]);
+        // 50mm x 30mm in points (1mm = 2.83464567pt) - matches the actual paper size
+        // preset ("50 x 30mm") the M110S driver offers, confirmed against a real print.
+        $pdf->setPaper([0, 0, 141.732, 85.039]);
 
         return $pdf->stream($device->device_code . '-qr-label.pdf');
     }

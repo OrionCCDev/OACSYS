@@ -28,7 +28,7 @@
                 <p class="text-muted text-center mt-3" style="max-width: 320px;">
                     This QR code is fixed to this device - it always points to this same
                     device record. "Print Label" opens a bare, correctly-sized page for a
-                    Phomemo M110/M120 40&times;30mm label and prints it directly. Scanning
+                    Phomemo M110/M120 50&times;30mm label and prints it directly. Scanning
                     the code requires an admin login and opens this device's data, current
                     holder, last activity, and full receive/clearance history.
                 </p>
