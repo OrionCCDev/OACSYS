@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Employee;
+use App\Support\PdfFonts;
 use App\Models\DeviceAndSimReceive;
 use App\Models\DeviceAndSimClearance;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeviceController extends Controller
@@ -181,18 +183,30 @@ class DeviceController extends Controller
     }
 
     /**
-     * Bare, standalone print target for the Phomemo label - no shared layout,
-     * no nav/sidebar to hide. A "hide everything else on the dashboard page"
-     * CSS trick doesn't work reliably for print (a fixed-position element
-     * gets repeated on every page a print engine paginates the hidden content
-     * into), so this page is deliberately the only thing that exists on it.
+     * Phomemo label as an actual PDF, not an HTML page sent to window.print().
+     * Printing HTML lets the browser inject its own "headers and footers"
+     * (date, page URL, page number) into the printable area regardless of
+     * @page margin - that text was showing up on the physical label and
+     * pushing the QR code out of frame. A real PDF, printed via the
+     * browser's PDF viewer, never gets that overlay.
      */
     public function qrPrint(Device $device)
     {
         $url = route('device.show', $device->id);
+        // PNG needs the imagick extension, which isn't available here, so SVG it is -
+        // but dompdf only resolves SVG through an <img src="data:image/svg+xml;..."> ,
+        // it has no renderer for an inline <svg> element written directly in the HTML
+        // (that was silently dropped, leaving the label with no QR code at all).
         $qrSvg = QrCode::size(240)->margin(1)->generate($url);
+        $qrDataUri = 'data:image/svg+xml;base64,' . base64_encode($qrSvg);
 
-        return view('device.qr-print', compact('device', 'qrSvg'));
+        $pdf = Pdf::loadView('device.qr-label-pdf', compact('device', 'qrDataUri'));
+        PdfFonts::register($pdf->getDomPDF());
+
+        // 40mm x 30mm in points (1mm = 2.83464567pt) - the Phomemo M110/M120 label size.
+        $pdf->setPaper([0, 0, 113.386, 85.039]);
+
+        return $pdf->stream($device->device_code . '-qr-label.pdf');
     }
 
     /**
