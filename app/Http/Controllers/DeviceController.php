@@ -181,6 +181,21 @@ class DeviceController extends Controller
     }
 
     /**
+     * Bare, standalone print target for the Phomemo label - no shared layout,
+     * no nav/sidebar to hide. A "hide everything else on the dashboard page"
+     * CSS trick doesn't work reliably for print (a fixed-position element
+     * gets repeated on every page a print engine paginates the hidden content
+     * into), so this page is deliberately the only thing that exists on it.
+     */
+    public function qrPrint(Device $device)
+    {
+        $url = route('device.show', $device->id);
+        $qrSvg = QrCode::size(240)->margin(1)->generate($url);
+
+        return view('device.qr-print', compact('device', 'qrSvg'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Device $device)

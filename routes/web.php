@@ -197,6 +197,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 
     Route::resource('/device', DeviceController::class);
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
+    Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
     Route::resource('/simCard', SimCardController::class);
     // Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}', [ReceiveController::class, 'make'])->name('receive.make');
 
