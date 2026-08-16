@@ -192,6 +192,10 @@
                                                             class="btn btn-sm btn-info" title="Edit">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
+                                                        <a href="{{ route('device.qr' , $device->id) }}"
+                                                            class="btn btn-sm btn-dark" title="QR Code">
+                                                            <i class="fa fa-qrcode"></i>
+                                                        </a>
                                                          <button data-toggle="modal"
                                                             data-target="#exampleModalCenter{{ $device->id }}"
                                                             type="button" class="btn btn-sm btn-danger"

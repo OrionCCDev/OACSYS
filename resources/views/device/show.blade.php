@@ -86,6 +86,13 @@
                                             <span class="ml-5 text-dark">{{ $device->project->project_name }} </span>
                                     </li>
                                     @endif
+                                    @if ($device->department_id != null)
+                                    <li class="list-group-item" style="font-size: 35px">
+                                        <span>
+                                            <span>Placed In Department: </span></span>
+                                            <span class="ml-5 text-dark">{{ $device->department->name }} </span>
+                                    </li>
+                                    @endif
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
                                             <span>Model: </span></span>
@@ -149,6 +156,9 @@
                             <a href="{{ route('device.edit' , $device->id) }}" class="btn mb-2 btn-info btn-wth-icon icon-wthot-bg  icon-right btn-lg">
                                 <span class="btn-text">Edit</span> <span class="icon-label"><span class="feather-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span> </span>
                             </a>
+                            <a href="{{ route('device.qr', $device->id) }}" class="btn btn-dark btn-lg mb-2">
+                                <i class="fa fa-qrcode"></i> QR Code
+                            </a>
                             <button type="button" class="btn btn-success btn-lg mb-2" data-toggle="modal" data-target="#assignEmployeeModal">
                                 Assign to Employee
                             </button>
@@ -159,6 +169,92 @@
                                     Make Available
                                 </button>
                             </form>
+                        </div>
+                    </div>
+
+                    <!-- Receive History -->
+                    <div class="row mt-4">
+                        <div class="col-xl-12">
+                            <section class="hk-sec-wrapper">
+                                <h5 class="hk-sec-title">Receive History</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Receive Code</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($receiveHistory as $historyReceive)
+                                            <tr>
+                                                <td>{{ $historyReceive->code }}</td>
+                                                <td>{{ $historyReceive->created_at->format('Y-m-d H:i') }}</td>
+                                                <td>
+                                                    @if($historyReceive->status == 'received')
+                                                        <span class="badge badge-success">Received</span>
+                                                    @else
+                                                        <span class="badge badge-warning">Pending</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('receive.show', $historyReceive->id) }}" class="btn btn-sm btn-info">View</a>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center">No receive history for this device</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!-- Clearance History -->
+                    <div class="row mt-4">
+                        <div class="col-xl-12">
+                            <section class="hk-sec-wrapper">
+                                <h5 class="hk-sec-title">Clearance History</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Clearance Code</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($clearanceHistory as $historyClearance)
+                                            <tr>
+                                                <td>{{ $historyClearance->clear_code }}</td>
+                                                <td>{{ $historyClearance->created_at->format('Y-m-d H:i') }}</td>
+                                                <td>
+                                                    @if($historyClearance->status == 'finished')
+                                                        <span class="badge badge-success">Finished</span>
+                                                    @else
+                                                        <span class="badge badge-warning">Pending</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('clearance.show', $historyClearance->id) }}" class="btn btn-sm btn-info">View</a>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center">No clearance history for this device</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </div>

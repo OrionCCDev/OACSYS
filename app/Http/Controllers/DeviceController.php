@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Employee;
+use App\Models\DeviceAndSimReceive;
+use App\Models\DeviceAndSimClearance;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeviceController extends Controller
 {
@@ -124,7 +127,41 @@ class DeviceController extends Controller
      */
     public function show(Device $device)
     {
-        return view('device.show', compact('device'));
+        $device->load('department');
+
+        // A device can pass through many receives/clearances over its life (the
+        // devices.receive_id column only ever points at the latest one), so the
+        // full history has to come from the pivot tables, not that column.
+        $receiveHistory = DeviceAndSimReceive::where('device_id', $device->id)
+            ->with('receive')
+            ->get()
+            ->pluck('receive')
+            ->filter()
+            ->sortByDesc('created_at')
+            ->values();
+
+        $clearanceHistory = DeviceAndSimClearance::where('device_id', $device->id)
+            ->with('clearance')
+            ->get()
+            ->pluck('clearance')
+            ->filter()
+            ->sortByDesc('created_at')
+            ->values();
+
+        return view('device.show', compact('device', 'receiveHistory', 'clearanceHistory'));
+    }
+
+    /**
+     * Fixed, printable QR code for this device - encodes the (admin-only)
+     * device.show URL, so scanning it always lands on this device's current
+     * data and full receive/clearance history.
+     */
+    public function qrCode(Device $device)
+    {
+        $url = route('device.show', $device->id);
+        $qrSvg = QrCode::size(280)->margin(1)->generate($url);
+
+        return view('device.qr-code', compact('device', 'url', 'qrSvg'));
     }
 
     /**
