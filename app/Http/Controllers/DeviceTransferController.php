@@ -6,6 +6,7 @@ use App\Models\Clearance;
 use App\Models\Device;
 use App\Models\DeviceAndSimReceive;
 use App\Models\Receive;
+use App\Models\SimCard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 class DeviceTransferController extends Controller
 {
     /**
-     * Show the picker form (releasing employee, receiving employee, devices).
+     * Show the picker form (releasing employee, receiving employee, devices/sims).
      */
     public function create()
     {
@@ -27,7 +28,7 @@ class DeviceTransferController extends Controller
      */
     public function finish(Clearance $clearance, Receive $receive)
     {
-        $clearance->load(['employee', 'devices']);
+        $clearance->load(['employee', 'devices', 'simCards']);
         $receive->load('employee');
 
         $deviceRecords = DeviceAndSimReceive::where('receive_id', $receive->id)
@@ -35,13 +36,18 @@ class DeviceTransferController extends Controller
             ->with('device')
             ->get();
 
-        return view('device-transfer.finish', compact('clearance', 'receive', 'deviceRecords'));
+        $simRecords = DeviceAndSimReceive::where('receive_id', $receive->id)
+            ->whereNotNull('sim_card_id')
+            ->with('simCard')
+            ->get();
+
+        return view('device-transfer.finish', compact('clearance', 'receive', 'deviceRecords', 'simRecords'));
     }
 
     /**
      * Sign the releasing employee's clearance. Deliberately does not touch the
-     * device's status or ownership - it stays reserved (pending-cancel) until
-     * the receive side is completed, so it's never briefly "available" and
+     * device/sim status or ownership - they stay reserved (pending-cancel) until
+     * the receive side is completed, so nothing is ever briefly "available" and
      * grabbable by an unrelated flow mid-transfer.
      */
     public function completeClearance(Request $request, Clearance $clearance)
@@ -64,7 +70,7 @@ class DeviceTransferController extends Controller
 
     /**
      * Sign the receiving employee's receive. This is the step that actually
-     * moves the device(s) to the new owner.
+     * moves the device(s)/SIM(s) to the new owner.
      */
     public function completeReceive(Request $request, Receive $receive)
     {
@@ -96,8 +102,21 @@ class DeviceTransferController extends Controller
                 'receive_id' => $receive->id,
             ]);
 
+            $simIds = DeviceAndSimReceive::where('receive_id', $receive->id)
+                ->whereNotNull('sim_card_id')
+                ->pluck('sim_card_id');
+
+            SimCard::whereIn('id', $simIds)->update([
+                'status' => 'taken',
+                'employee_id' => $receive->employee_id,
+                'client_employee_id' => null,
+                'consultant_id' => null,
+                'project_id' => null,
+                'department_id' => null,
+            ]);
+
             return redirect()->route('device.index')
-                ->with('success', 'Transfer completed - device(s) now assigned to the new employee.');
+                ->with('success', 'Transfer completed - assets now assigned to the new employee.');
         });
     }
 }

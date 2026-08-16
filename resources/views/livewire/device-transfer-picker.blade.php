@@ -107,6 +107,42 @@
                 </table>
             </div>
         </div>
+
+        <div class="card p-3 mb-3">
+            <h6 class="mb-3">SIM Cards held by {{ $fromSearch }}</h6>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th width="50">Select</th>
+                            <th>SIM Number</th>
+                            <th>Provider</th>
+                            <th>Plan</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($this->fromSimCards as $sim)
+                        <tr>
+                            <td>
+                                <input type="checkbox" wire:model="selectedSimCards" value="{{ $sim->id }}" class="form-check-input">
+                            </td>
+                            <td>{{ $sim->sim_number }}</td>
+                            <td>{{ $sim->sim_provider }}</td>
+                            <td>{{ $sim->sim_plan }}</td>
+                            <td>
+                                <input type="text" wire:model="simCardNotes.{{ $sim->id }}" class="form-control form-control-sm" placeholder="Optional note">
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center">This employee has no SIM cards to transfer</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @endif
 
         @if($fromEmployeeId && $toEmployeeId)

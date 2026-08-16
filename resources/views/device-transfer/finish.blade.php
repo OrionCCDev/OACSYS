@@ -41,7 +41,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">No devices found for this transfer</td>
+                                    <td colspan="4" class="text-center">No devices in this transfer</td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -50,6 +50,38 @@
                 </section>
             </div>
         </div>
+
+        @if($simRecords->isNotEmpty())
+        <div class="row mt-3">
+            <div class="col-xl-12">
+                <section class="hk-sec-wrapper">
+                    <h5 class="hk-sec-title">SIM Cards Being Transferred</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>SIM Number</th>
+                                    <th>Provider</th>
+                                    <th>Plan</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($simRecords as $record)
+                                <tr>
+                                    <td>{{ $record->simCard->sim_number }}</td>
+                                    <td>{{ $record->simCard->sim_provider }}</td>
+                                    <td>{{ $record->simCard->sim_plan }}</td>
+                                    <td>{{ $record->notes ?? '-' }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        @endif
 
         <div class="row mt-4">
             <!-- Clearance side -->
@@ -89,7 +121,7 @@
 
                     @if($receive->status == 'received')
                         <div class="alert alert-success mb-0">
-                            <i class="fa fa-check"></i> Receive signed &mdash; devices now belong to {{ $receive->employee->name ?? 'the new employee' }}.
+                            <i class="fa fa-check"></i> Receive signed &mdash; assets now belong to {{ $receive->employee->name ?? 'the new employee' }}.
                         </div>
                     @else
                         <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" class="btn btn-info btn-block mb-3">
