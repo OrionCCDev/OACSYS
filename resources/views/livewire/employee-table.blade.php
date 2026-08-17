@@ -25,16 +25,36 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">@Search</div>
                                                 </div>
-                                                <input type="text" wire:model.live="search" class="form-control" placeholder="Search employees...">
+                                                <input type="text" wire:model.live.debounce.300ms="search" class="form-control" placeholder="Search by name or ID...">
                                             </div>
                                         </div>
-                                        <div class="col-auto">
-                                            <div class="input-group mb-2">
-                                                <select wire:model.live="positionFilter" class="form-control">
-                                                    <option value="">All Positions</option>
-                                                    <option value="manager">Managers Only</option>
-                                                </select>
-                                            </div>
+                                        <div class="col-auto mb-2">
+                                            <select wire:model.live="departmentFilter" class="form-control">
+                                                <option value="">All Departments</option>
+                                                @foreach($departments as $department)
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-auto mb-2">
+                                            <select wire:model.live="positionFilter" class="form-control">
+                                                <option value="">All Positions</option>
+                                                @foreach($positions as $position)
+                                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-auto mb-2">
+                                            <select wire:model.live="statusFilter" class="form-control">
+                                                <option value="">All Statuses</option>
+                                                <option value="active">Active</option>
+                                                <option value="resigned">Resigned</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-auto mb-2">
+                                            <button wire:click="resetFilters" type="button" class="btn btn-secondary">
+                                                <i class="fa fa-refresh"></i> Reset
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +85,8 @@
                                                 <tbody>
                                                     @foreach ($employees as $employee)
                                                     <tr @if ($employee->resign_date != null)
-                                                        style="background-color: dimgrey;color:white"
+                                                        style="background-color: darkred !important; color: white"
+                                                        title="Resigned {{ \Carbon\Carbon::parse($employee->resign_date)->format('Y-m-d') }}"
                                                     @endif>
                                                         <td><img class="img-fluid rounded"
                                                                 src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . $employee->profile_image) }}" width="50" height="50" alt="icon"></td>

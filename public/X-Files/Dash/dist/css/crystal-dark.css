@@ -34,6 +34,15 @@
 
 /* ---------- base canvas ---------- */
 
+/* Tells the browser to render its own native chrome (select dropdown
+   popups, scrollbars, date pickers, etc) in dark mode - without this,
+   a <select>'s closed box can be themed via .form-control below, but the
+   OPEN options list is native browser UI and stays white regardless of
+   any background CSS on the select itself. */
+:root {
+  color-scheme: dark;
+}
+
 html, body {
   background-color: var(--bg) !important;
   background-image:
