@@ -153,6 +153,15 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::resource('logistics', LogisticsUserController::class);
     });
 
+    // Static /employees/create must be registered before the /employees/{employee}
+    // wildcard below - Laravel matches routes in registration order, so with the
+    // wildcard first, a request for /employees/create was being caught by it
+    // (treating "create" as the {employee} id), failing route-model binding, and
+    // 404ing instead of ever reaching EmployeeController@create.
+    Route::middleware(['role:o-hr|o-super-admin|o-admin'])->group(function () {
+        Route::resource('/employees', EmployeeController::class)->except(['show']);
+    });
+
     // 'show' route allows managers as well
     Route::middleware(['role:o-hr|o-super-admin|o-admin|o-manager'])->group(function () {
         Route::resource('manager', ManagerController::class)
@@ -283,7 +292,6 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     // Route::resource('department' , DepartmentController::class );
     Route::resource('/clearance', ClearanceController::class);
     Route::resource('/receive', ReceiveController::class);
-    Route::resource('/employees', EmployeeController::class)->except(['show']);
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::get('/device/employee/assign', [DeviceController::class, 'assignDeviceToEmp'])->name('device.assignDeviceToEmp');
     Route::post('/device/employee/assign', [DeviceController::class, 'storeAssignDeviceToEmp'])->name('device.storeAssignDeviceToEmp');
