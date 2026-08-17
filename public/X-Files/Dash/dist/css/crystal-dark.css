@@ -411,6 +411,25 @@ section.hk-sec-wrapper {
   color: var(--ink) !important;
 }
 .form-control::placeholder { color: var(--ink-faint); }
+
+/* color-scheme: dark on :root is not enough on its own in every browser -
+   a <select> with an explicit (near-transparent) background from the rule
+   above can still pop its native options list up in plain white. Setting
+   color-scheme directly on the control plus explicit colors on <option>
+   covers both: the popup chrome itself, and the option rows within it. */
+select.form-control {
+  color-scheme: dark;
+}
+select.form-control option {
+  background-color: var(--panel-solid) !important;
+  color: var(--ink) !important;
+}
+select.form-control option:checked,
+select.form-control option:hover,
+select.form-control option:focus {
+  background-color: var(--sapphire) !important;
+  color: #fff !important;
+}
 .form-control:focus, .dd-handle:focus {
   border-color: var(--sapphire-bright) !important;
   box-shadow: 0 0 0 3px rgba(125, 196, 255, 0.15) !important;
