@@ -416,17 +416,21 @@ section.hk-sec-wrapper {
    a <select> with an explicit (near-transparent) background from the rule
    above can still pop its native options list up in plain white. Setting
    color-scheme directly on the control plus explicit colors on <option>
-   covers both: the popup chrome itself, and the option rows within it. */
-select.form-control {
+   covers both: the popup chrome itself, and the option rows within it.
+   Unscoped (not just .form-control) so it reaches every plain <select> on
+   the site, including the handful that render without that class. select2-
+   enhanced selects are unaffected - select2 hides the native popup and
+   renders its own themed dropdown (see the select2-* rules below). */
+select {
   color-scheme: dark;
 }
-select.form-control option {
+select option {
   background-color: var(--panel-solid) !important;
   color: var(--ink) !important;
 }
-select.form-control option:checked,
-select.form-control option:hover,
-select.form-control option:focus {
+select option:checked,
+select option:hover,
+select option:focus {
   background-color: var(--sapphire) !important;
   color: #fff !important;
 }
