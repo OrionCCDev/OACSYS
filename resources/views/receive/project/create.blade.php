@@ -61,13 +61,14 @@
                                                     <span class="btn btn-primary btn-file">
                                                         <span class="fileinput-new">Select file</span>
                                                         <span class="fileinput-exists">Change</span>
-                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*">
+                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*,application/pdf">
                                                     </span>
                                                 </span>
                                                 <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>
                                             </div>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                                <div id="imagePdfNotice" class="alert alert-secondary" style="display:none;"></div>
                                             </div>
                                             <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div>
                                         </div>
@@ -76,18 +77,17 @@
                                             document.getElementById('imageInput').onchange = function(evt) {
                                                 const [file] = this.files;
                                                 const validationMessage = document.getElementById('validationMessage');
+                                                const preview = document.getElementById('imagePreview');
+                                                const pdfNotice = document.getElementById('imagePdfNotice');
                                                 validationMessage.style.display = 'none';
                                                 validationMessage.innerText = '';
+                                                pdfNotice.style.display = 'none';
 
                                                 if (file) {
-                                                    const preview = document.getElementById('imagePreview');
-                                                    preview.src = URL.createObjectURL(file);
-                                                    preview.style.display = 'block';
-
                                                     // Validate file type
-                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml'];
+                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml', 'application/pdf'];
                                                     if (!validTypes.includes(file.type)) {
-                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, and SVG are allowed.';
+                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, SVG, and PDF are allowed.';
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
                                                         return;
@@ -100,6 +100,15 @@
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
                                                         return;
+                                                    }
+
+                                                    if (file.type === 'application/pdf') {
+                                                        preview.style.display = 'none';
+                                                        pdfNotice.textContent = 'PDF selected: ' + file.name;
+                                                        pdfNotice.style.display = 'block';
+                                                    } else {
+                                                        preview.src = URL.createObjectURL(file);
+                                                        preview.style.display = 'block';
                                                     }
                                                 }
                                             };

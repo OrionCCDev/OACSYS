@@ -63,7 +63,7 @@
                                                     <span class="btn btn-primary btn-file">
                                                         <span class="fileinput-new">Select file</span>
                                                         <span class="fileinput-exists">Change</span>
-                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*">
+                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*,application/pdf">
                                                     </span>
                                                 </span>
                                                 <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>
@@ -376,7 +376,7 @@
                                                     <span class="btn btn-primary btn-file">
                                                         <span class="fileinput-new">Select file</span>
                                                         <span class="fileinput-exists">Change</span>
-                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*">
+                                                        <input type="file" name="receiving_signature" id="imageInput" accept="image/*,application/pdf">
                                                     </span>
                                                 </span>
                                                 <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>

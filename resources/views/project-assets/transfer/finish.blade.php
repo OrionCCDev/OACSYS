@@ -86,16 +86,17 @@
                                         @csrf
 
                                         <div class="form-group">
-                                            <label for="transfer_signature">Signature Image <span class="text-danger">*</span></label>
-                                            <input type="file" name="transfer_signature" id="transfer_signature" class="form-control @error('transfer_signature') is-invalid @enderror" accept="image/*" required>
+                                            <label for="transfer_signature">Signed Document <span class="text-danger">*</span></label>
+                                            <input type="file" name="transfer_signature" id="transfer_signature" class="form-control @error('transfer_signature') is-invalid @enderror" accept="image/*,application/pdf" required>
                                             @error('transfer_signature')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <small class="form-text text-muted">Upload the signed transfer document (JPG, PNG, SVG - Max 2MB)</small>
+                                            <small class="form-text text-muted">Upload the signed transfer document (JPG, PNG, SVG, or PDF - Max 2MB)</small>
                                         </div>
 
                                         <div class="form-group">
                                             <img id="signature-preview" src="" alt="Signature Preview" style="display:none; max-width: 100%; max-height: 300px; border: 1px solid #ddd; padding: 10px; margin-top: 10px;">
+                                            <div id="signature-pdf-notice" class="alert alert-secondary" style="display:none;"></div>
                                         </div>
 
                                         <div class="text-right mt-3">
@@ -118,10 +119,17 @@
 <script>
     document.getElementById('transfer_signature').addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (file) {
+        const preview = document.getElementById('signature-preview');
+        const pdfNotice = document.getElementById('signature-pdf-notice');
+        if (!file) return;
+        if (file.type === 'application/pdf') {
+            preview.style.display = 'none';
+            pdfNotice.textContent = 'PDF selected: ' + file.name;
+            pdfNotice.style.display = 'block';
+        } else {
+            pdfNotice.style.display = 'none';
             const reader = new FileReader();
             reader.onload = function(e) {
-                const preview = document.getElementById('signature-preview');
                 preview.src = e.target.result;
                 preview.style.display = 'block';
             }

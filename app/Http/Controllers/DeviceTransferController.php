@@ -53,7 +53,7 @@ class DeviceTransferController extends Controller
     public function completeClearance(Request $request, Clearance $clearance)
     {
         $request->validate([
-            'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'clearing_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         $image = $request->file('clearing_signature');
@@ -75,7 +75,7 @@ class DeviceTransferController extends Controller
     public function completeReceive(Request $request, Receive $receive)
     {
         $request->validate([
-            'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         return DB::transaction(function () use ($request, $receive) {

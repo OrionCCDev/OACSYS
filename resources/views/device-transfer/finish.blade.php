@@ -102,8 +102,8 @@
                         <form action="{{ route('device-transfer.clearance.complete', $clearance->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label>Signed Clearance Image <span class="text-danger">*</span></label>
-                                <input type="file" name="clearing_signature" class="form-control" accept="image/*" required>
+                                <label>Signed Clearance Document <span class="text-danger">*</span></label>
+                                <input type="file" name="clearing_signature" class="form-control" accept="image/*,application/pdf" required>
                             </div>
                             <button type="submit" class="btn btn-danger">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Clearance
@@ -131,8 +131,8 @@
                         <form action="{{ route('device-transfer.receive.complete', $receive->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
-                                <label>Signed Receiving Image <span class="text-danger">*</span></label>
-                                <input type="file" name="receiving_signature" class="form-control" accept="image/*" required>
+                                <label>Signed Receiving Document <span class="text-danger">*</span></label>
+                                <input type="file" name="receiving_signature" class="form-control" accept="image/*,application/pdf" required>
                             </div>
                             <button type="submit" class="btn btn-success">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Receive

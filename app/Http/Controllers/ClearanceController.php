@@ -161,7 +161,7 @@ class ClearanceController extends Controller
     public function uploadSignature(Request $request, $id)
     {
         $request->validate([
-            'signature' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'signature' => 'required|mimes:jpeg,png,jpg,pdf|max:2048'
         ]);
 
         $clearance = Clearance::with(['devices', 'simCards'])->findOrFail($id);

@@ -174,7 +174,7 @@ class ReceiveController extends Controller
     public function finishRproject(Request $request, $id)
     {
         $request->validate([
-            'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
             'devices' => 'required|json',
         ]);
 
@@ -245,7 +245,7 @@ class ReceiveController extends Controller
     public function clear($id, $clearId, Request $request)
     {
         $request->validate([
-            'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'clearing_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         $clr = \App\Models\Clearance::findOrFail($clearId);
@@ -374,7 +374,7 @@ class ReceiveController extends Controller
     public function finish($receive, Request $request)
     {
         $request->validate([
-            'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
         $rcv = Receive::findOrFail($receive);
         $devices = json_decode($request->devices);

@@ -65,9 +65,9 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="signature">Signature Image</label>
+                                    <label for="signature">Signed Document</label>
                                     <input type="file" class="form-control" id="signature" name="signature"
-                                        accept="image/*" required>
+                                        accept="image/*,application/pdf" required>
                                 </div>
                             </div>
                             <div class="modal-footer">

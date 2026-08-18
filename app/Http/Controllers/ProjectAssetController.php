@@ -177,7 +177,7 @@ class ProjectAssetController extends Controller
     public function completeReceive(Request $request, $receiveId)
     {
         $request->validate([
-            'receiving_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         return DB::transaction(function () use ($request, $receiveId) {
@@ -338,7 +338,7 @@ class ProjectAssetController extends Controller
     public function completeClearance(Request $request, $clearanceId)
     {
         $request->validate([
-            'clearing_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'clearing_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         return DB::transaction(function () use ($request, $clearanceId) {
@@ -519,7 +519,7 @@ class ProjectAssetController extends Controller
     public function completeTransfer(Request $request, $transferId)
     {
         $request->validate([
-            'transfer_signature' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'transfer_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
         ]);
 
         return DB::transaction(function () use ($request, $transferId) {

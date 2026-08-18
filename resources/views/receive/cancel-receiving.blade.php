@@ -52,21 +52,29 @@
                                                 <span class="btn btn-primary btn-file">
                                                     <span class="fileinput-new">Select file</span>
                                                     <span class="fileinput-exists">Change</span>
-                                                    <input type="file" name="clearing_signature" id="imageInput" accept="image/*">
+                                                    <input type="file" name="clearing_signature" id="imageInput" accept="image/*,application/pdf">
                                                 </span>
                                             </span>
                                             <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput">Remove</a>
                                         </div>
                                         <div class="mt-3">
                                             <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                            <div id="imagePdfNotice" class="alert alert-secondary" style="display:none;"></div>
                                         </div>
                                     </div>
 
                                     <script>
                                     document.getElementById('imageInput').onchange = function(evt) {
                                         const [file] = this.files;
-                                        if (file) {
-                                            const preview = document.getElementById('imagePreview');
+                                        const preview = document.getElementById('imagePreview');
+                                        const pdfNotice = document.getElementById('imagePdfNotice');
+                                        if (!file) return;
+                                        if (file.type === 'application/pdf') {
+                                            preview.style.display = 'none';
+                                            pdfNotice.textContent = 'PDF selected: ' + file.name;
+                                            pdfNotice.style.display = 'block';
+                                        } else {
+                                            pdfNotice.style.display = 'none';
                                             preview.src = URL.createObjectURL(file);
                                             preview.style.display = 'block';
                                         }
