@@ -52,7 +52,7 @@
                                                         <td>{{ $clr->clear_code }}</td>
                                                         <td>{{ $clr->status }}</td>
                                                         <td>{{ $clr->created_at }}</td>
-                                                        <td><a href="{{ route('employee.clearance.detail', ['id' => $clr->id]) }}"
+                                                        <td><a href="{{ route('clearance.show', ['clearance' => $clr->id]) }}"
                                                                 class="btn btn-info">Show</a></td>
                                                     </tr>
                                                     @endforeach
@@ -103,7 +103,7 @@
                                                         <td>{{ $clr->clear_code }}</td>
                                                         <td>{{ $clr->status }}</td>
                                                         <td>{{ $clr->created_at }}</td>
-                                                        <td><a href="{{ route('employee.clearance.detail', ['id' => $clr->id]) }}"
+                                                        <td><a href="{{ route('clearance.show', ['clearance' => $clr->id]) }}"
                                                                 class="btn btn-info">Show</a></td>
                                                     </tr>
                                                     @endforeach
@@ -153,7 +153,7 @@
                                                         <td>{{ $clr->clear_code }}</td>
                                                         <td>{{ $clr->status }}</td>
                                                         <td>{{ $clr->created_at }}</td>
-                                                        <td><a href="{{ route('employee.clearance.detail', ['id' => $clr->id]) }}"
+                                                        <td><a href="{{ route('clearance.show', ['clearance' => $clr->id]) }}"
                                                                 class="btn btn-info">Show</a></td>
                                                     </tr>
                                                     @endforeach

@@ -136,29 +136,6 @@ class EmployeeController extends Controller
 
         return view('employees.history', compact('employee', 'history'));
     }
-    public function showClearanceDetails($id)
-    {
-        $clr = Clearance::find($id);
-        $deviceIds = DB::table('device_and_sim_clearances')
-                        ->where('clearance_id', $id)
-                        ->whereNotNull('device_id')
-                        ->pluck('device_id')
-                        ->toArray();
-        $simCardsIds = DB::table('device_and_sim_clearances')
-                        ->where('clearance_id', $id)
-                        ->whereNotNull('sim_card_id')
-                        ->pluck('sim_card_id')
-                        ->toArray();
-
-        $Devices = Device::whereIn('id', $deviceIds)->get();
-        $SimCards = SimCard::whereIn('id', $simCardsIds)->get();
-
-        // Logic to display all employee receives
-        return view('clearance.clearanceDetails', compact('clr' , 'Devices' , 'SimCards'));
-    }
-
-
-
 
     /**
      * Show the form for creating a new resource.

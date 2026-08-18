@@ -303,7 +303,6 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
         ->name('clearance.upload-signature');
     Route::get('/employee/receives/{id}', [EmployeeController::class, 'showReceives'])->name('employee.receives');
     Route::get('/employee/receive/{id}', [EmployeeController::class, 'showReceiveDetails'])->name('employee.receive.detail');
-    Route::get('/employee/clearance/details/{id}', [EmployeeController::class, 'showClearanceDetails'])->name('employee.clearance.detail');
     Route::get('/employee/clearances/{id}', [EmployeeController::class, 'showClearances'])->name('employee.clearances');
     Route::get('/employee/history/{id}', [EmployeeController::class, 'showHistory'])->name('employee.history');
     Route::post('/clearance/{clearance}/cancel', [ClearanceController::class, 'cancel'])->name('clearance.cancel');

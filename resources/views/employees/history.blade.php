@@ -303,7 +303,7 @@
                                             <i class="icon-eye mr-5"></i> View Details
                                         </a>
                                     @else
-                                        <a href="{{ route('employee.clearance.detail', $record->id) }}" class="btn btn-sm btn-danger btn-rounded">
+                                        <a href="{{ route('clearance.show', $record->id) }}" class="btn btn-sm btn-danger btn-rounded">
                                             <i class="icon-eye mr-5"></i> View Details
                                         </a>
                                     @endif
