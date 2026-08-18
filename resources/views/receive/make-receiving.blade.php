@@ -298,7 +298,18 @@
                 </div>
                 @else
                 <div class="col-xl-12">
-                    <img src="{{ asset('X-Files/Dash/imgs/receives/' . $receive->receive_image ) }}" width="100%" height="100%" alt="">
+                    @php
+                        $receiveDocUrl = asset('X-Files/Dash/imgs/receives/' . $receive->receive_image);
+                        $receiveIsPdf = strtolower(pathinfo($receive->receive_image, PATHINFO_EXTENSION)) === 'pdf';
+                    @endphp
+                    @if($receiveIsPdf)
+                        <iframe src="{{ $receiveDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
+                        <div class="mt-2 no-print">
+                            <a href="{{ $receiveDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
+                        </div>
+                    @else
+                        <img src="{{ $receiveDocUrl }}" width="100%" height="100%" alt="">
+                    @endif
                 </div>
                 @endif
             </div>
@@ -619,7 +630,18 @@
                 </div>
                 @else
                 <div class="col-xl-12">
-                    <img src="{{ asset('X-Files/Dash/imgs/receives/' . $receive->receive_image ) }}" width="100%" height="100%" alt="">
+                    @php
+                        $receiveDocUrl = asset('X-Files/Dash/imgs/receives/' . $receive->receive_image);
+                        $receiveIsPdf = strtolower(pathinfo($receive->receive_image, PATHINFO_EXTENSION)) === 'pdf';
+                    @endphp
+                    @if($receiveIsPdf)
+                        <iframe src="{{ $receiveDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
+                        <div class="mt-2 no-print">
+                            <a href="{{ $receiveDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
+                        </div>
+                    @else
+                        <img src="{{ $receiveDocUrl }}" width="100%" height="100%" alt="">
+                    @endif
                 </div>
                 @endif
             </div>

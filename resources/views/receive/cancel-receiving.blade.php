@@ -59,7 +59,7 @@
                                         </div>
                                         <div class="mt-3">
                                             <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
-                                            <div id="imagePdfNotice" class="alert alert-secondary" style="display:none;"></div>
+                                            <iframe id="imagePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
                                         </div>
                                     </div>
 
@@ -67,14 +67,14 @@
                                     document.getElementById('imageInput').onchange = function(evt) {
                                         const [file] = this.files;
                                         const preview = document.getElementById('imagePreview');
-                                        const pdfNotice = document.getElementById('imagePdfNotice');
+                                        const pdfPreview = document.getElementById('imagePdfPreview');
                                         if (!file) return;
                                         if (file.type === 'application/pdf') {
                                             preview.style.display = 'none';
-                                            pdfNotice.textContent = 'PDF selected: ' + file.name;
-                                            pdfNotice.style.display = 'block';
+                                            pdfPreview.src = URL.createObjectURL(file);
+                                            pdfPreview.style.display = 'block';
                                         } else {
-                                            pdfNotice.style.display = 'none';
+                                            pdfPreview.style.display = 'none';
                                             preview.src = URL.createObjectURL(file);
                                             preview.style.display = 'block';
                                         }

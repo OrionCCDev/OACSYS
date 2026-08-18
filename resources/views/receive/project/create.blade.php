@@ -68,7 +68,7 @@
                                             </div>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
-                                                <div id="imagePdfNotice" class="alert alert-secondary" style="display:none;"></div>
+                                                <iframe id="imagePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
                                             </div>
                                             <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div>
                                         </div>
@@ -78,10 +78,10 @@
                                                 const [file] = this.files;
                                                 const validationMessage = document.getElementById('validationMessage');
                                                 const preview = document.getElementById('imagePreview');
-                                                const pdfNotice = document.getElementById('imagePdfNotice');
+                                                const pdfPreview = document.getElementById('imagePdfPreview');
                                                 validationMessage.style.display = 'none';
                                                 validationMessage.innerText = '';
-                                                pdfNotice.style.display = 'none';
+                                                pdfPreview.style.display = 'none';
 
                                                 if (file) {
                                                     // Validate file type
@@ -104,8 +104,8 @@
 
                                                     if (file.type === 'application/pdf') {
                                                         preview.style.display = 'none';
-                                                        pdfNotice.textContent = 'PDF selected: ' + file.name;
-                                                        pdfNotice.style.display = 'block';
+                                                        pdfPreview.src = URL.createObjectURL(file);
+                                                        pdfPreview.style.display = 'block';
                                                     } else {
                                                         preview.src = URL.createObjectURL(file);
                                                         preview.style.display = 'block';
@@ -307,7 +307,18 @@
                 </div>
                 @else
                 <div class="col-xl-12">
-                    <img src="{{ asset('X-Files/Dash/imgs/receives/' . $receive->receive_image ) }}" width="100%" height="100%" alt="">
+                    @php
+                        $receiveDocUrl = asset('X-Files/Dash/imgs/receives/' . $receive->receive_image);
+                        $receiveIsPdf = strtolower(pathinfo($receive->receive_image, PATHINFO_EXTENSION)) === 'pdf';
+                    @endphp
+                    @if($receiveIsPdf)
+                        <iframe src="{{ $receiveDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
+                        <div class="mt-2 no-print">
+                            <a href="{{ $receiveDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
+                        </div>
+                    @else
+                        <img src="{{ $receiveDocUrl }}" width="100%" height="100%" alt="">
+                    @endif
                 </div>
                 @endif
             </div>

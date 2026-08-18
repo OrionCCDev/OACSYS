@@ -96,7 +96,7 @@
 
                                         <div class="form-group">
                                             <img id="signature-preview" src="" alt="Signature Preview" style="display:none; max-width: 100%; max-height: 300px; border: 1px solid #ddd; padding: 10px; margin-top: 10px;">
-                                            <div id="signature-pdf-notice" class="alert alert-secondary" style="display:none;"></div>
+                                            <iframe id="signature-pdf-preview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd; margin-top: 10px;"></iframe>
                                         </div>
 
                                         <div class="text-right mt-3">
@@ -120,14 +120,14 @@
     document.getElementById('transfer_signature').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const preview = document.getElementById('signature-preview');
-        const pdfNotice = document.getElementById('signature-pdf-notice');
+        const pdfPreview = document.getElementById('signature-pdf-preview');
         if (!file) return;
         if (file.type === 'application/pdf') {
             preview.style.display = 'none';
-            pdfNotice.textContent = 'PDF selected: ' + file.name;
-            pdfNotice.style.display = 'block';
+            pdfPreview.src = URL.createObjectURL(file);
+            pdfPreview.style.display = 'block';
         } else {
-            pdfNotice.style.display = 'none';
+            pdfPreview.style.display = 'none';
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.src = e.target.result;

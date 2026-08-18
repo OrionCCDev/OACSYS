@@ -90,7 +90,18 @@
         <div class="row" id="PrintingArea" style="position: relative;">
             <div class="col-xl-12">
                 @if ($clearanceResign->status == 'resigned')
-                <img src="{{ asset('X-Files/Dash/imgs/clearance/' . $clearanceResign->clear_image) }}" alt="" srcset="">
+                @php
+                    $clearDocUrl = asset('X-Files/Dash/imgs/clearance/' . $clearanceResign->clear_image);
+                    $clearIsPdf = strtolower(pathinfo($clearanceResign->clear_image, PATHINFO_EXTENSION)) === 'pdf';
+                @endphp
+                @if($clearIsPdf)
+                    <iframe src="{{ $clearDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
+                    <div class="mt-2 no-print">
+                        <a href="{{ $clearDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
+                    </div>
+                @else
+                    <img src="{{ $clearDocUrl }}" alt="" srcset="">
+                @endif
                 @else
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">

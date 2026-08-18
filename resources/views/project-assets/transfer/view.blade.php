@@ -114,7 +114,18 @@
                                     <h5 class="mb-0">Transfer Signature</h5>
                                 </div>
                                 <div class="card-body text-center">
-                                    <img src="{{ asset('X-Files/Dash/imgs/transfers/' . $transfer->transfer_image) }}" alt="Transfer Signature" class="img-fluid" style="max-height: 400px; border: 1px solid #ddd; padding: 10px;">
+                                    @php
+                                        $transferDocUrl = asset('X-Files/Dash/imgs/transfers/' . $transfer->transfer_image);
+                                        $transferIsPdf = strtolower(pathinfo($transfer->transfer_image, PATHINFO_EXTENSION)) === 'pdf';
+                                    @endphp
+                                    @if($transferIsPdf)
+                                        <iframe src="{{ $transferDocUrl }}" width="100%" height="600" style="border:1px solid #ddd;"></iframe>
+                                        <div class="mt-2">
+                                            <a href="{{ $transferDocUrl }}" target="_blank" class="btn btn-info btn-sm">Open PDF in New Tab</a>
+                                        </div>
+                                    @else
+                                        <img src="{{ $transferDocUrl }}" alt="Transfer Signature" class="img-fluid" style="max-height: 400px; border: 1px solid #ddd; padding: 10px;">
+                                    @endif
                                 </div>
                             </div>
                         </div>

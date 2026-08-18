@@ -91,7 +91,20 @@
         </div>
         <div class="row" id="PrintingArea">
             @if ( $data['clearance']->status == 'finished')
-                <img src="{{ asset('X-Files/Dash/imgs/clearance/' . $data['clearance']->clear_image ) }}" alt="" srcset="">
+                @php
+                    $clearDocUrl = asset('X-Files/Dash/imgs/clearance/' . $data['clearance']->clear_image);
+                    $clearIsPdf = strtolower(pathinfo($data['clearance']->clear_image, PATHINFO_EXTENSION)) === 'pdf';
+                @endphp
+                @if($clearIsPdf)
+                    <div class="col-12">
+                        <iframe src="{{ $clearDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
+                        <div class="mt-2 no-print">
+                            <a href="{{ $clearDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
+                        </div>
+                    </div>
+                @else
+                    <img src="{{ $clearDocUrl }}" alt="" srcset="">
+                @endif
             @else
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
