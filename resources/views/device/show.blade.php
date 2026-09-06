@@ -183,6 +183,9 @@
                             <button type="button" class="btn btn-success btn-lg mb-2" data-toggle="modal" data-target="#assignEmployeeModal">
                                 Assign to Employee
                             </button>
+                            <button type="button" class="btn btn-secondary btn-lg mb-2" data-toggle="modal" data-target="#duplicateDeviceModal">
+                                Duplicate
+                            </button>
                             <form action="{{ route('device.unassign', $device->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('PUT')
@@ -301,6 +304,43 @@
     </div>
 </div>
 
+<!-- Duplicate Device Modal -->
+<div class="modal fade" id="duplicateDeviceModal" tabindex="-1" role="dialog" aria-labelledby="duplicateDeviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('device.duplicate', $device->id) }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="duplicateDeviceModalLabel">Duplicate This Device</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This creates new devices with the same name, type, model, price, brand, stored place,
+                        health, description, notes, main image and gallery as
+                        <strong>{{ $device->device_name }}</strong>.
+                    </p>
+                    <p class="text-muted">
+                        Each copy gets its own unique device code and starts as <strong>available</strong> with
+                        no serial number, employee, project, client or department assignment - fill those in
+                        individually afterward.
+                    </p>
+                    <div class="form-group">
+                        <label for="duplicateCopies">Number of Copies</label>
+                        <input type="number" class="form-control" id="duplicateCopies" name="copies" value="1" min="1" max="20" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Copies</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     document.addEventListener('livewire:initialized', () => {
@@ -310,5 +350,24 @@
     });
 </script>
 @endpush
+
+@section('sweetalert')
+<script>
+    @if(session('success'))
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session('success') }}'
+        });
+    @endif
+</script>
+@endsection
 
 @endsection

@@ -125,6 +125,74 @@ class DeviceController extends Controller
     }
 
     /**
+     * Create one or more copies of a device (same name/type/model/price/brand/
+     * stored place/health/description/notes/images) as fresh, unassigned
+     * inventory. Serial number, device code, status and any employee/project/
+     * client/department assignment are never copied - each physical unit needs
+     * its own identity.
+     */
+    public function duplicate(Request $request, Device $device)
+    {
+        $validated = $request->validate([
+            'copies' => 'required|integer|min:1|max:20',
+        ]);
+
+        $sourceMainImagePath = null;
+        if ($device->main_image && $device->main_image !== 'default_device.png') {
+            $path = public_path('X-Files/Dash/imgs/devices/' . $device->main_image);
+            if (file_exists($path)) {
+                $sourceMainImagePath = $path;
+            }
+        }
+
+        for ($i = 0; $i < $validated['copies']; $i++) {
+            $mainImageName = $device->main_image;
+            if ($sourceMainImagePath) {
+                $mainImageName = \Illuminate\Support\Str::uuid() . '.' . pathinfo($sourceMainImagePath, PATHINFO_EXTENSION);
+                copy($sourceMainImagePath, public_path('X-Files/Dash/imgs/devices/' . $mainImageName));
+            }
+
+            $copy = Device::create([
+                'device_name' => $device->device_name,
+                'device_type' => $device->device_type,
+                'device_code' => $this->generateUniqueDeviceCode($device->device_type),
+                'device_model' => $device->device_model,
+                'device_price' => $device->device_price,
+                'supplier_name' => $device->supplier_name,
+                'stored_at' => $device->stored_at,
+                'health' => $device->health,
+                'short_description' => $device->short_description,
+                'notes' => $device->notes,
+                'main_image' => $mainImageName,
+                'status' => 'available',
+            ]);
+
+            foreach ($device->getMedia('Device_image') as $media) {
+                $media->copy($copy, 'Device_image');
+            }
+        }
+
+        return redirect()->route('device.show', $device->id)
+            ->with('success', $validated['copies'] . ' copy/copies of this device were created successfully.');
+    }
+
+    /**
+     * The device_code generator in store() (type prefix + yymmHHiiss) can collide
+     * when several copies are made in the same second, so append a random
+     * 2-digit suffix and confirm uniqueness against the database.
+     */
+    private function generateUniqueDeviceCode(?string $deviceType): string
+    {
+        $prefix = strtoupper(substr($deviceType ?? 'XX', 0, 2));
+
+        do {
+            $code = $prefix . now()->format('ymdHis') . random_int(10, 99);
+        } while (Device::where('device_code', $code)->exists());
+
+        return $code;
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(Device $device)

@@ -205,6 +205,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::resource('/consultant', ConsultantController::class);
 
     Route::resource('/device', DeviceController::class);
+    Route::post('/device/{device}/duplicate', [DeviceController::class, 'duplicate'])->name('device.duplicate');
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
     Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
 
