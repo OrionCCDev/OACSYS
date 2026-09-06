@@ -20,6 +20,10 @@ class SimCardManage extends Component
     public $sim_provider;
     public $sim_plan;
     public $search = '';
+    public $filterStatus = '';
+    public $filterProvider = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
     public $edtId;
     public $edtNumber;
     public $edtProvider;
@@ -59,12 +63,62 @@ class SimCardManage extends Component
         $this->dispatch('showToast');
     }
 
+    /**
+     * Reset back to page 1 whenever search/filters change - otherwise a
+     * narrower result set can leave the view stuck on a now out-of-range
+     * page and look like the search returned nothing.
+     */
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterProvider()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
+
     public function render()
     {
-        $data = SimCard::where('sim_number', 'like', '%'.$this->search.'%')
-            ->orWhere('sim_provider', 'like', '%'.$this->search.'%')
-            ->orWhere('sim_plan', 'like', '%'.$this->search.'%')
-            ->paginate(10);
+        $query = SimCard::query();
+
+        if ($this->search !== '') {
+            $query->where(function ($q) {
+                $q->where('sim_number', 'like', '%'.$this->search.'%')
+                    ->orWhere('sim_provider', 'like', '%'.$this->search.'%')
+                    ->orWhere('sim_plan', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('employee', fn ($eq) => $eq->where('name', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('consultant', fn ($eq) => $eq->where('name', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('clientEmployee', fn ($eq) => $eq->where('name', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('device', fn ($eq) => $eq->where('device_name', 'like', '%'.$this->search.'%'));
+            });
+        }
+
+        if ($this->filterStatus !== '') {
+            $query->where('status', $this->filterStatus);
+        }
+
+        if ($this->filterProvider !== '') {
+            $query->where('sim_provider', $this->filterProvider);
+        }
+
+        $data = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
 
         return view('livewire.sim-card-manage', [
             'data' => $data

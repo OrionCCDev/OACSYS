@@ -129,10 +129,36 @@
                                                         </div>
                                                         <input type="text"
                                                             name="search" wire:model.live='search' class="form-control"
-                                                            id="" placeholder="Search">
+                                                            id="" placeholder="Number, plan, provider, owner or device">
                                                     </div>
                                                 </div>
-
+                                                <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Status</div>
+                                                        </div>
+                                                        <select wire:model.live='filterStatus' class="form-control">
+                                                            <option value="">All Statuses</option>
+                                                            <option value="available">Available</option>
+                                                            <option value="taken">Taken</option>
+                                                            <option value="pending-receive">Pending Receive</option>
+                                                            <option value="pending-cancel">Pending Cancel</option>
+                                                            <option value="replacement">Replacement</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="input-group mb-2">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Provider</div>
+                                                        </div>
+                                                        <select wire:model.live='filterProvider' class="form-control">
+                                                            <option value="">All Providers</option>
+                                                            <option value="DU">DU</option>
+                                                            <option value="Etisalat">E&</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -141,10 +167,23 @@
                                     <table class="table table-info table-bordered table-hover  mb-0">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>SimCard Number</th>
-                                                <th>Plan</th>
-                                                <th>Provider</th>
+                                                <th style="cursor:pointer" wire:click="sortBy('sim_number')">
+                                                    SimCard Number
+                                                    @if($sortField === 'sim_number') <i class="icon-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}"></i> @endif
+                                                </th>
+                                                <th style="cursor:pointer" wire:click="sortBy('sim_plan')">
+                                                    Plan
+                                                    @if($sortField === 'sim_plan') <i class="icon-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}"></i> @endif
+                                                </th>
+                                                <th style="cursor:pointer" wire:click="sortBy('sim_provider')">
+                                                    Provider
+                                                    @if($sortField === 'sim_provider') <i class="icon-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}"></i> @endif
+                                                </th>
                                                 <th>Owner & Status</th>
+                                                <th style="cursor:pointer" wire:click="sortBy('created_at')">
+                                                    Added
+                                                    @if($sortField === 'created_at') <i class="icon-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}"></i> @endif
+                                                </th>
                                                 <th>Handle</th>
                                             </tr>
                                         </thead>
@@ -157,20 +196,20 @@
                                                     <!-- existing buttons -->
                                                 </td>
                                                 <td>
+                                                    <input type="text" wire:model='edtPlan' value="{{ $edtPlan }}" >
+                                                    <!-- existing update/cancel buttons -->
+                                                </td>
+                                                <td>
                                                     <select wire:model='edtProvider' class="form-control">
                                                         <option value="">Select Provider</option>
                                                         <option value="DU">DU</option>
                                                         <option value="Etisalat">E&</option>
                                                     </select>
                                                 </td>
-                                                <td>
-                                                    <input type="text" wire:model='edtPlan' value="{{ $edtPlan }}" >
-                                                    <!-- existing update/cancel buttons -->
-                                                </td>
                                             @else
                                                 <td>{{ $sim->sim_number }}</td>
-                                                <td>{{ $sim->sim_provider }}</td>
                                                 <td>{{ $sim->sim_plan }}</td>
+                                                <td>{{ $sim->sim_provider }}</td>
                                             @endif
                                                 <td>
                                                     @if ($edtId == $sim->id)
@@ -202,6 +241,7 @@
                                                         @endif
                                                     @endif
                                                 </td>
+                                                <td>{{ $sim->created_at->format('Y-m-d') }}</td>
                                                 <td>
                                                     @if ($edtId == $sim->id)
                                                     <button wire:click="update({{ $sim->id }})" class="btn btn-success mr-25" data-toggle="tooltip" data-original-title="Save">
