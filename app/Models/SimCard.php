@@ -38,4 +38,19 @@ class SimCard extends Model
     public function device(){
         return $this->belongsTo(Device::class);
     }
+
+    /**
+     * Truly free: no employee/consultant/client/device holding it, and not
+     * mid some other process (pending-receive etc). status alone isn't
+     * trustworthy on its own since older code paths can leave it out of sync
+     * with the assignment columns.
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available')
+            ->whereNull('employee_id')
+            ->whereNull('consultant_id')
+            ->whereNull('client_employee_id')
+            ->whereNull('device_id');
+    }
 }

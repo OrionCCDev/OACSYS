@@ -110,7 +110,11 @@ class SimCardManage extends Component
             });
         }
 
-        if ($this->filterStatus !== '') {
+        if ($this->filterStatus === 'available') {
+            // status alone can be stale, so "Available" also has to mean no
+            // employee/consultant/client/device is actually holding it.
+            $query->available();
+        } elseif ($this->filterStatus !== '') {
             $query->where('status', $this->filterStatus);
         }
 
@@ -153,14 +157,24 @@ class SimCardManage extends Component
 
     public function update( SimCard $sim)
     {
-
-
-        $sim->update([
+        $attributes = [
             'sim_number' => $this->edtNumber,
             'sim_provider' => $this->edtProvider,
             'sim_plan' => $this->edtPlan,
             'status' => $this->edtStatus
-        ]);
+        ];
+
+        // Marking a SIM "available" from here has to actually free it -
+        // otherwise it keeps showing as taken by its old owner everywhere
+        // else while this page claims it's free.
+        if ($this->edtStatus === 'available') {
+            $attributes['employee_id'] = null;
+            $attributes['consultant_id'] = null;
+            $attributes['client_employee_id'] = null;
+            $attributes['device_id'] = null;
+        }
+
+        $sim->update($attributes);
         $this->edtId = null;
         $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' ,'edtStatus']);
         $this->dispatch('showToastOfUpdate');

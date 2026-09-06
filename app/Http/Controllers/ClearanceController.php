@@ -194,6 +194,7 @@ class ClearanceController extends Controller
                     'client_employee_id' => null,
                     'consultant_id' => null,
                     'project_id' => null,
+                    'device_id' => null,
                     'status' => 'available'
                 ]);
             }

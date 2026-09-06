@@ -29,7 +29,7 @@ class SimCardController extends Controller
      */
     public function create()
     {
-        $simCards = SimCard::all();
+        $simCards = SimCard::available()->orderBy('sim_number')->get();
         $employees = Employee::all();
 
         return view('sim_card.create', compact('simCards', 'employees'));
@@ -212,8 +212,16 @@ class SimCardController extends Controller
         ]);
 
         $simCard = SimCard::findOrFail($validated['sim_card_id']);
+
+        if ($simCard->consultant_id || $simCard->client_employee_id || $simCard->device_id) {
+            return redirect()->back()->with('error', 'That SIM card is already assigned elsewhere. Unassign it first.');
+        }
+
         $simCard->update([
             'employee_id' => $validated['employee_id'],
+            'consultant_id' => null,
+            'client_employee_id' => null,
+            'device_id' => null,
             'status' => 'taken',
         ]);
 

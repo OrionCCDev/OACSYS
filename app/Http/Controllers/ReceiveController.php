@@ -451,6 +451,7 @@ class ReceiveController extends Controller
                         'employee_id' => null,
                         'project_id' => null,
                         'department_id' => null,
+                        'device_id' => null,
                     ]);
             }
         }

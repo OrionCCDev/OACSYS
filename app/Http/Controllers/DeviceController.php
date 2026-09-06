@@ -201,7 +201,7 @@ class DeviceController extends Controller
         $device->load(['department', 'simCard']);
 
         $availableSimCards = SimCard::where(function ($query) use ($device) {
-            $query->where('status', 'available')->orWhere('device_id', $device->id);
+            $query->available()->orWhere('device_id', $device->id);
         })->orderBy('sim_number')->get();
 
         // A device can pass through many receives/clearances over its life (the
@@ -409,8 +409,13 @@ class DeviceController extends Controller
 
         $simCard = SimCard::findOrFail($request->sim_card_id);
 
-        if ($simCard->device_id && $simCard->device_id != $device->id) {
-            return redirect()->back()->with('error', 'That SIM card is already assigned to another device.');
+        $belongsToThisDevice = $simCard->device_id == $device->id;
+        $belongsElsewhere = !$belongsToThisDevice && (
+            $simCard->employee_id || $simCard->consultant_id || $simCard->client_employee_id || $simCard->device_id
+        );
+
+        if ($belongsElsewhere) {
+            return redirect()->back()->with('error', 'That SIM card is already assigned elsewhere. Unassign it first.');
         }
 
         if ($device->simCard && $device->simCard->id !== $simCard->id) {
