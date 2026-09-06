@@ -206,6 +206,8 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 
     Route::resource('/device', DeviceController::class);
     Route::post('/device/{device}/duplicate', [DeviceController::class, 'duplicate'])->name('device.duplicate');
+    Route::post('/device/{device}/assign-sim', [DeviceController::class, 'assignSim'])->name('device.assignSim');
+    Route::put('/device/{device}/unassign-sim', [DeviceController::class, 'unassignSim'])->name('device.unassignSim');
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
     Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
 

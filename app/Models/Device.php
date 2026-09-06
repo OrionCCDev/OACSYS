@@ -38,6 +38,9 @@ class Device extends Model implements HasMedia
     {
         return $this->hasMany(DeviceAndSimReceive::class, 'device_id', 'id');
     }
+    public function simCard(){
+        return $this->hasOne(SimCard::class);
+    }
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('Device_image');

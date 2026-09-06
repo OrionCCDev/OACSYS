@@ -142,6 +142,17 @@
                                             <span>Supplier Name: </span></span>
                                             <span class="ml-5 text-dark">{{ $device->supplier_name ?? 'No Supplier Assigned' }} </span>
                                     </li>
+                                    <li class="list-group-item" style="font-size: 35px">
+                                        <span>
+                                            <span>SIM Card: </span></span>
+                                            <span class="ml-5 text-dark">
+                                                @if($device->simCard)
+                                                    {{ $device->simCard->sim_number }} ({{ $device->simCard->sim_provider }})
+                                                @else
+                                                    No SIM Assigned
+                                                @endif
+                                            </span>
+                                    </li>
 
                                 </ul>
                              </div>
@@ -186,6 +197,18 @@
                             <button type="button" class="btn btn-secondary btn-lg mb-2" data-toggle="modal" data-target="#duplicateDeviceModal">
                                 Duplicate
                             </button>
+                            <button type="button" class="btn btn-primary btn-lg mb-2" data-toggle="modal" data-target="#assignSimModal">
+                                {{ $device->simCard ? 'Change SIM Card' : 'Assign SIM Card' }}
+                            </button>
+                            @if ($device->simCard)
+                            <form action="{{ route('device.unassignSim', $device->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-outline-danger btn-lg mb-2" onclick="return confirm('Remove the SIM card from this device?')">
+                                    Remove SIM Card
+                                </button>
+                            </form>
+                            @endif
                             <form action="{{ route('device.unassign', $device->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('PUT')
@@ -283,6 +306,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign SIM Card Modal -->
+<div class="modal fade" id="assignSimModal" tabindex="-1" role="dialog" aria-labelledby="assignSimModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('device.assignSim', $device->id) }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignSimModalLabel">Assign SIM Card To This Device</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="assignSimSelect">SIM Card</label>
+                        <select name="sim_card_id" id="assignSimSelect" class="form-control select2" required>
+                            <option value="">Select a SIM Card</option>
+                            @foreach($availableSimCards as $sim)
+                            <option value="{{ $sim->id }}" {{ $device->simCard && $device->simCard->id == $sim->id ? 'selected' : '' }}>
+                                {{ $sim->sim_number }} - {{ $sim->sim_provider }} ({{ $sim->sim_plan }})
+                            </option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">Only SIM cards that are available (or already on this device) are listed.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

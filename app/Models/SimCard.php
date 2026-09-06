@@ -34,4 +34,8 @@ class SimCard extends Model
     public function department(){
         return $this->belongsTo(Department::class);
     }
+
+    public function device(){
+        return $this->belongsTo(Device::class);
+    }
 }

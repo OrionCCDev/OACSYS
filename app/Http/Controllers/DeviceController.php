@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Employee;
+use App\Models\SimCard;
 use App\Support\PdfFonts;
 use App\Models\DeviceAndSimReceive;
 use App\Models\DeviceAndSimClearance;
@@ -197,7 +198,11 @@ class DeviceController extends Controller
      */
     public function show(Device $device)
     {
-        $device->load('department');
+        $device->load(['department', 'simCard']);
+
+        $availableSimCards = SimCard::where(function ($query) use ($device) {
+            $query->where('status', 'available')->orWhere('device_id', $device->id);
+        })->orderBy('sim_number')->get();
 
         // A device can pass through many receives/clearances over its life (the
         // devices.receive_id column only ever points at the latest one), so the
@@ -233,7 +238,7 @@ class DeviceController extends Controller
         }
 
         return view('device.show', compact(
-            'device', 'receiveHistory', 'clearanceHistory', 'lastActivity', 'lastActivityType'
+            'device', 'receiveHistory', 'clearanceHistory', 'lastActivity', 'lastActivityType', 'availableSimCards'
         ));
     }
 
@@ -389,5 +394,46 @@ class DeviceController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Put a SIM card into this device (e.g. a router or CCTV camera), so the
+     * pair can be tracked together. A device only ever holds one SIM, so
+     * whatever SIM it currently has gets freed back to available first.
+     */
+    public function assignSim(Request $request, Device $device)
+    {
+        $request->validate([
+            'sim_card_id' => 'required|exists:sim_cards,id',
+        ]);
+
+        $simCard = SimCard::findOrFail($request->sim_card_id);
+
+        if ($simCard->device_id && $simCard->device_id != $device->id) {
+            return redirect()->back()->with('error', 'That SIM card is already assigned to another device.');
+        }
+
+        if ($device->simCard && $device->simCard->id !== $simCard->id) {
+            $device->simCard->update(['device_id' => null, 'status' => 'available']);
+        }
+
+        $simCard->update([
+            'device_id' => $device->id,
+            'status' => 'taken',
+        ]);
+
+        return redirect()->back()->with('success', 'SIM card assigned to this device.');
+    }
+
+    /**
+     * Take the SIM card out of this device and make it available again.
+     */
+    public function unassignSim(Device $device)
+    {
+        if ($device->simCard) {
+            $device->simCard->update(['device_id' => null, 'status' => 'available']);
+        }
+
+        return redirect()->back()->with('success', 'SIM card removed from this device.');
     }
 }
