@@ -270,6 +270,10 @@ Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyR
         Route::get('/transfer/{transferId}/finish', [\App\Http\Controllers\ProjectAssetController::class, 'finishTransfer'])->name('transfer.finish');
         Route::post('/transfer/{transferId}/complete', [\App\Http\Controllers\ProjectAssetController::class, 'completeTransfer'])->name('transfer.complete');
         Route::get('/transfer/{transferId}/view', [\App\Http\Controllers\ProjectAssetController::class, 'viewTransfer'])->name('transfer.view');
+
+        // Rental Printers
+        Route::post('/{projectId}/printers/store', [\App\Http\Controllers\ProjectAssetController::class, 'storePrinter'])->name('printers.store');
+        Route::put('/printers/{device}/transfer', [\App\Http\Controllers\ProjectAssetController::class, 'quickTransferPrinter'])->name('printers.transfer');
     });
 
     // Department Asset Management Routes

@@ -11,6 +11,14 @@ class Device extends Model implements HasMedia
 {
     use InteractsWithMedia;
     protected $guarded = [];
+    protected $casts = [
+        'rental_start_date' => 'date',
+    ];
+
+    public function scopePrinters($query)
+    {
+        return $query->where('device_type', 'Printer');
+    }
 
     public function employee(){
         return $this->belongsTo(Employee::class);

@@ -457,7 +457,7 @@ class ProjectAssetController extends Controller
                         'device_id' => $deviceId,
                         'notes' => $request->device_notes[$index] ?? null,
                         'status' => 'pending',
-                        'transferred_by' => auth()->id(),
+                        'transferred_by' => auth()->user()->employee_profile_id,
                     ]);
                 }
             }
@@ -476,7 +476,7 @@ class ProjectAssetController extends Controller
                         'sim_card_id' => $simId,
                         'notes' => $request->sim_notes[$index] ?? null,
                         'status' => 'pending',
-                        'transferred_by' => auth()->id(),
+                        'transferred_by' => auth()->user()->employee_profile_id,
                     ]);
                 }
             }
@@ -576,6 +576,97 @@ class ProjectAssetController extends Controller
             ->get();
 
         return view('project-assets.transfer.view', compact('transfer', 'allTransfers'));
+    }
+
+    /**
+     * Add a rental printer directly onto this project - a Device with
+     * device_type Printer, scoped straight to project_id so it shows up in
+     * the project's Rental Printers section right away.
+     */
+    public function storePrinter(Request $request, $projectId)
+    {
+        $project = Project::findOrFail($projectId);
+
+        $validated = $request->validate([
+            'device_name' => 'required|string|max:255',
+            'device_model' => 'nullable|string|max:255',
+            'supplier_name' => 'nullable|string|max:255',
+            'serial_number' => 'nullable|string|max:255',
+            'rental_start_date' => 'nullable|date',
+            'stored_at' => 'required|in:office,server,store,delivered',
+            'health' => 'required|in:New,Mediam_use,Bad_use,Scrap,Need_fix',
+            'notes' => 'nullable|string|max:255',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        do {
+            $deviceCode = 'PR' . now()->format('ymdHis') . random_int(10, 99);
+        } while (Device::where('device_code', $deviceCode)->exists());
+
+        $printer = Device::create([
+            'device_type' => 'Printer',
+            'device_name' => $validated['device_name'],
+            'device_code' => $deviceCode,
+            'device_model' => $validated['device_model'] ?? null,
+            'supplier_name' => $validated['supplier_name'] ?? null,
+            'serial_number' => $validated['serial_number'] ?? null,
+            'rental_start_date' => $validated['rental_start_date'] ?? null,
+            'stored_at' => $validated['stored_at'],
+            'health' => $validated['health'],
+            'notes' => $validated['notes'] ?? null,
+            'status' => 'In-Project-Site',
+            'project_id' => $project->id,
+        ]);
+
+        if ($request->hasFile('main_image')) {
+            $mainImage = $request->file('main_image');
+            $mainImageName = \Illuminate\Support\Str::uuid() . '.' . $mainImage->getClientOriginalExtension();
+            $mainImage->move(public_path('X-Files/Dash/imgs/devices'), $mainImageName);
+            $printer->update(['main_image' => $mainImageName]);
+        }
+
+        return redirect()->route('project.details', $project->id)
+            ->with('success', 'Rental printer added to this project.');
+    }
+
+    /**
+     * Move a rental printer straight to another project - no signature step
+     * (unlike device/SIM transfers), just an instant move that's still logged
+     * in project_asset_transfers for a full audit trail.
+     */
+    public function quickTransferPrinter(Request $request, Device $device)
+    {
+        $validated = $request->validate([
+            'to_project_id' => 'required|exists:projects,id',
+        ]);
+
+        if ($device->device_type !== 'Printer') {
+            return redirect()->back()->with('error', 'That device is not a rental printer.');
+        }
+
+        if ((int) $validated['to_project_id'] === (int) $device->project_id) {
+            return redirect()->back()->with('error', 'This printer is already on that project.');
+        }
+
+        if (!$device->project_id) {
+            return redirect()->back()->with('error', 'This printer is not currently on a project.');
+        }
+
+        DB::transaction(function () use ($device, $validated) {
+            ProjectAssetTransfer::create([
+                'transfer_code' => ProjectAssetTransfer::generateUniqueCode(),
+                'from_project_id' => $device->project_id,
+                'to_project_id' => $validated['to_project_id'],
+                'device_id' => $device->id,
+                'status' => 'completed',
+                'transferred_at' => now(),
+                'transferred_by' => auth()->user()->employee_profile_id,
+            ]);
+
+            $device->update(['project_id' => $validated['to_project_id']]);
+        });
+
+        return redirect()->back()->with('success', 'Printer transferred successfully.');
     }
 
     /**
