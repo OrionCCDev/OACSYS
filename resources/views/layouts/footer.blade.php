@@ -52,7 +52,7 @@
 <!-- Init JavaScript -->
 <script src="{{ asset('X-Files/Dash/dist/js/init.js') }}"></script>
 <script src="{{ asset('X-Files/Dash/dist/js/dashboard-data.js') }}"></script>
-<script src="{{ asset('X-Files/Dash/dist/js/crystal-motion.js') }}"></script>
+<script src="{{ asset('X-Files/Dash/dist/js/crystal-motion.js') }}?v={{ filemtime(public_path('X-Files/Dash/dist/js/crystal-motion.js')) }}"></script>
 @livewireScripts()
 @yield('sweetalert')
 </body>

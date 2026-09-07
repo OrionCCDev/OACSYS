@@ -33,7 +33,9 @@
 
     <!-- Custom CSS -->
     <link href="{{ asset('X-Files/Dash/dist/css/style.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('X-Files/Dash/dist/css/crystal-dark.css') }}" rel="stylesheet" type="text/css">
+    {{-- ?v= mtime stamp: the filename never changes, so without this returning
+         browsers keep serving their cached copy of the theme after an update --}}
+    <link href="{{ asset('X-Files/Dash/dist/css/crystal-dark.css') }}?v={{ filemtime(public_path('X-Files/Dash/dist/css/crystal-dark.css')) }}" rel="stylesheet" type="text/css">
     @yield('custom_css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @livewireStyles()
