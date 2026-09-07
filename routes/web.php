@@ -211,6 +211,12 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
     Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
 
+    Route::prefix('printers')->name('printers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\PrinterController::class, 'index'])->name('index');
+        Route::get('/{device}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
+        Route::post('/{device}/assign', [\App\Http\Controllers\PrinterController::class, 'assign'])->name('assign');
+    });
+
     Route::prefix('device-transfer')->name('device-transfer.')->group(function () {
         Route::get('/create', [\App\Http\Controllers\DeviceTransferController::class, 'create'])->name('create');
         Route::get('/{clearance}/{receive}/finish', [\App\Http\Controllers\DeviceTransferController::class, 'finish'])->name('finish');

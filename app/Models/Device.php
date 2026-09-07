@@ -49,6 +49,12 @@ class Device extends Model implements HasMedia
     public function simCard(){
         return $this->hasOne(SimCard::class);
     }
+    public function printerAssignments(){
+        return $this->hasMany(PrinterAssignment::class)->orderByDesc('start_date');
+    }
+    public function currentAssignment(){
+        return $this->hasOne(PrinterAssignment::class)->whereNull('end_date')->latest('start_date');
+    }
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('Device_image');

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\DeviceAndSimReceive;
 use App\Models\ProjectAssetTransfer;
 use App\Models\DeviceAndSimClearance;
+use App\Models\PrinterAssignment;
 
 class ProjectAssetController extends Controller
 {
@@ -615,7 +616,6 @@ class ProjectAssetController extends Controller
             'health' => $validated['health'],
             'notes' => $validated['notes'] ?? null,
             'status' => 'In-Project-Site',
-            'project_id' => $project->id,
         ]);
 
         if ($request->hasFile('main_image')) {
@@ -625,14 +625,24 @@ class ProjectAssetController extends Controller
             $printer->update(['main_image' => $mainImageName]);
         }
 
+        PrinterAssignment::reassign(
+            $printer,
+            'project',
+            $project->id,
+            $validated['rental_start_date'] ?? now()->toDateString(),
+            auth()->user()->employee_profile_id
+        );
+
         return redirect()->route('project.details', $project->id)
             ->with('success', 'Rental printer added to this project.');
     }
 
     /**
      * Move a rental printer straight to another project - no signature step
-     * (unlike device/SIM transfers), just an instant move that's still logged
-     * in project_asset_transfers for a full audit trail.
+     * (unlike device/SIM transfers), just an instant move. Goes through the
+     * same PrinterAssignment::reassign() as the full printer report's
+     * reassignment form, so the dated history table stays the single source
+     * of truth for wherever a printer gets moved.
      */
     public function quickTransferPrinter(Request $request, Device $device)
     {
@@ -652,19 +662,13 @@ class ProjectAssetController extends Controller
             return redirect()->back()->with('error', 'This printer is not currently on a project.');
         }
 
-        DB::transaction(function () use ($device, $validated) {
-            ProjectAssetTransfer::create([
-                'transfer_code' => ProjectAssetTransfer::generateUniqueCode(),
-                'from_project_id' => $device->project_id,
-                'to_project_id' => $validated['to_project_id'],
-                'device_id' => $device->id,
-                'status' => 'completed',
-                'transferred_at' => now(),
-                'transferred_by' => auth()->user()->employee_profile_id,
-            ]);
-
-            $device->update(['project_id' => $validated['to_project_id']]);
-        });
+        PrinterAssignment::reassign(
+            $device,
+            'project',
+            (int) $validated['to_project_id'],
+            now()->toDateString(),
+            auth()->user()->employee_profile_id
+        );
 
         return redirect()->back()->with('success', 'Printer transferred successfully.');
     }
