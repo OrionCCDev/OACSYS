@@ -141,12 +141,12 @@
             curY += (mouseY - curY) * 0.06;
 
             if (liquid) {
-                liquid.style.transform = 'translate3d(' + (-curX * 16).toFixed(2) + 'px,' +
-                    (-curY * 16 + scrollY * 0.05).toFixed(2) + 'px,0) scale(2)';
+                liquid.style.transform = 'translate3d(' + (-curX * 24).toFixed(2) + 'px,' +
+                    (-curY * 24 + scrollY * 0.08).toFixed(2) + 'px,0) scale(2)';
             }
             if (canvas) {
-                canvas.style.transform = 'translate3d(' + (-curX * 30).toFixed(2) + 'px,' +
-                    (-curY * 30 + scrollY * 0.12).toFixed(2) + 'px,0) scale(1.06)';
+                canvas.style.transform = 'translate3d(' + (-curX * 40).toFixed(2) + 'px,' +
+                    (-curY * 40 + scrollY * 0.16).toFixed(2) + 'px,0) scale(1.06)';
             }
             if (masthead) {
                 // the dashboard title drifts down slower than the page and fades as it goes

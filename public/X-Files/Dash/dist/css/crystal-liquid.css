@@ -1,0 +1,158 @@
+/* ==========================================================================
+   OACSYS - Crystal liquid background
+   The animated background layer only (liquid blobs, particle canvas, grain).
+   Split out of crystal-dark.css so pages outside the main layout (login, etc)
+   can include it on its own. Markup: resources/views/layouts/crystal-bg.blade.php
+   Behaviour (particles, parallax): dist/js/crystal-motion.js
+   ========================================================================== */
+
+/* ---------- animated background: liquid blobs + particle canvas + grain ----------
+   Fixed behind the page at z-index -1 rather than lifting .hk-wrapper above it:
+   giving .hk-wrapper a z-index would make it a stacking context and trap every
+   Bootstrap .modal (rendered inside the wrapper) beneath the .modal-backdrop
+   that Bootstrap appends to <body>. */
+
+.crystal-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The liquid layer is rendered at HALF size and scaled x2. It's heavily
+   blurred, so the upscale is invisible - but blur cost scales with area, so
+   this makes the continuously-animating filter ~4x cheaper. The blur +
+   contrast pair is what makes separate blobs melt into each other with
+   liquid "necks" instead of just overlapping: blur softens their alpha, then
+   contrast pushes the soft edges back toward solid. On this near-black canvas
+   the dark halos that trick normally produces are invisible.
+   crystal-motion.js writes translate3d() into this element's transform for
+   parallax - it must always keep the trailing scale(2). */
+.crystal-liquid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  transform: scale(2);
+  transform-origin: 0 0;
+  filter: blur(28px) contrast(2.4) saturate(1.4);
+  will-change: transform;
+}
+
+/* Solid fills (not gradients) so the animated border-radius actually shapes
+   the blob - a radial falloff would look round no matter the radius. Sizes
+   are in the half-size container, so they appear doubled on screen. */
+.crystal-blob {
+  position: absolute;
+  mix-blend-mode: screen;
+  will-change: transform, border-radius;
+}
+
+/* Seven blobs: five around the edges plus two parked mid-viewport (6 and 7),
+   because content pages stack their panels in the middle and the corner-only
+   layout left that area dark. */
+.crystal-blob-1 {
+  width: 36vmax; height: 36vmax;
+  top: -10vmax; left: -8vmax;
+  background: rgba(61, 90, 224, 0.85);
+  animation: crystal-morph-a 22s ease-in-out infinite alternate;
+}
+.crystal-blob-2 {
+  width: 30vmax; height: 30vmax;
+  top: -6vmax; right: -10vmax;
+  background: rgba(125, 196, 255, 0.6);
+  animation: crystal-morph-b 26s ease-in-out infinite alternate;
+  animation-delay: -9s;
+}
+.crystal-blob-3 {
+  width: 40vmax; height: 40vmax;
+  bottom: -16vmax; left: 12vmax;
+  background: rgba(32, 47, 122, 0.92);
+  animation: crystal-morph-c 30s ease-in-out infinite alternate;
+  animation-delay: -17s;
+}
+.crystal-blob-4 {
+  width: 26vmax; height: 26vmax;
+  top: 18vmax; left: 30vmax;
+  background: rgba(62, 207, 142, 0.5);
+  animation: crystal-morph-b 21s ease-in-out infinite alternate-reverse;
+  animation-delay: -5s;
+}
+.crystal-blob-5 {
+  width: 22vmax; height: 22vmax;
+  bottom: 2vmax; right: 4vmax;
+  background: rgba(240, 184, 88, 0.3);
+  animation: crystal-morph-a 28s ease-in-out infinite alternate-reverse;
+  animation-delay: -21s;
+}
+.crystal-blob-6 {
+  width: 28vmax; height: 28vmax;
+  top: 26vmax; left: 2vmax;
+  background: rgba(125, 196, 255, 0.5);
+  animation: crystal-morph-c 24s ease-in-out infinite alternate-reverse;
+  animation-delay: -12s;
+}
+.crystal-blob-7 {
+  width: 24vmax; height: 24vmax;
+  top: 12vmax; right: 22vmax;
+  background: rgba(61, 90, 224, 0.7);
+  animation: crystal-morph-a 19s ease-in-out infinite alternate;
+  animation-delay: -3s;
+}
+
+/* Each keyframe changes the elliptical border-radius AND drifts/rotates, so
+   the shape stretches and squashes while it travels - that combination is
+   what reads as liquid rather than a floating circle. */
+@keyframes crystal-morph-a {
+  0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translate(0, 0) rotate(0deg) scale(1); }
+  33%  { border-radius: 25% 65% 75% 35% / 55% 65% 25% 60%; transform: translate(15vw, 10vh) rotate(60deg) scale(1.3); }
+  66%  { border-radius: 55% 45% 30% 70% / 35% 60% 40% 65%; transform: translate(-9vw, 21vh) rotate(140deg) scale(0.82); }
+  100% { border-radius: 70% 30% 60% 40% / 30% 70% 30% 70%; transform: translate(5vw, 3vh) rotate(220deg) scale(1.12); }
+}
+@keyframes crystal-morph-b {
+  0%   { border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%; transform: translate(0, 0) rotate(0deg) scale(1); }
+  33%  { border-radius: 75% 25% 35% 65% / 35% 75% 25% 65%; transform: translate(-18vw, 12vh) rotate(-75deg) scale(1.22); }
+  66%  { border-radius: 30% 70% 25% 75% / 65% 35% 65% 35%; transform: translate(-6vw, 27vh) rotate(-160deg) scale(1.34); }
+  100% { border-radius: 55% 45% 70% 30% / 45% 55% 40% 60%; transform: translate(10vw, 6vh) rotate(-250deg) scale(0.9); }
+}
+@keyframes crystal-morph-c {
+  0%   { border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; transform: translate(0, 0) rotate(0deg) scale(1); }
+  33%  { border-radius: 25% 75% 65% 35% / 55% 45% 25% 75%; transform: translate(19vw, -14vh) rotate(85deg) scale(1.26); }
+  66%  { border-radius: 65% 35% 75% 25% / 35% 65% 35% 65%; transform: translate(-13vw, -6vh) rotate(180deg) scale(1.08); }
+  100% { border-radius: 45% 55% 30% 70% / 70% 30% 70% 30%; transform: translate(6vw, -19vh) rotate(275deg) scale(0.86); }
+}
+
+/* Particle constellation sits above the liquid. Slightly over-scaled so the
+   parallax shift never exposes a bare edge. */
+#crystalParticles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  transform: scale(1.06);
+  will-change: transform;
+}
+
+/* Static film grain on top: breaks up the banding smooth gradients get on
+   dark screens and adds a little texture. A tiled SVG noise, so it costs
+   nothing per frame. */
+.crystal-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+/* ---------- reduced motion: freeze the layer ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .crystal-blob { animation: none !important; }
+  .crystal-liquid { transform: scale(2) !important; }
+  #crystalParticles { display: none; }
+}

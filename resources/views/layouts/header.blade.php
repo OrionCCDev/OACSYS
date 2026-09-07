@@ -36,6 +36,7 @@
     {{-- ?v= mtime stamp: the filename never changes, so without this returning
          browsers keep serving their cached copy of the theme after an update --}}
     <link href="{{ asset('X-Files/Dash/dist/css/crystal-dark.css') }}?v={{ filemtime(public_path('X-Files/Dash/dist/css/crystal-dark.css')) }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('X-Files/Dash/dist/css/crystal-liquid.css') }}?v={{ filemtime(public_path('X-Files/Dash/dist/css/crystal-liquid.css')) }}" rel="stylesheet" type="text/css">
     @yield('custom_css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @livewireStyles()
@@ -81,17 +82,7 @@
 
 <body>
 
-    <!-- Animated background: liquid blobs + particle canvas + grain, with mouse/scroll parallax (crystal-dark.css / crystal-motion.js) -->
-    <div class="crystal-bg" aria-hidden="true">
-        <div class="crystal-liquid">
-            <span class="crystal-blob crystal-blob-1"></span>
-            <span class="crystal-blob crystal-blob-2"></span>
-            <span class="crystal-blob crystal-blob-3"></span>
-            <span class="crystal-blob crystal-blob-4"></span>
-            <span class="crystal-blob crystal-blob-5"></span>
-        </div>
-        <canvas id="crystalParticles"></canvas>
-    </div>
+    @include('layouts.crystal-bg')
 
     <!-- Preloader -->
     <div class="preloader-it">

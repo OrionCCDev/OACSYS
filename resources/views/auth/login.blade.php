@@ -125,6 +125,8 @@
     <title>IT System - Login</title>
     <link rel="icon" href="{{ asset('X-Files/Dash/logo-blue.webp') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {{-- same animated liquid background as the app itself (this page doesn't use the main layout) --}}
+    <link href="{{ asset('X-Files/Dash/dist/css/crystal-liquid.css') }}?v={{ filemtime(public_path('X-Files/Dash/dist/css/crystal-liquid.css')) }}" rel="stylesheet" type="text/css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700&display=swap');
 
@@ -352,6 +354,7 @@
     </style>
 </head>
 <body>
+    @include('layouts.crystal-bg')
     <div class="login-container">
         <x-auth-session-status class="error-message" :status="session('status')" />
 
@@ -452,5 +455,6 @@
             }
         });
     </script>
+    <script src="{{ asset('X-Files/Dash/dist/js/crystal-motion.js') }}?v={{ filemtime(public_path('X-Files/Dash/dist/js/crystal-motion.js')) }}"></script>
 </body>
 </html>
