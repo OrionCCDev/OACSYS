@@ -9,7 +9,8 @@
                 <p>Every rental printer we track, its PO, and where it currently is.</p>
             </div>
             <div>
-                <a href="{{ route('supplier.index') }}" class="btn btn-secondary">Suppliers</a>
+                <a href="{{ route('supplier.index') }}" class="btn btn-secondary mr-2">Suppliers</a>
+                <a href="{{ route('printers.create') }}" class="btn btn-gradient-primary btn-rounded">Add Printer</a>
             </div>
         </div>
 
@@ -50,7 +51,7 @@
                                         <th>Model</th>
                                         <th>Supplier</th>
                                         <th>Project</th>
-                                        <th>Delivered To</th>
+                                        <th>Assigned To</th>
                                         <th>PO Number</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -66,7 +67,7 @@
                                         <td>{{ $printer->model ?? '-' }}</td>
                                         <td>{{ $printer->supplier->name ?? '-' }}</td>
                                         <td>{{ $printer->project->project_name ?? '-' }}</td>
-                                        <td>{{ $printer->deliveredToLabel() }}</td>
+                                        <td>{{ $printer->assignedToLabel() }}</td>
                                         <td>{{ $printer->po_number }}</td>
                                         <td>
                                             <span class="badge {{ ['active' => 'badge-success', 'transferred' => 'badge-info', 'cancelled' => 'badge-danger'][$printer->status] ?? 'badge-secondary' }} text-capitalize">

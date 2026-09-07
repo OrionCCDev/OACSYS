@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Receive Rental Printer</h2>
-                <p>Onto project: <strong>{{ $project->project_name }}</strong></p>
+                <p>Register a printer against its ERP purchase order.</p>
             </div>
         </div>
 
@@ -14,8 +14,20 @@
             <div class="row">
                 <div class="col-12">
                     <section class="hk-sec-wrapper">
-                        <form action="{{ route('printers.store', $project->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('printers.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>Project <span class="text-danger">*</span></label>
+                                    <select name="project_id" class="form-control select2" required>
+                                        <option value="">Select Project</option>
+                                        @foreach($projects as $proj)
+                                        <option value="{{ $proj->id }}" {{ old('project_id', $project?->id) == $proj->id ? 'selected' : '' }}>{{ $proj->project_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('project_id') <div class="text-danger">{{ $message }}</div> @enderror
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label>Printer Name</label>
@@ -58,16 +70,18 @@
 
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label>Delivered To <span class="text-danger">*</span></label>
+                                    <label>Assigned To <span class="text-danger">*</span></label>
                                     <select name="delivered_to_type" id="deliveredToType" class="form-control" required>
+                                        <option value="">Select who it's assigned to</option>
                                         <option value="client">Client</option>
                                         <option value="consultant">Consultant</option>
-                                        <option value="office">Our Office</option>
+                                        <option value="office">Orion (our office)</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 form-group delivery-target-group" data-type="client">
+                                {{-- shown by the script below once a type is chosen; Orion needs no target --}}
+                                <div class="col-md-6 form-group delivery-target-group" data-type="client" style="display:none">
                                     <label>Client</label>
-                                    <select name="target_id" class="form-control delivery-target" required>
+                                    <select name="target_id" class="form-control delivery-target" disabled>
                                         <option value="">Select Client</option>
                                         @foreach($clientEmployees as $client)
                                         <option value="{{ $client->id }}">{{ $client->name }}</option>
@@ -102,7 +116,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary">Receive Printer</button>
-                            <a href="{{ route('project.details', $project->id) }}" class="btn btn-secondary">Cancel</a>
+                            <a href="{{ $project ? route('project.details', $project->id) : route('printers.index') }}" class="btn btn-secondary">Cancel</a>
                         </form>
                     </section>
                 </div>

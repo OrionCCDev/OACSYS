@@ -52,8 +52,11 @@
                                                         '' }}>NVR</option>
                                                     <option value="Camera" {{ $device->device_type == 'Camera' ?
                                                         'selected' : '' }}>Camera</option>
-                                                    <option value="Printer" {{ $device->device_type == 'Printer' ?
-                                                        'selected' : '' }}>Printer</option>
+                                                    {{-- Printers are tracked separately (see the Printers section), so
+                                                         this option only remains for devices already recorded as one. --}}
+                                                    @if($device->device_type == 'Printer')
+                                                    <option value="Printer" selected>Printer (legacy)</option>
+                                                    @endif
                                                     <option value="Screen" {{ $device->device_type == 'Screen' ?
                                                         'selected' : '' }}>Screen</option>
                                                     <option value="Inverter" {{ $device->device_type == 'Inverter' ?

@@ -215,7 +215,7 @@
                                                 <div>
                                                     <span class="d-block">
                                                         <span class="display-5 font-weight-400 text-dark">{{
-                                                            $project->devices->where('device_type', 'Printer')->count()
+                                                            \App\Models\Printer::where('project_id', $project->id)->where('status', 'active')->count()
                                                             }}</span>
                                                     </span>
                                                 </div>
@@ -620,7 +620,7 @@
                                         </div>
                                     </div>
 
-                                    @php $printers = \App\Models\Printer::where('project_id', $project->id)->where('status', 'active')->with(['supplier', 'clientEmployee', 'consultant'])->get(); @endphp
+                                    @php $printers = \App\Models\Printer::where('project_id', $project->id)->where('status', 'active')->with(['supplier', 'clientEmployee', 'consultant'])->withCount('invoices')->get(); @endphp
 
                                     @if($printers->isEmpty())
                                     <p class="text-muted">No rental printers on this project yet.</p>
@@ -635,7 +635,8 @@
                                                     <th>Supplier</th>
                                                     <th>Serial Number</th>
                                                     <th>PO Number</th>
-                                                    <th>Delivered To</th>
+                                                    <th>Assigned To</th>
+                                                    <th>Invoices</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -650,9 +651,14 @@
                                                     <td>{{ $printer->supplier->name ?? '-' }}</td>
                                                     <td>{{ $printer->serial_number ?? '-' }}</td>
                                                     <td>{{ $printer->po_number }}</td>
-                                                    <td>{{ $printer->deliveredToLabel() }}</td>
+                                                    <td>{{ $printer->assignedToLabel() }}</td>
                                                     <td>
-                                                        <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">Manage</a>
+                                                        <a href="{{ route('printers.show', $printer->id) }}">
+                                                            {{ $printer->invoices_count }} {{ \Illuminate\Support\Str::plural('invoice', $printer->invoices_count) }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">Manage &amp; Invoices</a>
                                                     </td>
                                                 </tr>
                                                 @endforeach

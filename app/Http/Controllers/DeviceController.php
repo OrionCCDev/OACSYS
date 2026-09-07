@@ -69,7 +69,8 @@ class DeviceController extends Controller
     public function store(Request $request)
     {
         $requestedData = $request->validate([
-            'device_type' => 'required|string|max:255|in:Laptop,Pc,Router,Switch,NVR,Camera,Printer,Screen,Inverter,PC_Element,Electric_Element,Telephone,Other',
+            // No Printer: printers are their own model now (App\Models\Printer).
+            'device_type' => 'required|string|max:255|in:Laptop,Pc,Router,Switch,NVR,Camera,Screen,Inverter,PC_Element,Electric_Element,Telephone,Other',
             'device_name' => 'required|string|max:255',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'device_model' => 'nullable|string|max:255',

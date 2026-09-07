@@ -78,12 +78,12 @@
                             </tr>
                             <tr><th>Start Date</th><td>{{ $printer->start_date->format('Y-m-d') }}</td></tr>
                             <tr><th>End Date</th><td>{{ $printer->end_date?->format('Y-m-d') ?? '-' }}</td></tr>
-                            <tr><th>Delivered To</th><td>{{ $printer->deliveredToLabel() }}</td></tr>
+                            <tr><th>Assigned To</th><td>{{ $printer->assignedToLabel() }}</td></tr>
                         </table>
 
                         @if($printer->status === 'active')
                         <button type="button" class="btn btn-outline-primary btn-block mb-2" data-toggle="modal" data-target="#deliveryModal">
-                            Change Delivery
+                            Change Assignment
                         </button>
                         <button type="button" class="btn btn-warning btn-block mb-2" data-toggle="modal" data-target="#transferModal">
                             Transfer To Another Project
@@ -161,16 +161,16 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title">Change Delivery Location</h5>
+                    <h5 class="modal-title">Change Assignment</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Delivered To</label>
+                        <label>Assigned To</label>
                         <select name="delivered_to_type" id="deliveredToTypeEdit" class="form-control" required>
                             <option value="client" {{ $printer->delivered_to_type == 'client' ? 'selected' : '' }}>Client</option>
                             <option value="consultant" {{ $printer->delivered_to_type == 'consultant' ? 'selected' : '' }}>Consultant</option>
-                            <option value="office" {{ $printer->delivered_to_type == 'office' ? 'selected' : '' }}>Our Office</option>
+                            <option value="office" {{ $printer->delivered_to_type == 'office' ? 'selected' : '' }}>Orion (our office)</option>
                         </select>
                     </div>
                     <div class="form-group delivery-target-group-edit" data-type="client" style="{{ $printer->delivered_to_type != 'client' ? 'display:none' : '' }}">
@@ -231,11 +231,11 @@
                         <input type="file" name="po_document" class="form-control" accept="image/*,application/pdf">
                     </div>
                     <div class="form-group">
-                        <label>Delivered To</label>
+                        <label>Assigned To</label>
                         <select name="delivered_to_type" id="deliveredToTypeTransfer" class="form-control" required>
                             <option value="client">Client</option>
                             <option value="consultant">Consultant</option>
-                            <option value="office">Our Office</option>
+                            <option value="office">Orion (our office)</option>
                         </select>
                     </div>
                     <div class="form-group delivery-target-group-transfer" data-type="client">

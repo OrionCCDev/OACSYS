@@ -215,14 +215,18 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 
     Route::prefix('printers')->name('printers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PrinterController::class, 'index'])->name('index');
+        // Literal segments must be declared before /{printer}, otherwise "create"
+        // is matched as a printer id and fails route-model binding. The project is
+        // optional: omitted when adding from the printers report, supplied when
+        // coming from a project's own page (which pre-selects it).
+        Route::get('/create/{project?}', [\App\Http\Controllers\PrinterController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
+        Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
         Route::get('/{printer}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
-        Route::get('/project/{project}/create', [\App\Http\Controllers\PrinterController::class, 'create'])->name('create');
-        Route::post('/project/{project}/store', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
         Route::put('/{printer}/delivery', [\App\Http\Controllers\PrinterController::class, 'updateDelivery'])->name('delivery');
         Route::post('/{printer}/transfer', [\App\Http\Controllers\PrinterController::class, 'transfer'])->name('transfer');
         Route::post('/{printer}/cancel', [\App\Http\Controllers\PrinterController::class, 'cancel'])->name('cancel');
         Route::post('/{printer}/invoices', [\App\Http\Controllers\PrinterController::class, 'storeInvoice'])->name('invoices.store');
-        Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
     });
 
     Route::prefix('device-transfer')->name('device-transfer.')->group(function () {
@@ -285,9 +289,6 @@ Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyR
         Route::post('/transfer/{transferId}/complete', [\App\Http\Controllers\ProjectAssetController::class, 'completeTransfer'])->name('transfer.complete');
         Route::get('/transfer/{transferId}/view', [\App\Http\Controllers\ProjectAssetController::class, 'viewTransfer'])->name('transfer.view');
 
-        // Rental Printers
-        Route::post('/{projectId}/printers/store', [\App\Http\Controllers\ProjectAssetController::class, 'storePrinter'])->name('printers.store');
-        Route::put('/printers/{device}/transfer', [\App\Http\Controllers\ProjectAssetController::class, 'quickTransferPrinter'])->name('printers.transfer');
     });
 
     // Department Asset Management Routes

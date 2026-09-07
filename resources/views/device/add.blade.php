@@ -37,7 +37,6 @@
                                                     <option value="Switch" {{ old('device_type') == 'Switch' ? 'selected' : '' }}>Switch</option>
                                                     <option value="NVR" {{ old('device_type') == 'NVR' ? 'selected' : '' }}>NVR</option>
                                                     <option value="Camera" {{ old('device_type') == 'Camera' ? 'selected' : '' }}>Camera</option>
-                                                    <option value="Printer" {{ old('device_type') == 'Printer' ? 'selected' : '' }}>Printer</option>
                                                     <option value="Screen" {{ old('device_type') == 'Screen' ? 'selected' : '' }}>Screen</option>
                                                     <option value="Inverter" {{ old('device_type') == 'Inverter' ? 'selected' : '' }}>Inverter</option>
                                                     <option value="PC_Element" {{ old('device_type') == 'PC_Element' ? 'selected' : '' }}>PC Element</option>

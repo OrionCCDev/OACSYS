@@ -57,14 +57,15 @@ class Printer extends Model
     }
 
     /**
-     * Who/where within this project the printer is physically delivered to.
+     * Who the printer is assigned to within this project - a client, a
+     * consultant, or Orion itself.
      */
-    public function deliveredToLabel(): string
+    public function assignedToLabel(): string
     {
         return match ($this->delivered_to_type) {
             'client' => $this->clientEmployee->name ?? 'Unknown Client',
             'consultant' => $this->consultant->name ?? 'Unknown Consultant',
-            'office' => 'Our Office',
+            'office' => 'Orion',
             default => 'Unknown',
         };
     }

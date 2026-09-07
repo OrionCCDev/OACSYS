@@ -62,20 +62,24 @@ class PrinterController extends Controller
     }
 
     /**
-     * Form to receive a new printer (against its ERP PO) onto a project.
+     * Form to receive a new printer (against its ERP PO). Reachable straight
+     * from the printers report with no project chosen yet, or from a project's
+     * own page - which passes the project through to pre-select it.
      */
-    public function create(Project $project)
+    public function create(?Project $project = null)
     {
+        $projects = Project::where('status', 'in-progress')->orderBy('project_name')->get();
         $suppliers = Supplier::orderBy('name')->get();
         $clientEmployees = ClientEmployee::orderBy('name')->get();
         $consultants = Consultant::orderBy('name')->get();
 
-        return view('printers.create', compact('project', 'suppliers', 'clientEmployees', 'consultants'));
+        return view('printers.create', compact('project', 'projects', 'suppliers', 'clientEmployees', 'consultants'));
     }
 
-    public function store(Request $request, Project $project)
+    public function store(Request $request)
     {
         $validated = $request->validate([
+            'project_id' => 'required|exists:projects,id',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'po_number' => 'required|string|max:255',
             'po_document' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:4096',
@@ -95,7 +99,7 @@ class PrinterController extends Controller
         }
 
         $printer = Printer::create([
-            'project_id' => $project->id,
+            'project_id' => $validated['project_id'],
             'supplier_id' => $validated['supplier_id'] ?? null,
             'po_number' => $validated['po_number'],
             'name' => $validated['name'],
