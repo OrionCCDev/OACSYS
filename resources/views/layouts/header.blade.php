@@ -81,11 +81,15 @@
 
 <body>
 
-    <!-- Animated background: drifting aurora orbs + particle canvas (crystal-dark.css / crystal-motion.js) -->
+    <!-- Animated background: liquid blobs + particle canvas + grain, with mouse/scroll parallax (crystal-dark.css / crystal-motion.js) -->
     <div class="crystal-bg" aria-hidden="true">
-        <span class="crystal-orb crystal-orb-1"></span>
-        <span class="crystal-orb crystal-orb-2"></span>
-        <span class="crystal-orb crystal-orb-3"></span>
+        <div class="crystal-liquid">
+            <span class="crystal-blob crystal-blob-1"></span>
+            <span class="crystal-blob crystal-blob-2"></span>
+            <span class="crystal-blob crystal-blob-3"></span>
+            <span class="crystal-blob crystal-blob-4"></span>
+            <span class="crystal-blob crystal-blob-5"></span>
+        </div>
         <canvas id="crystalParticles"></canvas>
     </div>
 

@@ -1,12 +1,15 @@
 /* OACSYS Crystal Dark - motion layer
    1. Particle field on the fixed background canvas (#crystalParticles)
-   2. Count-up for dashboard stat numbers (.crystal-stat-number)
-   3. Click ripple on buttons (.btn)
-   The CSS side (orbs, entrance, hovers) lives in crystal-dark.css. */
+   2. Parallax: background layers follow the mouse and scroll at different
+      depths; tiles/stat cards tilt toward the cursor with a tracking glare
+   3. Count-up for dashboard stat numbers (.crystal-stat-number)
+   4. Click ripple on buttons (.btn)
+   The CSS side (liquid blobs, entrance, hovers) lives in crystal-dark.css. */
 (function () {
     'use strict';
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var finePointer  = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     /* ---------- 1. particles ---------- */
     function startParticles() {
@@ -103,7 +106,93 @@
         start();
     }
 
-    /* ---------- 2. count-up on dashboard stats ---------- */
+    /* ---------- 2. parallax ----------
+       Background depths: the liquid layer moves least (furthest away), the
+       particle canvas more (closer). Both follow the cursor (opposite to it,
+       like looking through a window) and drift with scroll. Targets are
+       lerped each frame so the motion is smooth even when the mouse jumps.
+       The liquid element's CSS transform is `scale(2)` (half-res upscale) -
+       the translate is written in FRONT of it so it stays in screen pixels. */
+    function startParallax() {
+        if (reduceMotion) return;
+
+        var liquid = document.querySelector('.crystal-liquid');
+        var canvas = document.getElementById('crystalParticles');
+        var masthead = document.querySelector('.crystal-masthead');
+        if (!liquid && !canvas && !masthead) return;
+
+        var mouseX = 0, mouseY = 0;      // -1 .. 1 from viewport centre
+        var curX = 0, curY = 0;          // lerped
+        var scrollY = window.scrollY || 0;
+        var rafId = null;
+
+        if (finePointer) {
+            window.addEventListener('mousemove', function (e) {
+                mouseX = (e.clientX / (window.innerWidth || 1)) * 2 - 1;
+                mouseY = (e.clientY / (window.innerHeight || 1)) * 2 - 1;
+            }, { passive: true });
+            window.addEventListener('mouseleave', function () { mouseX = 0; mouseY = 0; });
+        }
+        window.addEventListener('scroll', function () { scrollY = window.scrollY || 0; }, { passive: true });
+
+        function frame() {
+            rafId = requestAnimationFrame(frame);
+            curX += (mouseX - curX) * 0.06;
+            curY += (mouseY - curY) * 0.06;
+
+            if (liquid) {
+                liquid.style.transform = 'translate3d(' + (-curX * 16).toFixed(2) + 'px,' +
+                    (-curY * 16 + scrollY * 0.05).toFixed(2) + 'px,0) scale(2)';
+            }
+            if (canvas) {
+                canvas.style.transform = 'translate3d(' + (-curX * 30).toFixed(2) + 'px,' +
+                    (-curY * 30 + scrollY * 0.12).toFixed(2) + 'px,0) scale(1.06)';
+            }
+            if (masthead) {
+                // the dashboard title drifts down slower than the page and fades as it goes
+                var t = Math.min(scrollY / 320, 1);
+                masthead.style.transform = 'translate3d(0,' + (scrollY * 0.22).toFixed(2) + 'px,0)';
+                masthead.style.opacity = (1 - t * 0.85).toFixed(3);
+            }
+        }
+
+        function start() { if (rafId === null) rafId = requestAnimationFrame(frame); }
+        function stop() { if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; } }
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) stop(); else start();
+        });
+        start();
+    }
+
+    /* tiles / stat cards tilt toward the cursor; --mx/--my drive the CSS glare */
+    function startTilt() {
+        if (reduceMotion || !finePointer) return;
+        var MAX_DEG = 5;
+
+        document.addEventListener('mousemove', function (e) {
+            var card = e.target.closest && e.target.closest('.crystal-tile, .crystal-stat');
+            if (!card) return;
+            var rect = card.getBoundingClientRect();
+            var px = (e.clientX - rect.left) / rect.width;   // 0 .. 1
+            var py = (e.clientY - rect.top) / rect.height;
+            var rotY = (px - 0.5) * 2 * MAX_DEG;
+            var rotX = (0.5 - py) * 2 * MAX_DEG;
+            card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+            card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+            card.style.transition = 'transform 0.08s ease, border-color 0.2s ease, box-shadow 0.25s ease, background 0.2s ease';
+            card.style.transform = 'perspective(700px) rotateX(' + rotX.toFixed(2) + 'deg) rotateY(' + rotY.toFixed(2) + 'deg) translateY(-4px)';
+        }, { passive: true });
+
+        document.addEventListener('mouseout', function (e) {
+            var card = e.target.closest && e.target.closest('.crystal-tile, .crystal-stat');
+            if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+            // hand control back to the stylesheet's own hover/entrance rules
+            card.style.transition = '';
+            card.style.transform = '';
+        }, { passive: true });
+    }
+
+    /* ---------- 3. count-up on dashboard stats ---------- */
     function countUp() {
         var nodes = document.querySelectorAll('.crystal-stat-number');
         if (!nodes.length || reduceMotion) return;
@@ -125,7 +214,7 @@
         });
     }
 
-    /* ---------- 3. button ripple ---------- */
+    /* ---------- 4. button ripple ---------- */
     function ripple() {
         if (reduceMotion) return;
         document.addEventListener('mousedown', function (e) {
@@ -145,6 +234,8 @@
 
     function init() {
         startParticles();
+        startParallax();
+        startTilt();
         countUp();
         ripple();
     }
