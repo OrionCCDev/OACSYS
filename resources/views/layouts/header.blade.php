@@ -84,9 +84,16 @@
 
     @include('layouts.crystal-bg')
 
-    <!-- Preloader -->
+    <!-- Preloader: the site logo, its three glyphs bouncing in a wave (crystal-dark.css .crystal-loader) -->
     <div class="preloader-it">
-        <div class="loader-pendulums"></div>
+        <div class="crystal-loader" aria-hidden="true">
+            <div class="crystal-loader-glyphs">
+                <span class="crystal-loader-glyph"></span>
+                <span class="crystal-loader-glyph"></span>
+                <span class="crystal-loader-glyph"></span>
+            </div>
+            <span class="crystal-loader-tagline"></span>
+        </div>
     </div>
     <!-- /Preloader -->
 

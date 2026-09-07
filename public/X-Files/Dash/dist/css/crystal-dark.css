@@ -24,8 +24,10 @@
   --lime: #caff00;
 
   --ink: #e8edf7;
-  --ink-dim: #a7b3c9;
-  --ink-faint: #6c7890;
+  /* dim/faint were tuned for a flat near-black canvas; against the brighter
+     liquid background they dropped below readable contrast, so both are lifted */
+  --ink-dim: #c5cfe2;
+  --ink-faint: #97a4c0;
 
   --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
@@ -440,7 +442,8 @@ section.hk-sec-wrapper {
   border-color: var(--panel-border-strong) !important;
   color: var(--ink) !important;
 }
-.form-control::placeholder { color: var(--ink-faint); }
+/* opacity: 1 - Firefox otherwise fades placeholders to ~54% on its own */
+.form-control::placeholder, input::placeholder, textarea::placeholder { color: #b7c3da !important; opacity: 1; }
 
 /* color-scheme: dark on :root is not enough on its own in every browser -
    a <select> with an explicit (near-transparent) background from the rule
@@ -470,7 +473,8 @@ select option:focus {
 }
 .form-control:disabled {
   background-color: rgba(255, 255, 255, 0.02) !important;
-  color: var(--ink-faint) !important;
+  color: var(--ink-dim) !important;
+  opacity: 0.85;
 }
 
 label, .form-group label { color: var(--ink-dim); }
@@ -560,10 +564,15 @@ label, .form-group label { color: var(--ink-dim); }
 hr { border-color: var(--panel-border) !important; }
 
 .pagination .page-link {
-  background: transparent !important;
-  border-color: var(--panel-border) !important;
-  color: var(--ink-dim) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: var(--panel-border-strong) !important;
+  color: var(--ink) !important;
 }
+.pagination .page-link:hover {
+  background: rgba(125, 196, 255, 0.18) !important;
+  color: #fff !important;
+}
+.pagination .page-item.disabled .page-link { color: var(--ink-faint) !important; }
 .pagination .page-item.active .page-link {
   background: var(--sapphire) !important;
   border-color: var(--sapphire) !important;
@@ -974,23 +983,54 @@ body::before {
 
 .preloader-it {
   background: var(--bg) !important;
+  background-image: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(61, 90, 224, 0.28), transparent 70%) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.preloader-it .loader-pendulums { display: none; }
-.preloader-it::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 46px;
-  height: 46px;
-  margin: -23px 0 0 -23px;
-  border-radius: 50%;
-  border: 3px solid rgba(125, 196, 255, 0.15);
-  border-top-color: var(--sapphire-bright);
-  box-shadow: 0 0 24px rgba(125, 196, 255, 0.35);
-  animation: crystal-spin 0.9s linear infinite;
+
+/* Logo loader: the site logo (logo-white.webp, aspect 6080:3200 = 1.9) is
+   three glyphs across the top ~75% of its height with the tagline in the
+   bottom ~25%. The glyphs sit in exact thirds of the width, so each tile
+   shows one third of the image (background-size 300%) cropped to the glyph
+   row, and the three bounce in a staggered wave; the tagline is the bottom
+   strip, shown once, static. --lw is the rendered logo width. */
+.crystal-loader {
+  --lw: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  filter: drop-shadow(0 0 18px rgba(125, 196, 255, 0.35));
 }
-@keyframes crystal-spin { to { transform: rotate(360deg); } }
+.crystal-loader-glyphs {
+  display: flex;
+  width: var(--lw);
+}
+.crystal-loader-glyph {
+  width: calc(var(--lw) / 3);
+  height: calc(var(--lw) / 1.9 * 0.75);
+  background-image: url('../../logo-white.webp');
+  background-repeat: no-repeat;
+  background-size: 300% auto;
+  animation: crystal-loader-bounce 0.9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+.crystal-loader-glyph:nth-child(1) { background-position-x: 0%; }
+.crystal-loader-glyph:nth-child(2) { background-position-x: 50%;  animation-delay: 0.15s; }
+.crystal-loader-glyph:nth-child(3) { background-position-x: 100%; animation-delay: 0.30s; }
+.crystal-loader-tagline {
+  width: var(--lw);
+  height: calc(var(--lw) / 1.9 * 0.25);
+  background-image: url('../../logo-white.webp');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: 0 100%;
+  opacity: 0.85;
+}
+@keyframes crystal-loader-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-16px); }
+}
 
 /* ---------- entrance: panels rise in, staggered across a row ----------
    fill-mode backwards (not both): the element is held at the hidden "from"
@@ -1212,7 +1252,7 @@ body::before {
   .crystal-tile::before, .crystal-stat::before { display: none; }
   .crystal-blob,
   body::before,
-  .preloader-it::after,
+  .crystal-loader-glyph,
   .crystal-masthead-title,
   .crystal-stat-icon,
   .hk-wrapper.hk-vertical-nav .hk-nav.hk-nav-dark .navbar-nav .nav-item.active > .nav-link,
@@ -1235,3 +1275,59 @@ body::before {
   }
   .crystal-tile::after { display: none; }
 }
+
+/* ==========================================================================
+   Secondary text & gray controls
+   Bootstrap's hard-coded grays (#6c757d text-muted, the light input-group
+   label boxes, the gray secondary buttons) were tolerable on the flat black
+   canvas but read as muddy and low-contrast on the liquid background.
+   ========================================================================== */
+
+.text-muted, .text-secondary, .form-text, small.text-muted, .help-block {
+  color: var(--ink-dim) !important;
+}
+
+/* Laravel's default (Tailwind-flavoured) paginator view, if any page uses it */
+.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800 {
+  color: var(--ink-dim) !important;
+}
+
+/* the "@Search" / "Employee Name" / "Upload" label boxes in front of inputs */
+.input-group-text {
+  background: rgba(125, 196, 255, 0.12) !important;
+  border-color: var(--panel-border-strong) !important;
+  color: var(--ink) !important;
+  font-weight: 500;
+}
+
+/* gray buttons -> dark glass (Reset, modal Close, etc) */
+.btn-secondary, .btn-light, .btn-outline-secondary, .btn-default {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: var(--panel-border-strong) !important;
+  color: var(--ink) !important;
+}
+.btn-secondary:hover, .btn-light:hover, .btn-outline-secondary:hover, .btn-default:hover,
+.btn-secondary:focus, .btn-light:focus, .btn-outline-secondary:focus {
+  background: rgba(125, 196, 255, 0.22) !important;
+  color: #fff !important;
+}
+
+/* the file-input widget's "Select file" / "Change" is a .btn-file on a .btn-primary already;
+   its inline filename readout inherits the dim token now */
+.fileinput .fileinput-filename { color: var(--ink-dim); }
+
+/* Mintos ships .text-dark as cyan (#00aeff) - readable, but off-palette next to
+   the sapphire accents; and its .text-light-NN opacity variants sit too faint on
+   the liquid background. */
+.text-dark { color: var(--ink) !important; }
+.text-light-20, .text-light-40, .text-light-60 { color: var(--ink-dim) !important; }
+
+/* The receiving / clearance / resignation document pages hard-code the brand
+   navy (#174094) inline on their headings - it was written for the white
+   printed sheet and is unreadable on the dark theme. A stylesheet !important
+   outranks a non-important inline style, so this fixes every occurrence
+   without touching the templates, and the PDF views (which don't load this
+   theme) keep printing navy as designed. Same for the #374151 gray the
+   manager views use inline. */
+.hk-pg-wrapper [style*="color:#174094"], .hk-pg-wrapper [style*="color: #174094"] { color: var(--sapphire-bright) !important; }
+.hk-pg-wrapper [style*="color:#374151"], .hk-pg-wrapper [style*="color: #374151"] { color: var(--ink-dim) !important; }
