@@ -79,6 +79,13 @@
 
 <body>
 
+    <!-- Animated background: drifting aurora orbs + particle canvas (crystal-dark.css / crystal-motion.js) -->
+    <div class="crystal-bg" aria-hidden="true">
+        <span class="crystal-orb crystal-orb-1"></span>
+        <span class="crystal-orb crystal-orb-2"></span>
+        <span class="crystal-orb crystal-orb-3"></span>
+        <canvas id="crystalParticles"></canvas>
+    </div>
 
     <!-- Preloader -->
     <div class="preloader-it">
