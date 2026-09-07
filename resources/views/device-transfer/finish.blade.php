@@ -103,8 +103,29 @@
                             @csrf
                             <div class="form-group">
                                 <label>Signed Clearance Document <span class="text-danger">*</span></label>
-                                <input type="file" name="clearing_signature" class="form-control" accept="image/*,application/pdf" required>
+                                <input type="file" name="clearing_signature" id="clearingSignatureInput" class="form-control" accept="image/*,application/pdf" required>
                             </div>
+                            <div class="mb-3">
+                                <img id="clearingSignaturePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                <iframe id="clearingSignaturePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
+                            </div>
+                            <script>
+                                document.getElementById('clearingSignatureInput').onchange = function(evt) {
+                                    const [file] = this.files;
+                                    const preview = document.getElementById('clearingSignaturePreview');
+                                    const pdfPreview = document.getElementById('clearingSignaturePdfPreview');
+                                    if (!file) return;
+                                    if (file.type === 'application/pdf') {
+                                        preview.style.display = 'none';
+                                        pdfPreview.src = URL.createObjectURL(file);
+                                        pdfPreview.style.display = 'block';
+                                    } else {
+                                        pdfPreview.style.display = 'none';
+                                        preview.src = URL.createObjectURL(file);
+                                        preview.style.display = 'block';
+                                    }
+                                };
+                            </script>
                             <button type="submit" class="btn btn-danger">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Clearance
                             </button>
@@ -132,8 +153,29 @@
                             @csrf
                             <div class="form-group">
                                 <label>Signed Receiving Document <span class="text-danger">*</span></label>
-                                <input type="file" name="receiving_signature" class="form-control" accept="image/*,application/pdf" required>
+                                <input type="file" name="receiving_signature" id="receivingSignatureInput" class="form-control" accept="image/*,application/pdf" required>
                             </div>
+                            <div class="mb-3">
+                                <img id="receivingSignaturePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                <iframe id="receivingSignaturePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
+                            </div>
+                            <script>
+                                document.getElementById('receivingSignatureInput').onchange = function(evt) {
+                                    const [file] = this.files;
+                                    const preview = document.getElementById('receivingSignaturePreview');
+                                    const pdfPreview = document.getElementById('receivingSignaturePdfPreview');
+                                    if (!file) return;
+                                    if (file.type === 'application/pdf') {
+                                        preview.style.display = 'none';
+                                        pdfPreview.src = URL.createObjectURL(file);
+                                        pdfPreview.style.display = 'block';
+                                    } else {
+                                        pdfPreview.style.display = 'none';
+                                        preview.src = URL.createObjectURL(file);
+                                        preview.style.display = 'block';
+                                    }
+                                };
+                            </script>
                             <button type="submit" class="btn btn-success">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Receive
                             </button>

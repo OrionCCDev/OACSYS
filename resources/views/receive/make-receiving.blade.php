@@ -70,6 +70,7 @@
                                             </div>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                                <iframe id="imagePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
                                             </div>
                                             <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div>
                                         </div>
@@ -83,15 +84,15 @@
 
                                                 if (file) {
                                                     const preview = document.getElementById('imagePreview');
-                                                    preview.src = URL.createObjectURL(file);
-                                                    preview.style.display = 'block';
+                                                    const pdfPreview = document.getElementById('imagePdfPreview');
 
                                                     // Validate file type
-                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml'];
+                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml', 'application/pdf'];
                                                     if (!validTypes.includes(file.type)) {
-                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, and SVG are allowed.';
+                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, SVG, and PDF are allowed.';
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
+                                                        pdfPreview.style.display = 'none';
                                                         return;
                                                     }
 
@@ -101,7 +102,18 @@
                                                         validationMessage.innerText = 'File size exceeds 2MB.';
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
+                                                        pdfPreview.style.display = 'none';
                                                         return;
+                                                    }
+
+                                                    if (file.type === 'application/pdf') {
+                                                        preview.style.display = 'none';
+                                                        pdfPreview.src = URL.createObjectURL(file);
+                                                        pdfPreview.style.display = 'block';
+                                                    } else {
+                                                        pdfPreview.style.display = 'none';
+                                                        preview.src = URL.createObjectURL(file);
+                                                        preview.style.display = 'block';
                                                     }
                                                 }
                                             };
@@ -394,6 +406,7 @@
                                             </div>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="#" alt="Preview" style="max-width: 200px; display: none;">
+                                                <iframe id="imagePdfPreview" src="" style="display:none; width: 100%; height: 400px; border: 1px solid #ddd;"></iframe>
                                             </div>
                                             <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div>
                                         </div>
@@ -407,15 +420,15 @@
 
                                                 if (file) {
                                                     const preview = document.getElementById('imagePreview');
-                                                    preview.src = URL.createObjectURL(file);
-                                                    preview.style.display = 'block';
+                                                    const pdfPreview = document.getElementById('imagePdfPreview');
 
                                                     // Validate file type
-                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml'];
+                                                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/svg+xml', 'application/pdf'];
                                                     if (!validTypes.includes(file.type)) {
-                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, and SVG are allowed.';
+                                                        validationMessage.innerText = 'Invalid file type. Only JPEG, PNG, JPG, SVG, and PDF are allowed.';
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
+                                                        pdfPreview.style.display = 'none';
                                                         return;
                                                     }
 
@@ -425,7 +438,18 @@
                                                         validationMessage.innerText = 'File size exceeds 2MB.';
                                                         validationMessage.style.display = 'block';
                                                         preview.style.display = 'none';
+                                                        pdfPreview.style.display = 'none';
                                                         return;
+                                                    }
+
+                                                    if (file.type === 'application/pdf') {
+                                                        preview.style.display = 'none';
+                                                        pdfPreview.src = URL.createObjectURL(file);
+                                                        pdfPreview.style.display = 'block';
+                                                    } else {
+                                                        pdfPreview.style.display = 'none';
+                                                        preview.src = URL.createObjectURL(file);
+                                                        preview.style.display = 'block';
                                                     }
                                                 }
                                             };
