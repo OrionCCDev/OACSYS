@@ -125,6 +125,93 @@ class PrinterController extends Controller
     }
 
     /**
+     * Correct a printer's details. This is a data-entry fix, not a lifecycle
+     * action - moving a printer to a new project under a new PO is Transfer,
+     * which keeps the chain; ending its rental is Cancel.
+     */
+    public function edit(Printer $printer)
+    {
+        $projects = Project::orderBy('project_name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
+        $clientEmployees = ClientEmployee::orderBy('name')->get();
+        $consultants = Consultant::orderBy('name')->get();
+
+        return view('printers.edit', compact('printer', 'projects', 'suppliers', 'clientEmployees', 'consultants'));
+    }
+
+    public function update(Request $request, Printer $printer)
+    {
+        $validated = $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'po_number' => 'required|string|max:255',
+            'po_document' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:4096',
+            'name' => 'required|string|max:255',
+            'model' => 'nullable|string|max:255',
+            'serial_number' => 'nullable|string|max:255',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'delivered_to_type' => 'required|in:client,consultant,office',
+            'target_id' => 'nullable|integer|required_unless:delivered_to_type,office',
+            'start_date' => 'required|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        [$targetId, $error] = $this->resolveDeliveryTarget($validated['delivered_to_type'], $validated['target_id'] ?? null);
+        if ($error) {
+            return redirect()->back()->withInput()->with('error', $error);
+        }
+
+        $printer->update([
+            'project_id' => $validated['project_id'],
+            'supplier_id' => $validated['supplier_id'] ?? null,
+            'po_number' => $validated['po_number'],
+            'name' => $validated['name'],
+            'model' => $validated['model'] ?? null,
+            'serial_number' => $validated['serial_number'] ?? null,
+            'delivered_to_type' => $validated['delivered_to_type'],
+            'client_employee_id' => $validated['delivered_to_type'] === 'client' ? $targetId : null,
+            'consultant_id' => $validated['delivered_to_type'] === 'consultant' ? $targetId : null,
+            'start_date' => $validated['start_date'],
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        // Replace uploads only when a new file is supplied, and clear the old
+        // one off disk so replacements don't pile up.
+        if ($request->hasFile('po_document')) {
+            $old = $printer->po_document;
+            $printer->update(['po_document' => $this->storeUpload($request->file('po_document'), 'printers/po')]);
+            $this->deleteUpload($old, 'printers/po');
+        }
+
+        if ($request->hasFile('main_image')) {
+            $old = $printer->main_image;
+            $printer->update(['main_image' => $this->storeUpload($request->file('main_image'), 'devices')]);
+            $this->deleteUpload($old, 'devices');
+        }
+
+        return redirect()->route('printers.show', $printer->id)->with('success', 'Printer updated.');
+    }
+
+    /**
+     * Delete a printer outright - for records entered by mistake. Its invoice
+     * rows cascade at the database level, so their documents are cleared off
+     * disk here first.
+     */
+    public function destroy(Printer $printer)
+    {
+        foreach ($printer->invoices as $invoice) {
+            $this->deleteUpload($invoice->invoice_document, 'printers/invoices');
+        }
+
+        $this->deleteUpload($printer->po_document, 'printers/po');
+        $this->deleteUpload($printer->main_image, 'devices');
+
+        $printer->delete();
+
+        return redirect()->route('printers.index')->with('success', 'Printer deleted.');
+    }
+
+    /**
      * Move the printer between client/consultant/office within the same
      * project - no new PO, no history entry, just where it physically is.
      */
@@ -272,5 +359,18 @@ class PrinterController extends Controller
         $file->move(public_path('X-Files/Dash/imgs/' . $subfolder), $fileName);
 
         return $fileName;
+    }
+
+    /** Never removes the shared placeholder image. */
+    private function deleteUpload(?string $fileName, string $subfolder): void
+    {
+        if (!$fileName || $fileName === 'default_device.png') {
+            return;
+        }
+
+        $path = public_path('X-Files/Dash/imgs/' . $subfolder . '/' . $fileName);
+        if (is_file($path)) {
+            unlink($path);
+        }
     }
 }

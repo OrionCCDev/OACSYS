@@ -39,7 +39,14 @@
             </div>
             <div>
                 <a href="{{ route('printers.index') }}" class="btn btn-secondary mr-2">Back to Report</a>
-                <a href="{{ route('project.details', $printer->project_id) }}" class="btn btn-info">View Project</a>
+                <a href="{{ route('project.details', $printer->project_id) }}" class="btn btn-info mr-2">View Project</a>
+                <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-primary mr-2">Edit</a>
+                <form action="{{ route('printers.destroy', $printer->id) }}" method="POST" style="display:inline"
+                      onsubmit="return confirm('Delete this printer{{ $printer->invoices->count() ? ' and its ' . $printer->invoices->count() . ' invoice(s)' : '' }}? This cannot be undone.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
         </div>
 
@@ -155,7 +162,7 @@
 @if($printer->status === 'active')
 <!-- Change Delivery Modal -->
 <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form action="{{ route('printers.delivery', $printer->id) }}" method="POST">
                 @csrf
@@ -203,7 +210,7 @@
 
 <!-- Transfer To Another Project Modal -->
 <div class="modal fade" id="transferModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form action="{{ route('printers.transfer', $printer->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -276,7 +283,7 @@
 
 <!-- Cancel Rental Modal -->
 <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form action="{{ route('printers.cancel', $printer->id) }}" method="POST">
                 @csrf
@@ -307,7 +314,7 @@
 
 <!-- Add Invoice Modal -->
 <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <form action="{{ route('printers.invoices.store', $printer->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf

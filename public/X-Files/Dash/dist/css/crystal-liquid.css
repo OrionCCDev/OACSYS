@@ -44,11 +44,25 @@
 /* Solid fills (not gradients) so the animated border-radius actually shapes
    the blob - a radial falloff would look round no matter the radius. Sizes
    are in the half-size container, so they appear doubled on screen. */
+/* border-radius is a PAINT property: animating it forced this whole layer to
+   re-rasterize every frame, and the parent's blur+contrast then had to re-run
+   on the fresh paint, which in turn invalidated the backdrop-filter on every
+   glass panel above it. That chain is what made the page flicker. The radii
+   below are static and the morph comes from non-uniform scale + rotation
+   instead - transform only, so the layer is painted once and merely
+   re-composited. */
 .crystal-blob {
   position: absolute;
   mix-blend-mode: screen;
-  will-change: transform, border-radius;
+  border-radius: 58% 42% 33% 67% / 62% 34% 66% 38%;
+  will-change: transform;
 }
+.crystal-blob-2 { border-radius: 39% 61% 66% 34% / 71% 29% 71% 29%; }
+.crystal-blob-3 { border-radius: 52% 48% 37% 63% / 59% 43% 57% 41%; }
+.crystal-blob-4 { border-radius: 67% 33% 55% 45% / 36% 64% 36% 64%; }
+.crystal-blob-5 { border-radius: 44% 56% 29% 71% / 65% 37% 63% 35%; }
+.crystal-blob-6 { border-radius: 61% 39% 70% 30% / 41% 68% 32% 59%; }
+.crystal-blob-7 { border-radius: 35% 65% 48% 52% / 55% 46% 54% 45%; }
 
 /* Seven blobs: five around the edges plus two parked mid-viewport (6 and 7),
    because content pages stack their panels in the middle and the corner-only
@@ -106,27 +120,36 @@
   animation-delay: -3s;
 }
 
-/* Each keyframe changes the elliptical border-radius AND drifts/rotates, so
-   the shape stretches and squashes while it travels - that combination is
-   what reads as liquid rather than a floating circle. */
+/* Non-uniform scale (the two scale values differ) plus rotation is what makes
+   a blurred blob stretch and squash as it travels - the same liquid read as
+   animating border-radius, but entirely on the compositor. */
 @keyframes crystal-morph-a {
-  0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translate(0, 0) rotate(0deg) scale(1); }
-  33%  { border-radius: 25% 65% 75% 35% / 55% 65% 25% 60%; transform: translate(15vw, 10vh) rotate(60deg) scale(1.3); }
-  66%  { border-radius: 55% 45% 30% 70% / 35% 60% 40% 65%; transform: translate(-9vw, 21vh) rotate(140deg) scale(0.82); }
-  100% { border-radius: 70% 30% 60% 40% / 30% 70% 30% 70%; transform: translate(5vw, 3vh) rotate(220deg) scale(1.12); }
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+  33%  { transform: translate(15vw, 10vh) rotate(60deg) scale(1.42, 1.06); }
+  66%  { transform: translate(-9vw, 21vh) rotate(140deg) scale(0.84, 1.24); }
+  100% { transform: translate(5vw, 3vh) rotate(220deg) scale(1.18, 0.94); }
 }
 @keyframes crystal-morph-b {
-  0%   { border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%; transform: translate(0, 0) rotate(0deg) scale(1); }
-  33%  { border-radius: 75% 25% 35% 65% / 35% 75% 25% 65%; transform: translate(-18vw, 12vh) rotate(-75deg) scale(1.22); }
-  66%  { border-radius: 30% 70% 25% 75% / 65% 35% 65% 35%; transform: translate(-6vw, 27vh) rotate(-160deg) scale(1.34); }
-  100% { border-radius: 55% 45% 70% 30% / 45% 55% 40% 60%; transform: translate(10vw, 6vh) rotate(-250deg) scale(0.9); }
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+  33%  { transform: translate(-18vw, 12vh) rotate(-75deg) scale(1.05, 1.38); }
+  66%  { transform: translate(-6vw, 27vh) rotate(-160deg) scale(1.4, 1.1); }
+  100% { transform: translate(10vw, 6vh) rotate(-250deg) scale(0.92, 1.16); }
 }
 @keyframes crystal-morph-c {
-  0%   { border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; transform: translate(0, 0) rotate(0deg) scale(1); }
-  33%  { border-radius: 25% 75% 65% 35% / 55% 45% 25% 75%; transform: translate(19vw, -14vh) rotate(85deg) scale(1.26); }
-  66%  { border-radius: 65% 35% 75% 25% / 35% 65% 35% 65%; transform: translate(-13vw, -6vh) rotate(180deg) scale(1.08); }
-  100% { border-radius: 45% 55% 30% 70% / 70% 30% 70% 30%; transform: translate(6vw, -19vh) rotate(275deg) scale(0.86); }
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1, 1); }
+  33%  { transform: translate(19vw, -14vh) rotate(85deg) scale(1.3, 0.96); }
+  66%  { transform: translate(-13vw, -6vh) rotate(180deg) scale(0.95, 1.28); }
+  100% { transform: translate(6vw, -19vh) rotate(275deg) scale(1.14, 0.88); }
 }
+
+/* While a modal is open the user is reading a form, and every glass panel
+   behind it would otherwise keep re-sampling a moving backdrop. Freeze the
+   background for the duration - it also removes the worst of the flicker. */
+body.modal-open .crystal-blob,
+body.modal-open .crystal-liquid {
+  animation-play-state: paused;
+}
+body.modal-open #crystalParticles { display: none; }
 
 /* Particle constellation sits above the liquid. Slightly over-scaled so the
    parallax shift never exposes a bare edge. */

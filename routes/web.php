@@ -223,6 +223,9 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         Route::post('/', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
         Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
         Route::get('/{printer}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
+        Route::get('/{printer}/edit', [\App\Http\Controllers\PrinterController::class, 'edit'])->name('edit');
+        Route::put('/{printer}', [\App\Http\Controllers\PrinterController::class, 'update'])->name('update');
+        Route::delete('/{printer}', [\App\Http\Controllers\PrinterController::class, 'destroy'])->name('destroy');
         Route::put('/{printer}/delivery', [\App\Http\Controllers\PrinterController::class, 'updateDelivery'])->name('delivery');
         Route::post('/{printer}/transfer', [\App\Http\Controllers\PrinterController::class, 'transfer'])->name('transfer');
         Route::post('/{printer}/cancel', [\App\Http\Controllers\PrinterController::class, 'cancel'])->name('cancel');

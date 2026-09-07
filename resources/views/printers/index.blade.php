@@ -76,6 +76,7 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">View / History</a>
+                                            <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-sm btn-primary">Edit</a>
                                         </td>
                                     </tr>
                                     @empty
