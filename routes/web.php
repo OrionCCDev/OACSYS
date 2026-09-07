@@ -211,10 +211,18 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::get('/device/{device}/qr', [DeviceController::class, 'qrCode'])->name('device.qr');
     Route::get('/device/{device}/qr/print', [DeviceController::class, 'qrPrint'])->name('device.qr.print');
 
+    Route::resource('/supplier', \App\Http\Controllers\SupplierController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
     Route::prefix('printers')->name('printers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PrinterController::class, 'index'])->name('index');
-        Route::get('/{device}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
-        Route::post('/{device}/assign', [\App\Http\Controllers\PrinterController::class, 'assign'])->name('assign');
+        Route::get('/{printer}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
+        Route::get('/project/{project}/create', [\App\Http\Controllers\PrinterController::class, 'create'])->name('create');
+        Route::post('/project/{project}/store', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
+        Route::put('/{printer}/delivery', [\App\Http\Controllers\PrinterController::class, 'updateDelivery'])->name('delivery');
+        Route::post('/{printer}/transfer', [\App\Http\Controllers\PrinterController::class, 'transfer'])->name('transfer');
+        Route::post('/{printer}/cancel', [\App\Http\Controllers\PrinterController::class, 'cancel'])->name('cancel');
+        Route::post('/{printer}/invoices', [\App\Http\Controllers\PrinterController::class, 'storeInvoice'])->name('invoices.store');
+        Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
     });
 
     Route::prefix('device-transfer')->name('device-transfer.')->group(function () {

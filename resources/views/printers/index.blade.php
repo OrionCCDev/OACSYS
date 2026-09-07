@@ -6,7 +6,10 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Rental Printers Report</h2>
-                <p>Every rental printer we track, and where it currently is.</p>
+                <p>Every rental printer we track, its PO, and where it currently is.</p>
+            </div>
+            <div>
+                <a href="{{ route('supplier.index') }}" class="btn btn-secondary">Suppliers</a>
             </div>
         </div>
 
@@ -19,10 +22,21 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">Search</div>
                                 </div>
-                                <input type="text" name="search" class="form-control" placeholder="Name, model, supplier, serial" value="{{ request('search') }}">
+                                <input type="text" name="search" class="form-control" placeholder="Name, model, serial, PO number, supplier" value="{{ request('search') }}">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Search</button>
-                            @if(request('search'))
+                            <div class="input-group mb-2 mr-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Status</div>
+                                </div>
+                                <select name="status" class="form-control">
+                                    <option value="active" {{ request('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="transferred" {{ request('status') == 'transferred' ? 'selected' : '' }}>Transferred</option>
+                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mb-2">Filter</button>
+                            @if(request('search') || request('status'))
                             <a href="{{ route('printers.index') }}" class="btn btn-secondary mb-2 ml-2">Clear</a>
                             @endif
                         </form>
@@ -35,8 +49,10 @@
                                         <th>Name</th>
                                         <th>Model</th>
                                         <th>Supplier</th>
-                                        <th>Current Location</th>
-                                        <th>Since</th>
+                                        <th>Project</th>
+                                        <th>Delivered To</th>
+                                        <th>PO Number</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -46,27 +62,24 @@
                                         <td>
                                             <img src="{{ asset('X-Files/Dash/imgs/devices/' . $printer->main_image) }}" alt="" width="50" height="50" style="object-fit:cover">
                                         </td>
-                                        <td>{{ $printer->device_name }}</td>
-                                        <td>{{ $printer->device_model ?? '-' }}</td>
-                                        <td>{{ $printer->supplier_name ?? '-' }}</td>
+                                        <td>{{ $printer->name }}</td>
+                                        <td>{{ $printer->model ?? '-' }}</td>
+                                        <td>{{ $printer->supplier->name ?? '-' }}</td>
+                                        <td>{{ $printer->project->project_name ?? '-' }}</td>
+                                        <td>{{ $printer->deliveredToLabel() }}</td>
+                                        <td>{{ $printer->po_number }}</td>
                                         <td>
-                                            @if($printer->currentAssignment)
-                                                @php $type = $printer->currentAssignment->location_type; @endphp
-                                                <span class="badge {{ ['project' => 'badge-info', 'client' => 'badge-purple', 'consultant' => 'badge-Dark', 'office' => 'badge-secondary'][$type] ?? 'badge-secondary' }}">
-                                                    {{ $printer->currentAssignment->locationLabel() }}
-                                                </span>
-                                            @else
-                                                <span class="badge badge-warning">Unassigned</span>
-                                            @endif
+                                            <span class="badge {{ ['active' => 'badge-success', 'transferred' => 'badge-info', 'cancelled' => 'badge-danger'][$printer->status] ?? 'badge-secondary' }} text-capitalize">
+                                                {{ $printer->status }}
+                                            </span>
                                         </td>
-                                        <td>{{ $printer->currentAssignment?->start_date?->format('Y-m-d') ?? '-' }}</td>
                                         <td>
                                             <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">View / History</a>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No rental printers found.</td>
+                                        <td colspan="9" class="text-center">No printers found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

@@ -610,12 +610,17 @@
                                 <div class="col-lg-12">
                                     <div class="d-flex justify-content-between align-items-center mb-20">
                                         <h5 class="mb-0">Rental Printers</h5>
-                                        <button type="button" class="btn btn-gradient-info btn-rounded" data-toggle="modal" data-target="#addPrinterModal">
-                                            Add Rental Printer
-                                        </button>
+                                        <div>
+                                            <a href="{{ route('printers.index') }}" class="btn btn-secondary btn-rounded mr-2">
+                                                Printers Report
+                                            </a>
+                                            <a href="{{ route('printers.create', $project->id) }}" class="btn btn-gradient-info btn-rounded">
+                                                Receive Printer
+                                            </a>
+                                        </div>
                                     </div>
 
-                                    @php $printers = $project->devices->where('device_type', 'Printer'); @endphp
+                                    @php $printers = \App\Models\Printer::where('project_id', $project->id)->where('status', 'active')->with(['supplier', 'clientEmployee', 'consultant'])->get(); @endphp
 
                                     @if($printers->isEmpty())
                                     <p class="text-muted">No rental printers on this project yet.</p>
@@ -629,7 +634,8 @@
                                                     <th>Model</th>
                                                     <th>Supplier</th>
                                                     <th>Serial Number</th>
-                                                    <th>Rental Start Date</th>
+                                                    <th>PO Number</th>
+                                                    <th>Delivered To</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
@@ -639,128 +645,22 @@
                                                     <td>
                                                         <img src="{{ asset('X-Files/Dash/imgs/devices/' . $printer->main_image) }}" alt="" width="60" height="60" style="object-fit:cover">
                                                     </td>
-                                                    <td>{{ $printer->device_name }}</td>
-                                                    <td>{{ $printer->device_model ?? '-' }}</td>
-                                                    <td>{{ $printer->supplier_name ?? '-' }}</td>
+                                                    <td>{{ $printer->name }}</td>
+                                                    <td>{{ $printer->model ?? '-' }}</td>
+                                                    <td>{{ $printer->supplier->name ?? '-' }}</td>
                                                     <td>{{ $printer->serial_number ?? '-' }}</td>
-                                                    <td>{{ $printer->rental_start_date ? $printer->rental_start_date->format('Y-m-d') : '-' }}</td>
+                                                    <td>{{ $printer->po_number }}</td>
+                                                    <td>{{ $printer->deliveredToLabel() }}</td>
                                                     <td>
-                                                        <a href="{{ route('device.show', $printer->id) }}" class="btn btn-sm btn-info">View</a>
-                                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#transferPrinterModal{{ $printer->id }}">
-                                                            Transfer
-                                                        </button>
+                                                        <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">Manage</a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     </div>
-
-                                    <!-- Transfer Printer Modals - kept outside the table; a <div> as a direct
-                                         child of <tbody> is invalid HTML and browsers silently mangle it,
-                                         corrupting the form inside. -->
-                                    @foreach($printers as $printer)
-                                    <div class="modal fade" id="transferPrinterModal{{ $printer->id }}" tabindex="-1" role="dialog">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Transfer {{ $printer->device_name }} to Another Project</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form action="{{ route('project-assets.printers.transfer', $printer->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="modal-body">
-                                                        <select name="to_project_id" class="form-control" required>
-                                                            <option value="">Select Project</option>
-                                                            @foreach($projects->where('id', '!=', $project->id) as $proj)
-                                                                <option value="{{ $proj->id }}">{{ $proj->project_name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Transfer</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
                                     @endif
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Add Rental Printer Modal -->
-                    <div class="modal fade" id="addPrinterModal" tabindex="-1" role="dialog" aria-labelledby="addPrinterModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addPrinterModalLabel">Add Rental Printer</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="{{ route('project-assets.printers.store', $project->id) }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label>Name</label>
-                                            <input type="text" name="device_name" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Model</label>
-                                            <input type="text" name="device_model" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Supplier</label>
-                                            <input type="text" name="supplier_name" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Serial Number</label>
-                                            <input type="text" name="serial_number" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Rental Start Date</label>
-                                            <input type="date" name="rental_start_date" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Stored Place</label>
-                                            <select name="stored_at" class="form-control" required>
-                                                <option value="office">Our Office</option>
-                                                <option value="server">Server Room</option>
-                                                <option value="store">Store Area</option>
-                                                <option value="delivered" selected>With Project</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Health</label>
-                                            <select name="health" class="form-control" required>
-                                                <option value="New" selected>New</option>
-                                                <option value="Mediam_use">Medium</option>
-                                                <option value="Bad_use">Bad</option>
-                                                <option value="Need_fix">Need Maintain</option>
-                                                <option value="Scrap">Scrap</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Notes</label>
-                                            <textarea name="notes" class="form-control" rows="2"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Image</label>
-                                            <input type="file" name="main_image" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Add Printer</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
