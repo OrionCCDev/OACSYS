@@ -10,7 +10,8 @@
             </div>
             <div>
                 <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mr-2">Internet SIMs</a>
-                <a href="{{ route('sim-report.monthly') }}" class="btn btn-info mr-2">Make Monthly Report</a>
+                <a href="{{ route('sim-report.monthly') }}" class="btn btn-gradient-info btn-rounded mr-2">Make Monthly Report</a>
+                <a href="{{ route('sim-report.index') }}" class="btn btn-info mr-2">All Reports</a>
                 <a href="{{ route('routers.create') }}" class="btn btn-gradient-primary btn-rounded">Add Router</a>
             </div>
         </div>
@@ -46,9 +47,7 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Name</th>
-                                        <th>Brand</th>
-                                        <th>Model</th>
-                                        <th>Serial Number</th>
+                                        <th>Router S/N</th>
                                         <th>ISP Provider</th>
                                         <th>Account Site</th>
                                         <th class="text-center">SIMs</th>
@@ -60,8 +59,6 @@
                                     @forelse($routers as $router)
                                     <tr>
                                         <td>{{ $router->name }}</td>
-                                        <td>{{ $router->brand ?? '-' }}</td>
-                                        <td>{{ $router->model ?? '-' }}</td>
                                         <td>{{ $router->serial_number ?? '-' }}</td>
                                         <td>{{ $router->isp_provider ?? '-' }}</td>
                                         <td>{{ $router->siteLabel() }}</td>
@@ -94,7 +91,7 @@
                                         </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="9" class="text-center">No routers found.</td></tr>
+                                    <tr><td colspan="7" class="text-center">No routers found.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

@@ -252,6 +252,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         Route::get('/issued', [\App\Http\Controllers\SimReportController::class, 'index'])->name('index');
         Route::get('/issued/{report}', [\App\Http\Controllers\SimReportController::class, 'show'])->name('show');
         Route::get('/issued/{report}/pdf', [\App\Http\Controllers\SimReportController::class, 'pdf'])->name('pdf');
+        Route::get('/issued/{report}/excel', [\App\Http\Controllers\SimReportController::class, 'excel'])->name('excel');
         Route::delete('/issued/{report}', [\App\Http\Controllers\SimReportController::class, 'destroy'])->name('destroy');
     });
 

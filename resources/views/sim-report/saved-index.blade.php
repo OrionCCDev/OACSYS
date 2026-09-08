@@ -52,6 +52,7 @@
                                         <td>
                                             <a href="{{ route('sim-report.show', $report->id) }}" class="btn btn-sm btn-info">View</a>
                                             <a href="{{ route('sim-report.pdf', $report->id) }}" class="btn btn-sm btn-primary">PDF</a>
+                                            <a href="{{ route('sim-report.excel', $report->id) }}" class="btn btn-sm btn-success">Excel</a>
                                             <form action="{{ route('sim-report.destroy', $report->id) }}" method="POST" style="display:inline"
                                                   onsubmit="return confirm('Delete the {{ $report->monthLabel() }} report? Issued reports are meant to stay as a record. This cannot be undone.')">
                                                 @csrf

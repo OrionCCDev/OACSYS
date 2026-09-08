@@ -16,38 +16,57 @@ use Illuminate\Support\Facades\DB;
  *
  * Two things live here, and the difference matters:
  *
- *  - the working view: today's lines for a chosen month, where rows can be
- *    dropped before issuing.
+ *  - making a report: pick a month, check what is on it, drop anything that
+ *    should not be, and issue it.
  *  - issued reports: a frozen copy of what was confirmed. Editing or deleting
  *    a line afterwards never changes one, so a signed sheet can always be
  *    produced again exactly as it went out.
+ *
+ * Making one is a walk, not a single screen: month first, then a warning if
+ * that month has already been reported, and only then the lines to tick. That
+ * order stops a second report being raised against the wrong month unnoticed.
  */
 class SimReportController extends Controller
 {
     /**
-     * The working view for a month, ready to check over and issue.
-     *
-     * Defaults to last month, since a month is normally reported once it has
-     * finished. If that month already has an issued report the page says so
-     * and links to it rather than letting a second one be made unnoticed.
+     * Step 1 - which month? No month in the URL means nothing has been chosen
+     * yet, so only the picker is shown.
      */
     public function monthly(Request $request)
     {
-        $month = $this->resolveMonth($request->input('month'), Carbon::now()->subMonthNoOverflow());
+        if (!$request->filled('month')) {
+            return view('sim-report.choose-month', [
+                'suggested' => Carbon::now()->subMonthNoOverflow(),
+                'recent' => SimMonthlyReport::orderByDesc('report_month')->orderByDesc('sequence')->limit(5)->get(),
+            ]);
+        }
 
+        $month = $this->resolveMonth($request->input('month'));
+        $existing = $this->reportsFor($month);
+
+        // Step 2 - that month has been reported before. Say so, show it, and
+        // let the choice be made deliberately rather than by carrying on.
+        if ($existing->isNotEmpty() && !$request->boolean('new')) {
+            return view('sim-report.exists', [
+                'month' => $month,
+                'existingReports' => $existing,
+            ]);
+        }
+
+        // Step 3 - the lines, to tick over and issue.
         return view('sim-report.monthly', [
             'month' => $month,
             'sims' => $this->simsFor($month),
-            'existingReports' => $this->reportsFor($month),
+            'existingReports' => $existing,
         ]);
     }
 
     /**
-     * Issue the month: copy the chosen lines into a report that will not
+     * Issue the month: copy the ticked lines into a report that will not
      * change again.
      *
-     * Any line not ticked is simply left out - the live record is untouched,
-     * it just does not appear on this month's sheet.
+     * A line left unticked is simply not on this month's sheet - the live
+     * record is untouched.
      */
     public function store(Request $request)
     {
@@ -60,17 +79,16 @@ class SimReportController extends Controller
 
         $month = Carbon::createFromFormat('Y-m', $validated['month'])->startOfMonth();
 
-        $sims = $this->simsFor($month)
-            ->whereIn('id', $validated['sim_ids'])
-            ->values();
+        $sims = $this->simsFor($month)->whereIn('id', $validated['sim_ids'])->values();
 
         if ($sims->isEmpty()) {
-            return redirect()->route('sim-report.monthly', ['month' => $month->format('Y-m')])
+            return redirect()->route('sim-report.monthly', ['month' => $month->format('Y-m'), 'new' => 1])
                 ->with('error', 'None of the selected lines could be found for that month.');
         }
 
         $report = DB::transaction(function () use ($month, $sims, $validated) {
-            // A month can hold several reports; the new one goes after the last.
+            // A month can hold several reports; the new one goes after the last,
+            // and the earlier ones stay exactly as they were.
             $sequence = (SimMonthlyReport::where('report_month', $month)->max('sequence') ?? 0) + 1;
 
             $report = SimMonthlyReport::create([
@@ -103,7 +121,7 @@ class SimReportController extends Controller
         });
 
         return redirect()->route('sim-report.show', $report->id)
-            ->with('success', 'Report issued for ' . $report->monthLabel() . '. It is saved as it stands now.');
+            ->with('success', 'Report saved for ' . $report->monthLabel() . '. Export it as PDF or Excel below.');
     }
 
     /** Every issued report, newest month first. */
@@ -134,25 +152,20 @@ class SimReportController extends Controller
             'month' => $report->report_month,
             'issuedAt' => $report->created_at,
             'version' => $report->versionLabel(),
-            // Plain rows, so the template does not care whether they came from
-            // a live SIM or an issued line.
-            'rows' => $report->lines->map(fn ($l) => [
-                'sl_no' => $l->sl_no,
-                'sim_number' => $l->sim_number,
-                'sim_provider' => $l->sim_provider,
-                'account_name' => $l->account_name,
-                'account_site' => $l->account_site,
-                'line_active' => (bool) $l->line_active,
-                'sim_serial' => $l->sim_serial,
-                'contract_no' => $l->contract_no,
-                'router_serial' => $l->router_serial,
-                'remark' => $l->remark,
-            ])->all(),
+            'rows' => $this->rowsFromReport($report),
         ])->setPaper('a4', 'landscape');
 
-        return $pdf->download(
-            'sim-report-' . $report->report_month->format('Y-m')
-            . ($report->sequence > 1 ? '-v' . $report->sequence : '') . '.pdf'
+        return $pdf->download('sim-report-' . $this->reportSlug($report) . '.pdf');
+    }
+
+    /** The issued report as Excel. */
+    public function excel(SimMonthlyReport $report)
+    {
+        $report->load('lines');
+
+        return Excel::download(
+            new InternetSimReportExport($this->rowsFromReport($report)),
+            'sim-report-' . $this->reportSlug($report) . '.xlsx'
         );
     }
 
@@ -170,19 +183,55 @@ class SimReportController extends Controller
     }
 
     /**
-     * The same sheet as Excel, in the column order the importer reads.
+     * The live month as Excel, in the column order the importer reads.
      *
-     * This is the month-to-month workflow: download the last report, change
-     * what moved, upload it again on the Internet SIMs page.
+     * This is the month-to-month shortcut: download it, change what moved,
+     * upload it again on the Internet SIMs page.
      */
     public function monthlyExcel(Request $request)
     {
         $month = $this->resolveMonth($request->input('month'), Carbon::now()->subMonthNoOverflow());
 
+        $rows = $this->simsFor($month)->values()->map(fn ($sim, $i) => [
+            'sl_no' => $i + 1,
+            'sim_number' => $sim->sim_number,
+            'sim_provider' => $sim->sim_provider,
+            'account_name' => $sim->account_name,
+            'account_site' => $sim->account_site,
+            'line_active' => (bool) $sim->line_active,
+            'sim_serial' => $sim->sim_serial,
+            'contract_no' => $sim->contract_no,
+            'router_serial' => $sim->router?->serial_number,
+            'remark' => $sim->remark,
+        ])->all();
+
         return Excel::download(
-            new InternetSimReportExport($this->simsFor($month)),
+            new InternetSimReportExport($rows),
             'sim-report-' . $month->format('Y-m') . '.xlsx'
         );
+    }
+
+    /** Plain rows, so PDF and Excel do not care where they came from. */
+    private function rowsFromReport(SimMonthlyReport $report): array
+    {
+        return $report->lines->map(fn ($l) => [
+            'sl_no' => $l->sl_no,
+            'sim_number' => $l->sim_number,
+            'sim_provider' => $l->sim_provider,
+            'account_name' => $l->account_name,
+            'account_site' => $l->account_site,
+            'line_active' => (bool) $l->line_active,
+            'sim_serial' => $l->sim_serial,
+            'contract_no' => $l->contract_no,
+            'router_serial' => $l->router_serial,
+            'remark' => $l->remark,
+        ])->all();
+    }
+
+    private function reportSlug(SimMonthlyReport $report): string
+    {
+        return $report->report_month->format('Y-m')
+            . ($report->sequence > 1 ? '-v' . $report->sequence : '');
     }
 
     /**
@@ -210,7 +259,7 @@ class SimReportController extends Controller
     /** Accepts YYYY-MM from the month picker; anything else falls back. */
     private function resolveMonth(?string $input, ?Carbon $default = null): Carbon
     {
-        $default ??= Carbon::now();
+        $default ??= Carbon::now()->subMonthNoOverflow();
 
         try {
             return $input

@@ -26,6 +26,7 @@
             <div class="rpt-noprint">
                 <a href="{{ route('sim-report.index') }}" class="btn btn-secondary mr-2">All Reports</a>
                 <button type="button" class="btn btn-outline-primary mr-2" onclick="window.print()">Print</button>
+                <a href="{{ route('sim-report.excel', $report->id) }}" class="btn btn-success mr-2">Export Excel</a>
                 <a href="{{ route('sim-report.pdf', $report->id) }}" class="btn btn-gradient-primary btn-rounded">Export PDF</a>
             </div>
         </div>

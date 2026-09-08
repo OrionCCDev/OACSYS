@@ -14,10 +14,12 @@
     <div class="container-fluid mt-xl-50 mt-sm-30 mt-15">
         <div class="hk-pg-header align-items-top">
             <div>
-                <h2 class="hk-pg-title font-weight-600 mb-10">Site Internet SIM Report &mdash; {{ strtoupper($month->format('M Y')) }}</h2>
+                <h2 class="hk-pg-title font-weight-600 mb-10">
+                    Make Monthly Report &mdash; {{ strtoupper($month->format('M Y')) }}
+                </h2>
                 <p>
-                    Check the month over, drop anything that should not be on it, then issue it.
-                    <span class="text-muted">Issuing saves a copy that will not change afterwards.</span>
+                    Tick the routers and lines that belong on this month's report, then save it.
+                    <span class="text-muted">Saving keeps a copy that will not change afterwards.</span>
                 </p>
             </div>
             <div class="rpt-noprint">
@@ -32,47 +34,12 @@
             <div class="row">
                 <div class="col-12">
                     <section class="hk-sec-wrapper">
-                        <form method="GET" action="{{ route('sim-report.monthly') }}" class="form-inline mb-20 rpt-noprint">
-                            <div class="input-group mb-2 mr-2">
-                                <div class="input-group-prepend"><div class="input-group-text">Month</div></div>
-                                <input type="month" name="month" class="form-control" value="{{ $month->format('Y-m') }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary mb-2">Show</button>
-                            <span class="ml-3 mb-2 text-muted"><small>Defaults to last month.</small></span>
-                        </form>
-
-                        {{-- A month that has already been issued must say so, before a
-                             second report is made against it by accident. --}}
-                        @if($existingReports->isNotEmpty())
-                        <div class="alert alert-warning rpt-noprint">
-                            <h6 class="mb-2">
-                                {{ strtoupper($month->format('M Y')) }} has already been issued
-                                @if($existingReports->count() > 1)
-                                    ({{ $existingReports->count() }} times)
-                                @endif
-                            </h6>
-                            <ul class="list-unstyled mb-2">
-                                @foreach($existingReports as $existing)
-                                <li class="mb-1">
-                                    <a href="{{ route('sim-report.show', $existing->id) }}" class="btn btn-sm btn-info">View</a>
-                                    <a href="{{ route('sim-report.pdf', $existing->id) }}" class="btn btn-sm btn-outline-info">PDF</a>
-                                    <span class="ml-2">
-                                        {{ $existing->line_count }} lines &mdash;
-                                        issued {{ $existing->created_at->format('d M Y H:i') }}
-                                        @if($existing->creator) by {{ $existing->creator->name }} @endif
-                                        {{ $existing->versionLabel() }}
-                                    </span>
-                                </li>
-                                @endforeach
-                            </ul>
-                            <p class="mb-0">
-                                <small>
-                                    If the wrong month was picked, change it above. Issuing again is allowed
-                                    and keeps the one(s) above as history &mdash; nothing is overwritten.
-                                </small>
-                            </p>
-                        </div>
-                        @endif
+                        <p class="rpt-noprint mb-20">
+                            <a href="{{ route('sim-report.monthly') }}" class="btn btn-sm btn-secondary">&larr; Change month</a>
+                            <span class="text-muted ml-2">
+                                <small>Reporting on <strong>{{ $month->format('F Y') }}</strong>.</small>
+                            </span>
+                        </p>
 
                         @php
                             $activeCount = $sims->where('line_active', true)->count();
@@ -156,10 +123,10 @@
                                            placeholder="e.g. two lines removed pending replacement">
                                 </div>
                                 <button type="submit" class="btn btn-gradient-primary btn-rounded">
-                                    Issue Monthly Report &mdash; <span id="includedCount">{{ $sims->count() }}</span> line(s)
+                                    Make Report &mdash; <span id="includedCount">{{ $sims->count() }}</span> line(s)
                                 </button>
                                 <span class="text-muted ml-2">
-                                    <small>Saves a copy of these lines as they are now. You can print or export it afterwards.</small>
+                                    <small>Saves this month's report. You can export it as PDF or Excel straight afterwards.</small>
                                 </span>
                             </div>
                             @endif
@@ -208,7 +175,7 @@
                     return;
                 }
                 var dropped = boxes.length - included;
-                if (dropped > 0 && !confirm('Issue this report with ' + included + ' line(s)? ' + dropped + ' line(s) will be left off.')) {
+                if (dropped > 0 && !confirm('Save this report with ' + included + ' line(s)? ' + dropped + ' line(s) will be left off.')) {
                     e.preventDefault();
                 }
             });

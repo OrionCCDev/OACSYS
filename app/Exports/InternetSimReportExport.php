@@ -2,29 +2,23 @@
 
 namespace App\Exports;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 
 /**
- * The monthly SIM report as a spreadsheet, in the same column order the
- * importer reads back.
+ * The SIM report as a spreadsheet, in the same column order the importer
+ * reads back.
  *
- * That round trip is the point: download the month, change what moved in
- * Excel, upload it again. Lines are matched on SIM number, account site and
- * SIM S/N, so edits land on the right rows and nothing is duplicated.
+ * It takes plain rows rather than models, so the same class serves both the
+ * live month (download, edit, upload again) and an issued report (a copy of
+ * what went out).
  */
-class InternetSimReportExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
+class InternetSimReportExport implements FromArray, WithHeadings, ShouldAutoSize
 {
-    public function __construct(private Collection $sims)
+    /** @param array<int, array<string, mixed>> $rows */
+    public function __construct(private array $rows)
     {
-    }
-
-    public function collection(): Collection
-    {
-        return $this->sims;
     }
 
     /** Exactly what the importer looks for, so the file can go straight back in. */
@@ -44,21 +38,19 @@ class InternetSimReportExport implements FromCollection, WithHeadings, WithMappi
         ];
     }
 
-    public function map($sim): array
+    public function array(): array
     {
-        static $n = 0;
-
-        return [
-            ++$n,
-            $sim->sim_number,
-            $sim->sim_provider,
-            $sim->account_name,
-            $sim->account_site,
-            $sim->line_active ? 'active' : 'NOT active',
-            $sim->sim_serial,
-            $sim->contract_no,
-            $sim->router?->serial_number,
-            $sim->remark,
-        ];
+        return array_map(fn ($row) => [
+            $row['sl_no'],
+            $row['sim_number'],
+            $row['sim_provider'],
+            $row['account_name'],
+            $row['account_site'],
+            $row['line_active'] ? 'active' : 'NOT active',
+            $row['sim_serial'],
+            $row['contract_no'],
+            $row['router_serial'],
+            $row['remark'],
+        ], $this->rows);
     }
 }
