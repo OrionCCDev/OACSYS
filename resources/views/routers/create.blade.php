@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Add Router</h2>
-                <p>Routers are tracked separately from devices. Fit SIM cards to a router from the SIM card page.</p>
+                <p>The router and the internet line fitted in it, on one screen.</p>
             </div>
         </div>
         <div class="hk-pg">
@@ -15,7 +15,7 @@
                     <section class="hk-sec-wrapper">
                         <form action="{{ route('routers.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            @include('routers._form', ['router' => null])
+                            @include('routers._form', ['router' => null, 'sim' => null])
                             <button type="submit" class="btn btn-primary">Add Router</button>
                             <a href="{{ route('routers.index') }}" class="btn btn-secondary">Cancel</a>
                         </form>

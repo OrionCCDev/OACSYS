@@ -71,7 +71,7 @@
                                         <td class="mono">{{ $sim->sim_number ?? '-' }}</td>
                                         <td>{{ $sim->sim_provider ?? '-' }}</td>
                                         <td>{{ $sim->account_name ?? '-' }}</td>
-                                        <td>{{ $sim->holderLabel() }}</td>
+                                        <td>{{ $sim->siteLabel() }}</td>
                                         <td class="text-center">
                                             <span class="badge {{ $sim->line_active ? 'badge-success' : 'badge-danger' }}">
                                                 {{ $sim->lineStatusLabel() }}

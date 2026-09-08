@@ -68,7 +68,7 @@
                 <td>{{ $sim->sim_number ?? '-' }}</td>
                 <td>{{ $sim->sim_provider ?? '-' }}</td>
                 <td>{{ $sim->account_name ?? '-' }}</td>
-                <td>{{ $sim->holderLabel() }}</td>
+                <td>{{ $sim->siteLabel() }}</td>
                 <td class="c {{ $sim->line_active ? 'ok' : 'no' }}">{{ $sim->lineStatusLabel() }}</td>
                 <td>{{ $sim->sim_serial ?? '-' }}</td>
                 <td>{{ $sim->contract_no ?? '-' }}</td>

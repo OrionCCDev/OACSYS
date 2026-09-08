@@ -50,9 +50,7 @@ class SimReportController extends Controller
      */
     private function simsFor(Carbon $month)
     {
-        return InternetSim::with([
-                'router', 'employee', 'department', 'project', 'clientEmployee', 'consultant',
-            ])
+        return InternetSim::with('router')
             ->where('created_at', '<=', $month->copy()->endOfMonth())
             ->orderBy('sim_provider')
             ->orderBy('account_name')

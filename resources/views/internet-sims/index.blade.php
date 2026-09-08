@@ -73,10 +73,7 @@
                                         <td>{{ $sim->sim_number }}</td>
                                         <td>{{ $sim->sim_provider }}</td>
                                         <td>{{ $sim->account_name ?? '-' }}</td>
-                                        <td>
-                                            {{ $sim->holderLabel() }}
-                                            <span class="text-muted"><small>({{ $sim->holderType() }})</small></span>
-                                        </td>
+                                        <td>{{ $sim->siteLabel() }}</td>
                                         <td class="text-center">
                                             <span class="badge {{ $sim->line_active ? 'badge-success' : 'badge-danger' }}">{{ $sim->lineStatusLabel() }}</span>
                                             @if($sim->trashed())

@@ -22,7 +22,7 @@
                         <form method="GET" action="{{ route('routers.index') }}" class="form-inline mb-20">
                             <div class="input-group mb-2 mr-2">
                                 <div class="input-group-prepend"><div class="input-group-text">Search</div></div>
-                                <input type="text" name="search" class="form-control" placeholder="Name, brand, model, serial, holder" value="{{ request('search') }}">
+                                <input type="text" name="search" class="form-control" placeholder="Name, serial, ISP, site, SIM number, owner" value="{{ request('search') }}">
                             </div>
                             <div class="input-group mb-2 mr-2">
                                 <div class="input-group-prepend"><div class="input-group-text">Status</div></div>
@@ -49,8 +49,8 @@
                                         <th>Brand</th>
                                         <th>Model</th>
                                         <th>Serial Number</th>
-                                        <th>Supplier</th>
-                                        <th>Assigned To</th>
+                                        <th>ISP Provider</th>
+                                        <th>Account Site</th>
                                         <th class="text-center">SIMs</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -63,11 +63,8 @@
                                         <td>{{ $router->brand ?? '-' }}</td>
                                         <td>{{ $router->model ?? '-' }}</td>
                                         <td>{{ $router->serial_number ?? '-' }}</td>
-                                        <td>{{ $router->supplier?->name ?? '-' }}</td>
-                                        <td>
-                                            {{ $router->holderLabel() }}
-                                            <span class="text-muted"><small>({{ $router->holderType() }})</small></span>
-                                        </td>
+                                        <td>{{ $router->isp_provider ?? '-' }}</td>
+                                        <td>{{ $router->siteLabel() }}</td>
                                         <td class="text-center">{{ $router->sim_cards_count }}</td>
                                         <td>
                                             <span class="badge {{ ['active' => 'badge-success', 'in-stock' => 'badge-info', 'faulty' => 'badge-warning', 'retired' => 'badge-secondary'][$router->status] ?? 'badge-secondary' }}">

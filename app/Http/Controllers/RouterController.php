@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientEmployee;
-use App\Models\Consultant;
-use App\Models\Department;
-use App\Models\Employee;
-use App\Models\Project;
+use App\Models\InternetSim;
 use App\Models\Router;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 /**
- * Routers as first-class records, separate from devices. Existing
- * device_type='Router' devices are left alone as history; anything recorded
- * here is a router in its own right, and can carry the SIM cards fitted in it.
+ * Routers as first-class records, separate from devices, and the SIM line
+ * fitted in each one.
+ *
+ * The add/edit form covers both: one screen per line on the site internet
+ * sheet, rather than making somebody record a router here and its SIM
+ * somewhere else. A router with no SIM yet is fine, and extra SIMs for the
+ * same router can still be added on the Internet SIMs page.
  */
 class RouterController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Router::with(['supplier', 'employee', 'department', 'project', 'clientEmployee', 'consultant'])
-            ->withCount('simCards');
+        $query = Router::with('simCards')->withCount('simCards');
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -31,9 +29,10 @@ class RouterController extends Controller
                     ->orWhere('brand', 'like', "%{$search}%")
                     ->orWhere('model', 'like', "%{$search}%")
                     ->orWhere('serial_number', 'like', "%{$search}%")
-                    ->orWhereHas('supplier', fn ($sq) => $sq->where('name', 'like', "%{$search}%"))
-                    ->orWhereHas('employee', fn ($sq) => $sq->where('name', 'like', "%{$search}%"))
-                    ->orWhereHas('project', fn ($sq) => $sq->where('project_name', 'like', "%{$search}%"));
+                    ->orWhere('isp_provider', 'like', "%{$search}%")
+                    ->orWhere('account_site', 'like', "%{$search}%")
+                    ->orWhereHas('simCards', fn ($sq) => $sq->where('sim_number', 'like', "%{$search}%")
+                        ->orWhere('account_name', 'like', "%{$search}%"));
             });
         }
 
@@ -52,45 +51,44 @@ class RouterController extends Controller
 
     public function create()
     {
-        return view('routers.create', $this->holderOptions());
+        return view('routers.create');
     }
 
     public function store(Request $request)
     {
         $validated = $this->validateRouter($request);
 
-        $router = Router::create(array_merge(
-            $this->routerAttributes($validated),
-            $this->resolveHolder($validated)
-        ));
+        $router = Router::create($this->routerAttributes($validated));
 
         if ($request->hasFile('main_image')) {
             $router->update(['main_image' => $this->storeUpload($request->file('main_image'))]);
         }
 
-        return redirect()->route('routers.show', $router->id)->with('success', 'Router added.');
+        $this->syncSim($router, $validated);
+
+        return redirect()->route('routers.show', $router->id)->with('success', 'Router saved.');
     }
 
     public function show(Router $router)
     {
-        $router->load(['supplier', 'employee', 'department', 'project', 'clientEmployee', 'consultant', 'simCards']);
+        $router->load('simCards');
 
         return view('routers.show', compact('router'));
     }
 
     public function edit(Router $router)
     {
-        return view('routers.edit', array_merge(['router' => $router], $this->holderOptions()));
+        return view('routers.edit', [
+            'router' => $router,
+            'sim' => $router->primarySim(),
+        ]);
     }
 
     public function update(Request $request, Router $router)
     {
         $validated = $this->validateRouter($request);
 
-        $router->update(array_merge(
-            $this->routerAttributes($validated),
-            $this->resolveHolder($validated)
-        ));
+        $router->update($this->routerAttributes($validated));
 
         if ($request->hasFile('main_image')) {
             $old = $router->main_image;
@@ -98,11 +96,13 @@ class RouterController extends Controller
             $this->deleteUpload($old);
         }
 
-        return redirect()->route('routers.show', $router->id)->with('success', 'Router updated.');
+        $this->syncSim($router, $validated);
+
+        return redirect()->route('routers.show', $router->id)->with('success', 'Router saved.');
     }
 
     /**
-     * Soft delete: the record and any SIM pairing stay intact, so a router
+     * Soft delete: the record and its SIM pairing stay intact, so a router
      * removed by mistake can be restored.
      */
     public function destroy(Router $router)
@@ -126,7 +126,8 @@ class RouterController extends Controller
     {
         $router = Router::onlyTrashed()->findOrFail($routerId);
 
-        // Any SIM still pointing at it is unpaired rather than deleted.
+        // Any SIM still fitted is unpaired rather than deleted - the line
+        // exists with the provider whether or not we still have the router.
         $router->simCards()->update(['router_id' => null]);
         $this->deleteUpload($router->main_image);
         $router->forceDelete();
@@ -142,12 +143,20 @@ class RouterController extends Controller
             'brand' => 'nullable|string|max:255',
             'model' => 'nullable|string|max:255',
             'serial_number' => 'nullable|string|max:255',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'isp_provider' => 'nullable|string|max:255',
+            'account_site' => 'nullable|string|max:255',
             'status' => 'required|in:in-stock,active,faulty,retired',
-            'holder_type' => 'nullable|in:employee,department,project,client,consultant',
-            'holder_id' => 'nullable|integer|required_with:holder_type',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'notes' => 'nullable|string|max:1000',
+
+            // The SIM fitted in it. All optional: a router can be recorded
+            // before its line is arranged.
+            'sim_number' => 'nullable|string|max:255',
+            'sim_serial' => 'nullable|string|max:255',
+            'account_name' => 'nullable|string|max:255',
+            'contract_no' => 'nullable|string|max:255',
+            'line_active' => 'nullable|boolean',
+            'remark' => 'nullable|string|max:255',
         ]);
     }
 
@@ -158,47 +167,44 @@ class RouterController extends Controller
             'brand' => $v['brand'] ?? null,
             'model' => $v['model'] ?? null,
             'serial_number' => $v['serial_number'] ?? null,
-            'supplier_id' => $v['supplier_id'] ?? null,
+            'isp_provider' => $v['isp_provider'] ?? null,
+            'account_site' => $v['account_site'] ?? null,
             'status' => $v['status'],
             'notes' => $v['notes'] ?? null,
         ];
     }
 
     /**
-     * Only one holder column may be set, so every one is cleared first and the
-     * chosen kind written back.
+     * Create or update the router's SIM from the same form.
+     *
+     * A blank SIM number means "no SIM entered here" and leaves any existing
+     * line alone rather than destroying it - removing a line is done from the
+     * Internet SIMs page, where it is an explicit act.
+     *
+     * The ISP and site are shared: one line, one provider, one place.
      */
-    private function resolveHolder(array $v): array
+    private function syncSim(Router $router, array $v): void
     {
-        $holders = (new Router)->clearHolders();
-
-        if (empty($v['holder_type']) || empty($v['holder_id'])) {
-            return $holders;
+        if (blank($v['sim_number'] ?? null)) {
+            return;
         }
 
-        $column = match ($v['holder_type']) {
-            'employee' => 'employee_id',
-            'department' => 'department_id',
-            'project' => 'project_id',
-            'client' => 'client_employee_id',
-            'consultant' => 'consultant_id',
-        };
-
-        $holders[$column] = $v['holder_id'];
-
-        return $holders;
-    }
-
-    private function holderOptions(): array
-    {
-        return [
-            'suppliers' => Supplier::orderBy('name')->get(),
-            'employees' => Employee::orderBy('name')->get(),
-            'departments' => Department::orderBy('name')->get(),
-            'projects' => Project::orderBy('project_name')->get(),
-            'clientEmployees' => ClientEmployee::orderBy('name')->get(),
-            'consultants' => Consultant::orderBy('name')->get(),
+        $attributes = [
+            'sim_number' => $v['sim_number'],
+            'sim_provider' => $v['isp_provider'] ?? '-',
+            'sim_serial' => $v['sim_serial'] ?? null,
+            'account_name' => $v['account_name'] ?? null,
+            'contract_no' => $v['contract_no'] ?? null,
+            // An unchecked checkbox is simply absent from the request.
+            'line_active' => (bool) ($v['line_active'] ?? false),
+            'account_site' => $v['account_site'] ?? null,
+            'remark' => $v['remark'] ?? null,
+            'router_id' => $router->id,
         ];
+
+        $sim = $router->primarySim();
+
+        $sim ? $sim->update($attributes) : InternetSim::create($attributes);
     }
 
     private function storeUpload($file): string

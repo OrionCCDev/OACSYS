@@ -46,8 +46,8 @@
                             <tr><th style="width:45%">Brand</th><td>{{ $router->brand ?? '-' }}</td></tr>
                             <tr><th>Model</th><td>{{ $router->model ?? '-' }}</td></tr>
                             <tr><th>Serial Number</th><td>{{ $router->serial_number ?? '-' }}</td></tr>
-                            <tr><th>Supplier</th><td>{{ $router->supplier?->name ?? '-' }}</td></tr>
-                            <tr><th>Assigned To</th><td>{{ $router->holderLabel() }} <span class="text-muted">({{ $router->holderType() }})</span></td></tr>
+                            <tr><th>ISP Provider</th><td>{{ $router->isp_provider ?? '-' }}</td></tr>
+                            <tr><th>Account Site</th><td>{{ $router->siteLabel() }}</td></tr>
                             @if($router->notes)
                             <tr><th>Notes</th><td>{{ $router->notes }}</td></tr>
                             @endif

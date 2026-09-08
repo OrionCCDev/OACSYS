@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientEmployee;
-use App\Models\Consultant;
-use App\Models\Department;
-use App\Models\Employee;
 use App\Models\InternetSim;
-use App\Models\Project;
 use App\Models\Router;
 use Illuminate\Http\Request;
 
@@ -20,7 +15,7 @@ class InternetSimController extends Controller
 {
     public function index(Request $request)
     {
-        $query = InternetSim::with(['router', 'employee', 'department', 'project', 'clientEmployee', 'consultant']);
+        $query = InternetSim::with('router');
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -30,10 +25,9 @@ class InternetSimController extends Controller
                     ->orWhere('account_name', 'like', "%{$search}%")
                     ->orWhere('contract_no', 'like', "%{$search}%")
                     ->orWhere('remark', 'like', "%{$search}%")
+                    ->orWhere('account_site', 'like', "%{$search}%")
                     ->orWhereHas('router', fn ($rq) => $rq->where('serial_number', 'like', "%{$search}%")
-                        ->orWhere('name', 'like', "%{$search}%"))
-                    ->orWhereHas('employee', fn ($eq) => $eq->where('name', 'like', "%{$search}%"))
-                    ->orWhereHas('project', fn ($pq) => $pq->where('project_name', 'like', "%{$search}%"));
+                        ->orWhere('name', 'like', "%{$search}%"));
             });
         }
 
@@ -68,10 +62,7 @@ class InternetSimController extends Controller
     {
         $validated = $this->validateSim($request);
 
-        $sim = InternetSim::create(array_merge(
-            $this->simAttributes($validated),
-            $this->resolveHolder($validated)
-        ));
+        InternetSim::create($this->simAttributes($validated));
 
         return redirect()->route('internet-sims.index')->with('success', 'Internet SIM added.');
     }
@@ -85,10 +76,7 @@ class InternetSimController extends Controller
     {
         $validated = $this->validateSim($request, $internetSim->id);
 
-        $internetSim->update(array_merge(
-            $this->simAttributes($validated),
-            $this->resolveHolder($validated)
-        ));
+        $internetSim->update($this->simAttributes($validated));
 
         return redirect()->route('internet-sims.index')->with('success', 'Internet SIM updated.');
     }
@@ -127,8 +115,7 @@ class InternetSimController extends Controller
             'contract_no' => 'nullable|string|max:255',
             'line_active' => 'nullable|boolean',
             'router_id' => 'nullable|exists:routers,id',
-            'holder_type' => 'nullable|in:employee,department,project,client,consultant',
-            'holder_id' => 'nullable|integer|required_with:holder_type',
+            'account_site' => 'nullable|string|max:255',
             'remark' => 'nullable|string|max:255',
             'notes' => 'nullable|string|max:1000',
         ]);
@@ -145,42 +132,16 @@ class InternetSimController extends Controller
             // An unchecked checkbox is simply absent from the request.
             'line_active' => (bool) ($v['line_active'] ?? false),
             'router_id' => $v['router_id'] ?? null,
+            'account_site' => $v['account_site'] ?? null,
             'remark' => $v['remark'] ?? null,
             'notes' => $v['notes'] ?? null,
         ];
-    }
-
-    /** Only one holder column may be set, so all are cleared first. */
-    private function resolveHolder(array $v): array
-    {
-        $holders = (new InternetSim)->clearHolders();
-
-        if (empty($v['holder_type']) || empty($v['holder_id'])) {
-            return $holders;
-        }
-
-        $column = match ($v['holder_type']) {
-            'employee' => 'employee_id',
-            'department' => 'department_id',
-            'project' => 'project_id',
-            'client' => 'client_employee_id',
-            'consultant' => 'consultant_id',
-        };
-
-        $holders[$column] = $v['holder_id'];
-
-        return $holders;
     }
 
     private function formOptions(): array
     {
         return [
             'routers' => Router::orderBy('name')->get(),
-            'employees' => Employee::orderBy('name')->get(),
-            'departments' => Department::orderBy('name')->get(),
-            'projects' => Project::orderBy('project_name')->get(),
-            'clientEmployees' => ClientEmployee::orderBy('name')->get(),
-            'consultants' => Consultant::orderBy('name')->get(),
         ];
     }
 }
