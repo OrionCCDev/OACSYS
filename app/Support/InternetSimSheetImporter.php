@@ -15,10 +15,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
  * the same sheet can be uploaded again after a correction, and a later
  * month's sheet only changes what actually changed.
  *
- * The serial alone is deliberately NOT the identity. Real sheets carry the
- * same S/N on two different lines - a copy-paste slip - and keying on it
- * would silently drop one of them. Every row is imported; duplicated serials
- * are reported instead so they can be corrected at the source.
+ * The serial alone is deliberately NOT the identity. The same SIM legitimately
+ * appears more than once - copies of a line, sitting at different sites or the
+ * same one - so keying on the serial would silently drop real rows. Number,
+ * site and serial together is what makes a line that line.
  *
  * Routers are matched on their serial. The sheet has no router name, so the
  * serial is used as the name; rename them afterwards if you want something
@@ -53,63 +53,66 @@ class InternetSimSheetImporter
      */
     public function import(string $path, ?Carbon $recordedAt = null): self
     {
-        $recordedAt ??= Carbon::now();
-
         $reader = IOFactory::createReaderForFile($path);
         $reader->setReadDataOnly(true);
-        $rows = $reader->load($path)->getSheet(0)->toArray(null, true, false, false);
+        $sheet = $reader->load($path)->getSheet(0)->toArray(null, true, false, false);
 
-        $map = $this->findHeader($rows);
-        $seen = [];
-        $serials = [];
+        $map = $this->findHeader($sheet);
 
-        foreach ($rows as $i => $raw) {
-            if ($i <= $map['row']) {
-                continue;
+        $rows = [];
+        foreach ($sheet as $i => $raw) {
+            if ($i > $map['row']) {
+                $rows[$i + 1] = $this->readRow($raw, $map['columns']);
             }
+        }
 
-            $row = $this->readRow($raw, $map['columns']);
+        return $this->importRows($rows, $recordedAt);
+    }
+
+    /**
+     * Save already-parsed rows. Keyed by whatever number should be reported
+     * back to the user (the spreadsheet row, or an index for a seeder).
+     *
+     * @param  array<int|string, array>  $rows
+     */
+    public function importRows(array $rows, ?Carbon $recordedAt = null): self
+    {
+        $recordedAt ??= Carbon::now();
+        $seen = [];
+
+        foreach ($rows as $i => $row) {
+            $row += [
+                'sim_number' => '', 'sim_provider' => '', 'account_name' => '',
+                'account_site' => '', 'line_active' => true, 'sim_serial' => '',
+                'contract_no' => '', 'router_serial' => '', 'remark' => '',
+            ];
 
             // A line needs at least a number or a serial to mean anything.
             if (blank($row['sim_number']) && blank($row['sim_serial'])) {
                 continue;
             }
 
+            // Only rows identical in number, site AND serial are the same
+            // line. A repeated SIM at a different site is a real second entry.
             $key = $this->keyFor($row);
             if (isset($seen[$key])) {
                 $this->warnings[] = sprintf(
-                    'Row %d is an exact repeat of row %d (%s, %s) - imported once.',
-                    $i + 1,
+                    'Row %s is identical to row %s (%s, %s) - imported once.',
+                    $i,
                     $seen[$key],
                     $row['sim_number'] ?: 'no number',
                     $row['account_site'] ?: 'no site'
                 );
                 continue;
             }
-            $seen[$key] = $i + 1;
-
-            // Two different lines sharing a serial is almost always a slip in
-            // the sheet. Both are imported; the clash is reported so it can be
-            // fixed at source rather than quietly losing one of them.
-            if (filled($row['sim_serial'])) {
-                if (isset($serials[$row['sim_serial']])) {
-                    $this->warnings[] = sprintf(
-                        'Row %d has the same SIM S/N as row %d (%s) - both imported, but one is probably a typo.',
-                        $i + 1,
-                        $serials[$row['sim_serial']],
-                        $row['sim_serial']
-                    );
-                } else {
-                    $serials[$row['sim_serial']] = $i + 1;
-                }
-            }
+            $seen[$key] = $i;
 
             if (blank($row['sim_number'])) {
-                $this->warnings[] = sprintf('Row %d has no SIM number (%s).', $i + 1, $row['account_site'] ?: 'no site');
+                $this->warnings[] = sprintf('Row %s has no SIM number (%s).', $i, $row['account_site'] ?: 'no site');
             }
 
             $router = $this->routerFor($row, $recordedAt);
-            $this->saveSim($row, $router, $recordedAt, $i + 1);
+            $this->saveSim($row, $router, $recordedAt, $i);
         }
 
         return $this;
@@ -192,7 +195,7 @@ class InternetSimSheetImporter
         return $router;
     }
 
-    private function saveSim(array $row, ?Router $router, Carbon $recordedAt, int $rowNumber): void
+    private function saveSim(array $row, ?Router $router, Carbon $recordedAt, int|string $rowNumber): void
     {
         $attributes = [
             'sim_number' => $row['sim_number'] ?: '-',

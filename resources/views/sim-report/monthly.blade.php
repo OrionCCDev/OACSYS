@@ -21,6 +21,8 @@
             <div class="rpt-noprint">
                 <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mr-2">Internet SIMs</a>
                 <a href="{{ route('routers.index') }}" class="btn btn-secondary mr-2">Routers</a>
+                <a href="{{ route('sim-report.monthly.excel', ['month' => $month->format('Y-m')]) }}"
+                   class="btn btn-success mr-2">Export Excel</a>
                 <a href="{{ route('sim-report.monthly.pdf', ['month' => $month->format('Y-m')]) }}"
                    class="btn btn-gradient-primary btn-rounded">Export PDF</a>
             </div>
@@ -42,6 +44,13 @@
                             $activeCount = $sims->where('line_active', true)->count();
                             $withRouter = $sims->whereNotNull('router_id')->count();
                         @endphp
+                        <p class="text-muted rpt-noprint">
+                            <small>
+                                <strong>Next month:</strong> these lines carry forward on their own &mdash; only change what moved.
+                                To edit in Excel instead, use <em>Export Excel</em>, change it, then upload it again
+                                from <a href="{{ route('internet-sims.index') }}">Internet SIMs &rarr; Import Sheet</a>.
+                            </small>
+                        </p>
                         <p class="text-muted">
                             <strong>{{ $sims->count() }}</strong> SIM{{ $sims->count() == 1 ? '' : 's' }} &mdash;
                             {{ $activeCount }} active, {{ $sims->count() - $activeCount }} not active,

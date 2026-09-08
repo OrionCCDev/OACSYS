@@ -245,6 +245,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     Route::prefix('sim-report')->name('sim-report.')->group(function () {
         Route::get('/', [\App\Http\Controllers\SimReportController::class, 'monthly'])->name('monthly');
         Route::get('/pdf', [\App\Http\Controllers\SimReportController::class, 'monthlyPdf'])->name('monthly.pdf');
+        Route::get('/excel', [\App\Http\Controllers\SimReportController::class, 'monthlyExcel'])->name('monthly.excel');
     });
 
     Route::prefix('printers')->name('printers.')->group(function () {

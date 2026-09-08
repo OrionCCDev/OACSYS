@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InternetSimReportExport;
 use App\Models\InternetSim;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -38,6 +40,24 @@ class SimReportController extends Controller
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('sim-report-' . $month->format('Y-m') . '.pdf');
+    }
+
+    /**
+     * The same sheet as Excel, in the column order the importer reads.
+     *
+     * This is the month-to-month workflow: download the last report, change
+     * what moved, upload it again on the Internet SIMs page. Rows are matched
+     * on SIM number, account site and SIM S/N, so edits land on the right
+     * lines and nothing is duplicated.
+     */
+    public function monthlyExcel(Request $request)
+    {
+        $month = $this->resolveMonth($request->input('month'));
+
+        return Excel::download(
+            new InternetSimReportExport($this->simsFor($month)),
+            'sim-report-' . $month->format('Y-m') . '.xlsx'
+        );
     }
 
     /**
