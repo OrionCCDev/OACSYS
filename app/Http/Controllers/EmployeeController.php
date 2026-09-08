@@ -358,7 +358,7 @@ class EmployeeController extends Controller
             ]);
         });
 
-        $managedProjects = Project::where('manager_id', $employee->id)->pluck('project_name');
+        $managedProjects = Project::where('project_manager_id', $employee->id)->pluck('project_name');
         if ($managedProjects->isNotEmpty()) {
             return to_route('employees.index')->with(
                 'error',

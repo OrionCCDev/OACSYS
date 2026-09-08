@@ -124,7 +124,7 @@ class ReceiveController extends Controller
 
                 // Get the project manager or client as receiver
                 $receiver = $project->manager ?? $project->client;
-                $receiver_type = $project->manager_id ? 'employee' : 'client';
+                $receiver_type = $project->project_manager_id ? 'employee' : 'client';
 
                 // Create a new pending receive record
                 $receive = Receive::create([
@@ -158,7 +158,7 @@ class ReceiveController extends Controller
             $devicesData = Device::whereIn('id', $deviceIds)->get();
 
             $receiver = $project->manager ?? $project->client;
-            $receiver_type = $project->manager_id ? 'employee' : 'client';
+            $receiver_type = $project->project_manager_id ? 'employee' : 'client';
 
             return view('receive.project.create', compact('devicesData', 'receiver', 'receiver_type', 'project', 'receive_id', 'receive'));
         });
