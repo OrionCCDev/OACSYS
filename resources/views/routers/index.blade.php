@@ -46,8 +46,8 @@
                             <table class="table table-hover table-bordered">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Router S/N</th>
+                                        <th>Router</th>
+                                        <th>SIM Number</th>
                                         <th>ISP Provider</th>
                                         <th>Account Site</th>
                                         <th class="text-center">SIMs</th>
@@ -58,8 +58,20 @@
                                 <tbody>
                                     @forelse($routers as $router)
                                     <tr>
-                                        <td>{{ $router->name }}</td>
-                                        <td>{{ $router->serial_number ?? '-' }}</td>
+                                        <td>
+                                            {{ $router->name }}
+                                            {{-- imported routers are named by their serial; only repeat it when it differs --}}
+                                            @if($router->serial_number && $router->serial_number !== $router->name)
+                                                <small class="text-muted d-block">S/N {{ $router->serial_number }}</small>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @forelse($router->simCards as $sim)
+                                                <div style="font-family:Consolas,monospace">{{ $sim->sim_number }}</div>
+                                            @empty
+                                                <span class="text-muted">no SIM</span>
+                                            @endforelse
+                                        </td>
                                         <td>{{ $router->isp_provider ?? '-' }}</td>
                                         <td>{{ $router->siteLabel() }}</td>
                                         <td class="text-center">{{ $router->sim_cards_count }}</td>

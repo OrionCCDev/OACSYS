@@ -62,6 +62,20 @@
                             @csrf
                             <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
 
+                            {{-- Type-to-filter, entirely on the page: 38+ rows are a lot to
+                                 tick through by eye. Filtering hides rows, it never unticks
+                                 them - hidden rows keep whatever state they had. --}}
+                            <div class="form-inline mb-15 rpt-noprint">
+                                <div class="input-group mr-2 mb-2">
+                                    <div class="input-group-prepend"><div class="input-group-text">Filter</div></div>
+                                    <input type="search" id="rowFilter" class="form-control" style="min-width:300px"
+                                           placeholder="SIM number, site, account, router, remark...">
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-success mr-1 mb-2" id="tickShown">Tick shown</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger mr-2 mb-2" id="untickShown">Untick shown</button>
+                                <span class="text-muted mb-2"><small id="filterInfo"></small></span>
+                            </div>
+
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover sim-rpt mb-0">
                                     <thead class="thead-light">
@@ -156,6 +170,34 @@
         }
 
         boxes.forEach(function (box) { box.addEventListener('change', refresh); });
+
+        // Live filter: hide rows whose text does not contain the term.
+        var filter = document.getElementById('rowFilter');
+        var info = document.getElementById('filterInfo');
+        function shownRows() {
+            return boxes.map(function (b) { return b.closest('tr'); })
+                        .filter(function (r) { return r.style.display !== 'none'; });
+        }
+        function applyFilter() {
+            var term = (filter.value || '').trim().toLowerCase();
+            var shown = 0;
+            boxes.forEach(function (box) {
+                var row = box.closest('tr');
+                var hit = !term || row.textContent.toLowerCase().indexOf(term) !== -1;
+                row.style.display = hit ? '' : 'none';
+                if (hit) shown++;
+            });
+            info.textContent = term ? shown + ' of ' + boxes.length + ' rows match' : '';
+        }
+        if (filter) filter.addEventListener('input', applyFilter);
+        document.getElementById('tickShown').addEventListener('click', function () {
+            shownRows().forEach(function (r) { r.querySelector('.sim-include').checked = true; });
+            refresh();
+        });
+        document.getElementById('untickShown').addEventListener('click', function () {
+            shownRows().forEach(function (r) { r.querySelector('.sim-include').checked = false; });
+            refresh();
+        });
         if (all) {
             all.addEventListener('change', function () {
                 boxes.forEach(function (box) { box.checked = all.checked; });

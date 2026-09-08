@@ -59,7 +59,7 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary mb-2">Filter</button>
-                            @if(request('search') || request('provider') || request('line'))
+                            @if(request('search') || request('provider') || (request('line') && request('line') !== 'all'))
                             <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mb-2 ml-2">Clear</a>
                             @endif
                         </form>
