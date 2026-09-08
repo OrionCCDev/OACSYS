@@ -89,6 +89,16 @@
         </div>
         <div class="row" id="PrintingArea">
 
+            @if ($receive->status == 'received')
+            <div class="col-xl-12">
+                @include('partials.uploaded-document', [
+                    'file' => $receive->receive_image,
+                    'dir' => 'receives',
+                    'name' => 'receiving-' . $receive->code,
+                    'title' => 'Signed Receiving',
+                ])
+            </div>
+            @else
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">
@@ -215,6 +225,7 @@
                     </ul>
                 </section>
             </div>
+            @endif
         </div>
 
     </div>

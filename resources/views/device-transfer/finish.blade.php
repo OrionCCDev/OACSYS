@@ -91,9 +91,15 @@
                     <p class="text-muted">{{ $clearance->employee?->name ?? '-' }} ({{ $clearance->clear_code }})</p>
 
                     @if($clearance->status == 'finished')
-                        <div class="alert alert-success mb-0">
+                        <div class="alert alert-success">
                             <i class="fa fa-check"></i> Clearance signed.
                         </div>
+                        @include('partials.uploaded-document', [
+                            'file' => $clearance->clear_image,
+                            'dir' => 'clearance',
+                            'name' => 'clearance-' . $clearance->clear_code,
+                            'title' => 'Signed Clearance',
+                        ])
                     @else
                         <a href="{{ route('clearance.pdf', $clearance->id) }}" target="_blank" class="btn btn-info btn-block mb-3">
                             <i class="fa fa-print"></i> Print Clearance Document
@@ -141,9 +147,15 @@
                     <p class="text-muted">{{ $receive->employee?->name ?? '-' }} ({{ $receive->code }})</p>
 
                     @if($receive->status == 'received')
-                        <div class="alert alert-success mb-0">
+                        <div class="alert alert-success">
                             <i class="fa fa-check"></i> Receive signed &mdash; assets now belong to {{ $receive->employee?->name ?? 'the new employee' }}.
                         </div>
+                        @include('partials.uploaded-document', [
+                            'file' => $receive->receive_image,
+                            'dir' => 'receives',
+                            'name' => 'receiving-' . $receive->code,
+                            'title' => 'Signed Receiving',
+                        ])
                     @else
                         <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" class="btn btn-info btn-block mb-3">
                             <i class="fa fa-print"></i> Print Receiving Document

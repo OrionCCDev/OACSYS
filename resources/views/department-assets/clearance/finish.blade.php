@@ -11,6 +11,18 @@
         </div>
 
         <div class="row">
+            @if(in_array($clearance->status, ['finished', 'resigned']))
+            <div class="col-xl-12 mb-20">
+                <section class="hk-sec-wrapper">
+                    @include('partials.uploaded-document', [
+                        'file' => $clearance->clear_image,
+                        'dir' => 'clearance',
+                        'name' => 'clearance-' . $clearance->clear_code,
+                        'title' => 'Signed Clearance',
+                    ])
+                </section>
+            </div>
+            @endif
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper">
                     <h5 class="hk-sec-title">Assets to be Cleared</h5>

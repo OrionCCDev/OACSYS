@@ -90,18 +90,12 @@
         <div class="row" id="PrintingArea" style="position: relative;">
             <div class="col-xl-12">
                 @if ($clearanceResign->status == 'resigned')
-                @php
-                    $clearDocUrl = asset('X-Files/Dash/imgs/clearance/' . $clearanceResign->clear_image);
-                    $clearIsPdf = strtolower(pathinfo($clearanceResign->clear_image, PATHINFO_EXTENSION)) === 'pdf';
-                @endphp
-                @if($clearIsPdf)
-                    <iframe src="{{ $clearDocUrl }}" width="100%" height="700" style="border:1px solid #ddd;"></iframe>
-                    <div class="mt-2 no-print">
-                        <a href="{{ $clearDocUrl }}" target="_blank" class="btn btn-info">Open PDF in New Tab</a>
-                    </div>
-                @else
-                    <img src="{{ $clearDocUrl }}" alt="" srcset="">
-                @endif
+                @include('partials.uploaded-document', [
+                    'file' => $clearanceResign->clear_image,
+                    'dir' => 'clearance',
+                    'name' => 'resignation-' . $clearanceResign->clear_code,
+                    'title' => 'Signed Resignation Clearance',
+                ])
                 @else
                 <section class="hk-sec-wrapper hk-invoice-wrap pa-35">
                     <div class="invoice-from-wrap">

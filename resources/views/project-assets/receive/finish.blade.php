@@ -11,6 +11,18 @@
         </div>
 
         <div class="row">
+            @if($receive->status == 'received')
+            <div class="col-xl-12 mb-20">
+                <section class="hk-sec-wrapper">
+                    @include('partials.uploaded-document', [
+                        'file' => $receive->receive_image,
+                        'dir' => 'receives',
+                        'name' => 'receiving-' . $receive->code,
+                        'title' => 'Signed Receiving',
+                    ])
+                </section>
+            </div>
+            @endif
             <div class="col-xl-12">
                 <section class="hk-sec-wrapper">
                     <h5 class="hk-sec-title">Assets to be Received</h5>
