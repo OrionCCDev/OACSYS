@@ -4,11 +4,14 @@ deployment:
     - export DEPLOYPATH=/home/edlb2bdo7yna/public_html/orionacsys.com
     - /bin/cp -R * $DEPLOYPATH
     - '[ -f $DEPLOYPATH/.env ] || /bin/cp .env.example $DEPLOYPATH/.env'
-    - cd $DEPLOYPATH
-    - composer install --no-dev --optimize-autoloader
-    - php artisan config:clear
-    - php artisan cache:clear
-    - php artisan view:clear
-    - php artisan route:clear
-    - php artisan optimize
-
+    # Each task cd's for itself rather than relying on a bare `cd` task
+    # carrying over. If it does not carry over, artisan runs in the repository
+    # checkout and rebuilds ITS caches, leaving the live site serving whatever
+    # bootstrap/cache it already had - which is how a newly added route can be
+    # deployed and still come back as "Route not defined", while the new Blade
+    # views (plain files, copied above) load perfectly well.
+    - cd $DEPLOYPATH && composer install --no-dev --optimize-autoloader
+    # optimize:clear drops the config, route, view, event and compiled caches
+    # in one go, so a stale one cannot survive a deploy.
+    - cd $DEPLOYPATH && php artisan optimize:clear
+    - cd $DEPLOYPATH && php artisan optimize
