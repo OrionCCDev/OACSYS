@@ -101,16 +101,12 @@
         @endif
     </table>
 
-    {{-- Signed off by the IT responsible manager. The name is printed when we
-         know it; the line is there to sign either way. --}}
+    {{-- Signed off by the IT manager: a title and a line, no name. --}}
     <table class="sign">
         <tr>
             <td style="width:55%"></td>
             <td style="width:45%">
-                <div><strong>IT Responsible Manager</strong></div>
-                @if($signatory)
-                    <div class="sub">{{ $signatory }}</div>
-                @endif
+                <div><strong>IT Manager</strong></div>
                 <div class="line"></div>
                 <div class="sub">Signature &amp; Date</div>
             </td>

@@ -110,7 +110,6 @@ class PrinterReportController extends Controller
             'month' => $month,
             'rows' => $rows,
             'printers' => $printers,
-            'signatory' => $this->itManagerName(),
         ]);
     }
 
@@ -129,7 +128,6 @@ class PrinterReportController extends Controller
             'month' => $month,
             'rows' => $this->buildMonthlyRows($printers),
             'printers' => $printers,
-            'signatory' => $this->itManagerName(),
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('printers-report-' . $month->format('Y-m') . '.pdf');
@@ -193,22 +191,6 @@ class PrinterReportController extends Controller
         usort($rows, fn ($a, $b) => strcmp($a['project']->project_code ?? '', $b['project']->project_code ?? ''));
 
         return $rows;
-    }
-
-    /**
-     * Who signs the sheet off. Uses the IT manager on record when there is
-     * one; the PDF still prints a signature line either way.
-     */
-    private function itManagerName(): ?string
-    {
-        // Users hold the roles and point at their employee record, not the
-        // other way round, so the lookup starts from the user side.
-        $user = \App\Models\User::whereHas('roles', fn ($q) => $q->whereIn('name', ['o-super-admin', 'o-admin']))
-            ->with('employee')
-            ->orderBy('id')
-            ->first();
-
-        return $user?->employee?->name ?? $user?->name;
     }
 
     /**

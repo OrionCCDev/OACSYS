@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\InternetSim;
-use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,7 +24,6 @@ class SimReportController extends Controller
         return view('sim-report.monthly', [
             'month' => $month,
             'sims' => $sims,
-            'signatory' => $this->itManagerName(),
         ]);
     }
 
@@ -37,7 +35,6 @@ class SimReportController extends Controller
         $pdf = Pdf::loadView('sim-report.monthly-pdf', [
             'month' => $month,
             'sims' => $this->simsFor($month),
-            'signatory' => $this->itManagerName(),
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('sim-report-' . $month->format('Y-m') . '.pdf');
@@ -68,17 +65,4 @@ class SimReportController extends Controller
         }
     }
 
-    /**
-     * Who signs the sheet off. Users hold the roles and point at their
-     * employee record, so the lookup starts from the user side.
-     */
-    private function itManagerName(): ?string
-    {
-        $user = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['o-super-admin', 'o-admin']))
-            ->with('employee')
-            ->orderBy('id')
-            ->first();
-
-        return $user?->employee?->name ?? $user?->name;
-    }
 }
