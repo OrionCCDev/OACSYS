@@ -47,7 +47,7 @@ class InternetSimController extends Controller
             $query->where('line_active', false);
         }
 
-        $sims = $query->orderBy('sim_provider')->orderBy('account_name')->orderBy('sim_number')
+        $sims = $query->orderBy('id')
             ->paginate(20)->withQueryString();
 
         $providers = InternetSim::select('sim_provider')->distinct()->orderBy('sim_provider')->pluck('sim_provider');

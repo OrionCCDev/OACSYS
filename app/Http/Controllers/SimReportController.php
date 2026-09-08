@@ -237,14 +237,16 @@ class SimReportController extends Controller
     /**
      * Lines as they stand for a month: anything recorded by the end of it.
      * A line added later does not appear on an earlier month.
+     *
+     * Kept in the order the lines were entered, which is the order of the
+     * sheet they came from - so SL NO 1 on the report is row 1 on the sheet
+     * and the two can be read side by side.
      */
     private function simsFor(Carbon $month)
     {
         return InternetSim::with('router')
             ->where('created_at', '<=', $month->copy()->endOfMonth())
-            ->orderBy('sim_provider')
-            ->orderBy('account_name')
-            ->orderBy('sim_number')
+            ->orderBy('id')
             ->get();
     }
 
