@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class SimCard extends Model
 {
+    protected $casts = [
+        'line_active' => 'boolean',
+    ];
+
     protected $guarded = [];
 
     public function consultant(){
@@ -29,6 +33,31 @@ class SimCard extends Model
 
     public function project(){
         return $this->belongsTo(Project::class);
+    }
+
+    /** The router this SIM is fitted in, if any. */
+    public function router(){
+        return $this->belongsTo(Router::class);
+    }
+
+    /**
+     * The report's "Account Site" - where the SIM (and its router) ended up.
+     * At most one holder column is ever set, so the first found is the answer.
+     */
+    public function holderLabel(): string
+    {
+        return $this->employee?->name
+            ?? $this->department?->name
+            ?? $this->project?->project_name
+            ?? $this->clientEmployee?->name
+            ?? $this->consultant?->name
+            ?? 'Unassigned';
+    }
+
+    /** Live with the provider, which is separate from who holds it. */
+    public function lineStatusLabel(): string
+    {
+        return $this->line_active ? 'active' : 'NOT active';
     }
 
     public function department(){

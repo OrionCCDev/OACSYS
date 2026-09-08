@@ -289,6 +289,14 @@
                             </a>
                         </li>
                         <hr class="nav-separator">
+                        <li class="nav-item {{ Request::is('routers*') || Request::is('sim-report*') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('routers.index') }}">
+                                <span class="feather-icon crystal-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="20" height="8" rx="2"></rect><line x1="6" y1="18" x2="6.01" y2="18"></line><line x1="10" y1="18" x2="10.01" y2="18"></line><path d="M6 10V6a6 6 0 0 1 12 0v4"></path></svg></span>
+
+                                <span class="nav-link-text" style="font-size: 25px;padding-left:5px">Routers</span>
+                            </a>
+                        </li>
+                        <hr class="nav-separator">
                         <li class="nav-item {{ Request::is('clearance*') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('clearance.index') }}">
                                 <span class="feather-icon crystal-nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></span>

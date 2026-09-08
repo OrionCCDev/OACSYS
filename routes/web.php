@@ -213,6 +213,26 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
 
     Route::resource('/supplier', \App\Http\Controllers\SupplierController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
+    Route::prefix('routers')->name('routers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\RouterController::class, 'index'])->name('index');
+        // Literals before /{router}, or "create" binds as a router id.
+        Route::get('/create', [\App\Http\Controllers\RouterController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\RouterController::class, 'store'])->name('store');
+        // withTrashed: a deleted router still has to open, or it can never be restored.
+        Route::get('/{router}', [\App\Http\Controllers\RouterController::class, 'show'])->name('show')->withTrashed();
+        Route::get('/{router}/edit', [\App\Http\Controllers\RouterController::class, 'edit'])->name('edit');
+        Route::put('/{router}', [\App\Http\Controllers\RouterController::class, 'update'])->name('update');
+        Route::delete('/{router}', [\App\Http\Controllers\RouterController::class, 'destroy'])->name('destroy');
+        // Trashed-only, so these take a raw id rather than a bound model.
+        Route::put('/{routerId}/restore', [\App\Http\Controllers\RouterController::class, 'restore'])->name('restore');
+        Route::delete('/{routerId}/force', [\App\Http\Controllers\RouterController::class, 'forceDestroy'])->name('force-destroy');
+    });
+
+    Route::prefix('sim-report')->name('sim-report.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SimReportController::class, 'monthly'])->name('monthly');
+        Route::get('/pdf', [\App\Http\Controllers\SimReportController::class, 'monthlyPdf'])->name('monthly.pdf');
+    });
+
     Route::prefix('printers')->name('printers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\PrinterController::class, 'index'])->name('index');
         // Literal segments must be declared before /{printer}, otherwise "create"
