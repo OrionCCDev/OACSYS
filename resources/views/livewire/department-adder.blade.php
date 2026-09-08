@@ -150,7 +150,7 @@
                                                 @else
 
                                                 <td>{{ $department->name }}</td>
-                                                <td>{{ $department->manager->name ?? '—' }}</td>
+                                                <td>{{ $department->manager?->name ?? '—' }}</td>
                                                 @endif
 
 

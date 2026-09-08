@@ -48,13 +48,13 @@
                                 <td>{{ $recv->code }}</td>
                                 <td>
                                     @if ($recv->employee_id)
-                                    {{ $recv->employee->name }}
+                                    {{ $recv->employee?->name }}
                                     @elseif($recv->consultant_id)
-                                    {{ $recv->consultant->name }}
+                                    {{ $recv->consultant?->name }}
                                     @elseif($recv->client_employee_id)
-                                    {{ $recv->clientEmployee->name }}
+                                    {{ $recv->clientEmployee?->name }}
                                     @elseif($recv->project_id)
-                                    {{ $recv->project->project_code }}
+                                    {{ $recv->project?->project_code }}
                                     @endif
                                 </td>
                                 <td>

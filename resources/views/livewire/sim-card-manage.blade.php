@@ -220,13 +220,13 @@
                                                     </select>
                                                     @else
                                                         @if($sim->employee)
-                                                        <span class="badge badge-indigo">{{ $sim->employee->name }}</span>
+                                                        <span class="badge badge-indigo">{{ $sim->employee?->name }}</span>
                                                         @elseif($sim->clientEmployee)
-                                                        <span class="badge badge-purple">{{ $sim->clientEmployee->name }}</span>
+                                                        <span class="badge badge-purple">{{ $sim->clientEmployee?->name }}</span>
                                                         @elseif($sim->consultant)
-                                                        <span class="badge badge-Dark">{{ $sim->consultant->name }}</span>
+                                                        <span class="badge badge-Dark">{{ $sim->consultant?->name }}</span>
                                                         @elseif($sim->device)
-                                                        <span class="badge badge-warning">{{ $sim->device->device_name }} (Device)</span>
+                                                        <span class="badge badge-warning">{{ $sim->device?->device_name }} (Device)</span>
                                                         @else
                                                             @if ($sim->status == 'available')
 

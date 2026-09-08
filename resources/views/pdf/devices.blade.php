@@ -170,13 +170,13 @@
                 </td>
                 <td class="col-owner">
                     @if($device->employee)
-                        {{ $device->employee->name }}
+                        {{ $device->employee?->name }}
                     @elseif($device->consultant)
-                        {{ $device->consultant->name }}
+                        {{ $device->consultant?->name }}
                     @elseif($device->clientEmployee)
-                        {{ $device->clientEmployee->name }}
+                        {{ $device->clientEmployee?->name }}
                     @elseif($device->project)
-                        {{ $device->project->project_name }}
+                        {{ $device->project?->project_name }}
                     @else
                         -
                     @endif

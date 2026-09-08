@@ -103,7 +103,7 @@
                     </table>
                     <tr>
                         <td colspan="5" class="text-center bg-light">
-                            <a href="{{ route('project.receives.create', ['project_id' => $this->project->id]) }}"
+                            <a href="{{ route('project.receives.create', ['project_id' => $this->project?->id]) }}"
                                 class="btn btn-primary btn-lg mt-2 mb-2">
                                 <i class="icon-file-text"></i> Create Receiving Document
                             </a>

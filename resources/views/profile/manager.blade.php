@@ -159,11 +159,11 @@
                                                         <div class="card-body">
                                                             <span style="font-size: 20px"
                                                                 class=" badge badge-soft-success mt-15 mr-10">
-                                                                <h5>{{ $manager->department->name }} - </h5>
+                                                                <h5>{{ $manager->department?->name }} - </h5>
                                                             </span>
                                                             <span style="font-size: 20px"
                                                                 class="badge badge-soft-warning mt-15 mr-10">
-                                                                <h5>{{ $manager->position->name }}</h5>
+                                                                <h5>{{ $manager->position?->name }}</h5>
                                                             </span>
 
                                                         </div>
@@ -226,7 +226,7 @@
                                                                 </div>
                                                                 <div class="stat-box">
                                                                     <div class="stat-value">{{
-                                                                        $manager->department->name }}</div>
+                                                                        $manager->department?->name }}</div>
                                                                     <div class="stat-label">Department</div>
                                                                 </div>
                                                             </div>

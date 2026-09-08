@@ -75,13 +75,13 @@
 
         @if($printer->transferredFrom)
         <div class="alert alert-info">
-            Continued from <a href="{{ route('printers.show', $printer->transferredFrom->id) }}">{{ $printer->transferredFrom->project->project_name ?? 'a previous project' }}</a>
-            (ended {{ $printer->transferredFrom->end_date?->format('Y-m-d') }}).
+            Continued from <a href="{{ route('printers.show', $printer->transferredFrom?->id) }}">{{ $printer->transferredFrom?->project?->project_name ?? 'a previous project' }}</a>
+            (ended {{ $printer->transferredFrom?->end_date?->format('Y-m-d') }}).
         </div>
         @endif
         @if($printer->transferredTo)
         <div class="alert alert-warning">
-            This printer's rental was transferred on to <a href="{{ route('printers.show', $printer->transferredTo->id) }}">{{ $printer->transferredTo->project->project_name ?? 'another project' }}</a>.
+            This printer's rental was transferred on to <a href="{{ route('printers.show', $printer->transferredTo?->id) }}">{{ $printer->transferredTo?->project?->project_name ?? 'another project' }}</a>.
         </div>
         @endif
 
@@ -93,8 +93,8 @@
                         <table class="table table-sm text-left">
                             <tr><th>Model</th><td>{{ $printer->model ?? '-' }}</td></tr>
                             <tr><th>Serial Number</th><td>{{ $printer->serial_number ?? '-' }}</td></tr>
-                            <tr><th>Supplier</th><td>{{ $printer->supplier->name ?? '-' }}</td></tr>
-                            <tr><th>Project</th><td>{{ $printer->project->project_name ?? '-' }}</td></tr>
+                            <tr><th>Supplier</th><td>{{ $printer->supplier?->name ?? '-' }}</td></tr>
+                            <tr><th>Project</th><td>{{ $printer->project?->project_name ?? '-' }}</td></tr>
                             <tr><th>PO Number</th><td>{{ $printer->po_number }}</td></tr>
                             <tr>
                                 <th>PO Document</th>
@@ -251,7 +251,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted">This ends the printer's rental on {{ $printer->project->project_name ?? 'this project' }} and starts a new engagement under a new PO.</p>
+                    <p class="text-muted">This ends the printer's rental on {{ $printer->project?->project_name ?? 'this project' }} and starts a new engagement under a new PO.</p>
                     <div class="form-group">
                         <label>Target Project</label>
                         <select name="project_id" class="form-control" required>

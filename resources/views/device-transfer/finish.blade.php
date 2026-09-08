@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Complete Transfer</h2>
-                <p>{{ $clearance->employee->name ?? '-' }} &rarr; {{ $receive->employee->name ?? '-' }}</p>
+                <p>{{ $clearance->employee?->name ?? '-' }} &rarr; {{ $receive->employee?->name ?? '-' }}</p>
             </div>
         </div>
 
@@ -34,9 +34,9 @@
                             <tbody>
                                 @forelse($deviceRecords as $record)
                                 <tr>
-                                    <td>{{ $record->device->device_name }}</td>
-                                    <td>{{ $record->device->device_code }}</td>
-                                    <td>{{ $record->device->device_type }}</td>
+                                    <td>{{ $record->device?->device_name }}</td>
+                                    <td>{{ $record->device?->device_code }}</td>
+                                    <td>{{ $record->device?->device_type }}</td>
                                     <td>{{ $record->notes ?? '-' }}</td>
                                 </tr>
                                 @empty
@@ -69,9 +69,9 @@
                             <tbody>
                                 @foreach($simRecords as $record)
                                 <tr>
-                                    <td>{{ $record->simCard->sim_number }}</td>
-                                    <td>{{ $record->simCard->sim_provider }}</td>
-                                    <td>{{ $record->simCard->sim_plan }}</td>
+                                    <td>{{ $record->simCard?->sim_number }}</td>
+                                    <td>{{ $record->simCard?->sim_provider }}</td>
+                                    <td>{{ $record->simCard?->sim_plan }}</td>
                                     <td>{{ $record->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -88,7 +88,7 @@
             <div class="col-md-6">
                 <section class="hk-sec-wrapper h-100">
                     <h5 class="hk-sec-title">Step 1a &mdash; Releasing Employee Clearance</h5>
-                    <p class="text-muted">{{ $clearance->employee->name ?? '-' }} ({{ $clearance->clear_code }})</p>
+                    <p class="text-muted">{{ $clearance->employee?->name ?? '-' }} ({{ $clearance->clear_code }})</p>
 
                     @if($clearance->status == 'finished')
                         <div class="alert alert-success mb-0">
@@ -138,11 +138,11 @@
             <div class="col-md-6">
                 <section class="hk-sec-wrapper h-100">
                     <h5 class="hk-sec-title">Step 1b &mdash; Receiving Employee Receive</h5>
-                    <p class="text-muted">{{ $receive->employee->name ?? '-' }} ({{ $receive->code }})</p>
+                    <p class="text-muted">{{ $receive->employee?->name ?? '-' }} ({{ $receive->code }})</p>
 
                     @if($receive->status == 'received')
                         <div class="alert alert-success mb-0">
-                            <i class="fa fa-check"></i> Receive signed &mdash; assets now belong to {{ $receive->employee->name ?? 'the new employee' }}.
+                            <i class="fa fa-check"></i> Receive signed &mdash; assets now belong to {{ $receive->employee?->name ?? 'the new employee' }}.
                         </div>
                     @else
                         <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" class="btn btn-info btn-block mb-3">

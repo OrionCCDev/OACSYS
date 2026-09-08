@@ -19,15 +19,15 @@
                             <h6>Requester Information</h6>
                             <div class="form-group">
                                 <label>Name</label>
-                                <h3>{{ $request->employee->name }}</h3>
+                                <h3>{{ $request->employee?->name }}</h3>
                             </div>
                             <div class="form-group">
                                 <label>Position</label>
-                                <h3>{{ $request->employee->position->name }}</h3>
+                                <h3>{{ $request->employee?->position?->name }}</h3>
                             </div>
                             <div class="form-group">
                                 <label>Department</label>
-                                <h3>{{ $request->employee->department->name }}</h3>
+                                <h3>{{ $request->employee?->department?->name }}</h3>
                             </div>
                         </div>
                     </div>

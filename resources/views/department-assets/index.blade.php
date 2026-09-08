@@ -28,7 +28,7 @@
                                 @forelse($departments as $department)
                                 <tr>
                                     <td>{{ $department->name }}</td>
-                                    <td>{{ $department->manager->name ?? '—' }}</td>
+                                    <td>{{ $department->manager?->name ?? '—' }}</td>
                                     <td>{{ $department->devices->count() }}</td>
                                     <td>{{ $department->simCards->count() }}</td>
                                     <td>

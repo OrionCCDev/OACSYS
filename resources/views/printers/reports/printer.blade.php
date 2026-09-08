@@ -36,10 +36,10 @@
                         <table class="table table-sm text-left mb-0">
                             <tr><th style="width:45%">Model</th><td>{{ $printer->model ?? '-' }}</td></tr>
                             <tr><th>Serial Number</th><td>{{ $printer->serial_number ?? '-' }}</td></tr>
-                            <tr><th>Supplier</th><td>{{ $printer->supplier->name ?? '-' }}</td></tr>
+                            <tr><th>Supplier</th><td>{{ $printer->supplier?->name ?? '-' }}</td></tr>
                             <tr><th>Currently</th>
                                 <td>
-                                    {{ $chain->last()->project->project_name ?? '-' }}
+                                    {{ $chain->last()->project?->project_name ?? '-' }}
                                     <span class="badge {{ ['active' => 'badge-success', 'transferred' => 'badge-info', 'cancelled' => 'badge-danger'][$chain->last()->status] ?? 'badge-secondary' }} text-capitalize">{{ $chain->last()->status }}</span>
                                 </td>
                             </tr>
@@ -111,7 +111,7 @@
                             <tr @class(['rpt-row-current' => $link->id === $printer->id])>
                                 <td>{{ $i + 1 }}</td>
                                 <td>
-                                    <a href="{{ route('printers.reports.project', $link->project_id) }}">{{ $link->project->project_name ?? '-' }}</a>
+                                    <a href="{{ route('printers.reports.project', $link->project_id) }}">{{ $link->project?->project_name ?? '-' }}</a>
                                     @if($link->trashed())
                                         <span class="badge badge-dark ml-1">deleted</span>
                                     @endif
@@ -160,7 +160,7 @@
                             @php $link = $byId->get($invoice->printer_id); @endphp
                             <tr>
                                 <td>{{ $invoice->num }}</td>
-                                <td>{{ $link->project->project_name ?? '-' }}</td>
+                                <td>{{ $link->project?->project_name ?? '-' }}</td>
                                 <td>{{ $link->po_number ?? '-' }}</td>
                                 <td class="rpt-period">{{ $invoice->released_date?->format('d M Y') ?? '-' }}</td>
                                 <td class="rpt-period">{{ $invoice->start_date->format('d M Y') }} &ndash; {{ $invoice->end_date->format('d M Y') }}</td>

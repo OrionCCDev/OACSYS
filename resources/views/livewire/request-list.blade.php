@@ -16,7 +16,7 @@
                 @foreach ($requests as $req)
                 <tr>
                     <td>{{ $req->request_code }}</td>
-                    <td>{{ $req->employee->name }}</td>
+                    <td>{{ $req->employee?->name }}</td>
                     <td>
                         <select wire:change="updateStatus({{ $req->id }}, $event.target.value)" class="form-control form-control-sm">
                             <option value="pending" {{ $req->status === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -66,11 +66,11 @@
                             <h5 class="card-title">Requester Information</h5>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>Name:</strong> {{ $request->employee->name }}</p>
-                                    <p><strong>Position:</strong> {{ $request->employee->position->name }}</p>
+                                    <p><strong>Name:</strong> {{ $request->employee?->name }}</p>
+                                    <p><strong>Position:</strong> {{ $request->employee?->position?->name }}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Department:</strong> {{ $request->employee->department->name }}</p>
+                                    <p><strong>Department:</strong> {{ $request->employee?->department?->name }}</p>
                                     <p><strong>Status:</strong>
                                         <select wire:model="request.status" class="form-control form-control-sm">
                                             <option value="pending">Pending</option>

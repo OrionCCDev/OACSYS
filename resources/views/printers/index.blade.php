@@ -67,8 +67,8 @@
                                         </td>
                                         <td>{{ $printer->name }}</td>
                                         <td>{{ $printer->model ?? '-' }}</td>
-                                        <td>{{ $printer->supplier->name ?? '-' }}</td>
-                                        <td>{{ $printer->project->project_name ?? '-' }}</td>
+                                        <td>{{ $printer->supplier?->name ?? '-' }}</td>
+                                        <td>{{ $printer->project?->project_name ?? '-' }}</td>
                                         <td>{{ $printer->assignedToLabel() }}</td>
                                         <td>{{ $printer->po_number }}</td>
                                         <td>

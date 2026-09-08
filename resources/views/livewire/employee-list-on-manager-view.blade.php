@@ -33,8 +33,8 @@
                         <tr wire:key="{{ $employee->id }}">
                             <td>{{ $employee->employee_id }}</td>
                             <td>{{ $employee->name }}</td>
-                            <td>{{ $employee->position->name }}</td>
-                            <td>{{ $employee->department->name }}</td>
+                            <td>{{ $employee->position?->name }}</td>
+                            <td>{{ $employee->department?->name }}</td>
                             <td>
                                 <a href="{{ route('employees.show' , ['employee' => $employee->id]) }}" class="btn btn-info">
                                     <i class="ion ion-md-eye"></i> View Details

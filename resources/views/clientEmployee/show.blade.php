@@ -43,10 +43,10 @@
                                                             <tr>
                                                                 <td>{{ $clientEmployee->name ?? 'Not Assigned' }}</td>
                                                                 <td>{{ $clientEmployee->email ?? 'Not Assigned' }}</td>
-                                                                <td>{{ $clientEmployee->client->name ?? 'Not Assigned' }}</td>
+                                                                <td>{{ $clientEmployee->client?->name ?? 'Not Assigned' }}</td>
                                                                 <td>{{ $clientEmployee->mobile_number ?? 'Not Assigned' }}</td>
                                                                 <td>{{ $clientEmployee->position ?? 'Not Assigned' }}</td>
-                                                                <td>{{ $clientEmployee->project->project_name }} ( {{ $clientEmployee->project->project_code }} )</td>
+                                                                <td>{{ $clientEmployee->project?->project_name }} ( {{ $clientEmployee->project?->project_code }} )</td>
                                                                 <td>
                                                                     <a href="{{ route('clientEmployee.edit', $clientEmployee->id) }}" class="btn btn-info btn-sm">Edit</a>
                                                                 </td>

@@ -191,12 +191,12 @@
                                 <h5 class="card-title">Requester Information</h5>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong>Name:</strong> {{ $req->employee->name }}</p>
-                                        <p><strong>Position:</strong> {{ $req->employee->position->name }}</p>
+                                        <p><strong>Name:</strong> {{ $req->employee?->name }}</p>
+                                        <p><strong>Position:</strong> {{ $req->employee?->position?->name }}</p>
                                     </div>
                                     <div class="col-md-6">
                                         {{-- <p><strong>Status:</strong> {{ $req->status }}</p> --}}
-                                        <p><strong>Department:</strong> {{ $req->employee->department->name }}</p>
+                                        <p><strong>Department:</strong> {{ $req->employee?->department?->name }}</p>
                                     </div>
                                 </div>
                             </div>

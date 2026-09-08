@@ -89,11 +89,11 @@
                                             <span>Deleivered To: </span></span>
                                             <span class="ml-5 text-dark">
                                                 @if($device->employee)
-                                                    {{ $device->employee->name }} (Employee)
+                                                    {{ $device->employee?->name }} (Employee)
                                                 @elseif($device->client)
-                                                    {{ $device->client->name }} (Client)
+                                                    {{ $device->client?->name }} (Client)
                                                 @elseif($device->consultant)
-                                                    {{ $device->consultant->name }} (Consultant)
+                                                    {{ $device->consultant?->name }} (Consultant)
                                                 @else
                                                     No receiver assigned
                                                 @endif
@@ -104,14 +104,14 @@
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
                                             <span>Placed In Project: </span></span>
-                                            <span class="ml-5 text-dark">{{ $device->project->project_name }} </span>
+                                            <span class="ml-5 text-dark">{{ $device->project?->project_name }} </span>
                                     </li>
                                     @endif
                                     @if ($device->department_id != null)
                                     <li class="list-group-item" style="font-size: 35px">
                                         <span>
                                             <span>Placed In Department: </span></span>
-                                            <span class="ml-5 text-dark">{{ $device->department->name }} </span>
+                                            <span class="ml-5 text-dark">{{ $device->department?->name }} </span>
                                     </li>
                                     @endif
                                     <li class="list-group-item" style="font-size: 35px">
@@ -147,7 +147,7 @@
                                             <span>SIM Card: </span></span>
                                             <span class="ml-5 text-dark">
                                                 @if($device->simCard)
-                                                    {{ $device->simCard->sim_number }} ({{ $device->simCard->sim_provider }})
+                                                    {{ $device->simCard?->sim_number }} ({{ $device->simCard?->sim_provider }})
                                                 @else
                                                     No SIM Assigned
                                                 @endif
@@ -328,7 +328,7 @@
                         <select name="sim_card_id" id="assignSimSelect" class="form-control select2" required>
                             <option value="">Select a SIM Card</option>
                             @foreach($availableSimCards as $sim)
-                            <option value="{{ $sim->id }}" {{ $device->simCard && $device->simCard->id == $sim->id ? 'selected' : '' }}>
+                            <option value="{{ $sim->id }}" {{ $device->simCard && $device->simCard?->id == $sim->id ? 'selected' : '' }}>
                                 {{ $sim->sim_number }} - {{ $sim->sim_provider }} ({{ $sim->sim_plan }})
                             </option>
                             @endforeach

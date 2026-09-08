@@ -46,7 +46,7 @@
                                                                 <td>{{ $consultant->company_name }}</td>
                                                                 <td>{{ $consultant->mobile }}</td>
                                                                 <td>{{ $consultant->position }}</td>
-                                                                <td>{{ $consultant->project->project_name }} ( {{ $consultant->project->project_code }} )</td>
+                                                                <td>{{ $consultant->project?->project_name }} ( {{ $consultant->project?->project_code }} )</td>
                                                                 <td>
                                                                     <a href="{{ route('consultant.edit', $consultant->id) }}" class="btn btn-info btn-sm">Edit</a>
                                                                 </td>

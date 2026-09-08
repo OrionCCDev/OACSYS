@@ -173,8 +173,8 @@
                       @foreach ($data as $clientEmployee )
                       <tr>
                         <th scope="row">{{ $clientEmployee->name }}</th>
-                        <th scope="row">{{ $clientEmployee->client->name }}</th>
-                        <th scope="row">{{ $clientEmployee->project->project_name }}</th>
+                        <th scope="row">{{ $clientEmployee->client?->name }}</th>
+                        <th scope="row">{{ $clientEmployee->project?->project_name }}</th>
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="{{ route('clientEmployee.show' , $clientEmployee->id) }}" class="btn btn-sm btn-success" title="View Details">

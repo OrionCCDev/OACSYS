@@ -7,8 +7,8 @@
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Transfer Details - {{ $transfer->transfer_code }}</h2>
                 <p>
-                    <strong>From:</strong> {{ $transfer->fromProject->project_name }}
-                    <strong class="ml-3">To:</strong> {{ $transfer->toProject->project_name }}
+                    <strong>From:</strong> {{ $transfer->fromProject?->project_name }}
+                    <strong class="ml-3">To:</strong> {{ $transfer->toProject?->project_name }}
                 </p>
             </div>
             <div>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-md-3">
                             <strong>Transferred By:</strong><br>
-                            {{ $transfer->transferredBy->name ?? 'N/A' }}
+                            {{ $transfer->transferredBy?->name ?? 'N/A' }}
                         </div>
                         <div class="col-md-3">
                             <strong>Transfer Date:</strong><br>
@@ -66,10 +66,10 @@
                             <tbody>
                                 @foreach($devices as $transferRecord)
                                 <tr>
-                                    <td>{{ $transferRecord->device->device_name }}</td>
-                                    <td>{{ $transferRecord->device->device_code }}</td>
-                                    <td>{{ $transferRecord->device->device_type }}</td>
-                                    <td>{{ $transferRecord->device->device_model }}</td>
+                                    <td>{{ $transferRecord->device?->device_name }}</td>
+                                    <td>{{ $transferRecord->device?->device_code }}</td>
+                                    <td>{{ $transferRecord->device?->device_type }}</td>
+                                    <td>{{ $transferRecord->device?->device_model }}</td>
                                     <td>{{ $transferRecord->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -94,9 +94,9 @@
                             <tbody>
                                 @foreach($simCards as $transferRecord)
                                 <tr>
-                                    <td>{{ $transferRecord->simCard->sim_number }}</td>
-                                    <td>{{ $transferRecord->simCard->sim_provider }}</td>
-                                    <td>{{ $transferRecord->simCard->sim_plan }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_number }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_provider }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_plan }}</td>
                                     <td>{{ $transferRecord->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach

@@ -33,13 +33,13 @@
                                 <div class="media align-items-center">
                                     <div class="media-img-wrap  d-flex">
                                         <div class="avatar" style='width: 130px; height: 130px;'>
-                                            <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$project->manager->profile_image) }}"
+                                            <img src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/'.$project->manager?->profile_image) }}"
                                                 alt="user" class="avatar-img rounded-circle" style="object-fit: cover;object-position: top;">
                                         </div>
                                     </div>
                                     <div class="media-body">
                                         <div class="text-white text-capitalize display-6 mb-5 font-weight-400">{{
-                                            $project->manager->name }}</div>
+                                            $project->manager?->name }}</div>
                                         <div class="font-14 text-white"><span class="mr-5">Project Manager</span></div>
 
                                     </div>
@@ -250,8 +250,8 @@
 
                                                                     <td>{{ $employee->employee_id }}</td>
                                                                     <td>{{ $employee->name }}</td>
-                                                                    <td>{{ $employee->department->name }}</td>
-                                                                    <td>{{ $employee->position->name }}</td>
+                                                                    <td>{{ $employee->department?->name }}</td>
+                                                                    <td>{{ $employee->position?->name }}</td>
                                                                     <td>{{ $employee->devices->count() }}
                                                                     </td>
                                                                     <td class="">
@@ -381,7 +381,7 @@
                                                                                 <option value="">Select Client</option>
                                                                                 @foreach($clientEmployees as $clientEmployee)
                                                                                     <option value="{{ $clientEmployee->id }}">
-                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project->project_name }}</span>    @endif
+                                                                                        {{ $clientEmployee->name }} - {{ $clientEmployee->client?->name }} @if($clientEmployee->project_id != null) <span style="background-color: yellowgreen"> - {{ $clientEmployee->project?->project_name }}</span>    @endif
                                                                                     </option>
                                                                                 @endforeach
                                                                             </select>
@@ -491,7 +491,7 @@
                                                                                 <option value="">Select Consultant</option>
                                                                                 @foreach($consultants as $Ce)
                                                                                     <option value="{{ $Ce->id }}">
-                                                                                        {{ $Ce->name }} - {{ $Ce->company_name }} @if($Ce->project_id != null) <span style="background-color: yellowgreen"> - {{ $Ce->project->project_name }}</span>    @endif
+                                                                                        {{ $Ce->name }} - {{ $Ce->company_name }} @if($Ce->project_id != null) <span style="background-color: yellowgreen"> - {{ $Ce->project?->project_name }}</span>    @endif
                                                                                     </option>
                                                                                 @endforeach
                                                                             </select>
@@ -651,7 +651,7 @@
                                                     </td>
                                                     <td>{{ $printer->name }}</td>
                                                     <td>{{ $printer->model ?? '-' }}</td>
-                                                    <td>{{ $printer->supplier->name ?? '-' }}</td>
+                                                    <td>{{ $printer->supplier?->name ?? '-' }}</td>
                                                     <td>{{ $printer->serial_number ?? '-' }}</td>
                                                     <td>{{ $printer->po_number }}</td>
                                                     <td>{{ $printer->assignedToLabel() }}</td>

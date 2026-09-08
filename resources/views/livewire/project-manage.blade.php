@@ -224,7 +224,7 @@
                                                 </td>
                                                 @else
                                                 <td style="position: relative">
-                                                    {{ $Project->manager->name }}
+                                                    {{ $Project->manager?->name }}
                                                     <button style="position:absolute;top:5px;right:5px"
                                                     wire:click='edtProjectManager({{ $Project->id }})' class="btn btn-icon btn-primary  btn-sm"><span class="btn-icon-wrap"><i class="icon-pencil"></i></span></button>
                                                 </td>

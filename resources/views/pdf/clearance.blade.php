@@ -63,7 +63,7 @@
         <td class="k">Orion ID</td>
         <td class="v mono">{{ $receiver->employee_id ?? '-' }}</td>
         <td class="k">Department</td>
-        <td class="v">{{ $receiver->department->name ?? '-' }}</td>
+        <td class="v">{{ $receiver->department?->name ?? '-' }}</td>
     </tr>
     @endif
 </table>

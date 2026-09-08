@@ -86,9 +86,9 @@
                     <img class="img-fluid rounded mb-3" style="max-width: 220px;"
                         src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . $employee->profile_image) }}" alt="{{ $employee->name }}">
                     <h5 class="hk-sec-title mb-1">{{ $employee->name }}</h5>
-                    <p class="text-muted mb-2">{{ $employee->position->name ?? 'No Position Assigned' }}</p>
+                    <p class="text-muted mb-2">{{ $employee->position?->name ?? 'No Position Assigned' }}</p>
                     <p class="mb-0">
-                        <span class="badge badge-soft-success">{{ $employee->department->name ?? 'No Department Assigned' }}</span>
+                        <span class="badge badge-soft-success">{{ $employee->department?->name ?? 'No Department Assigned' }}</span>
                     </p>
                 </section>
             </div>
@@ -138,7 +138,7 @@
                         </li>
                         <li class="list-group-item">
                             <i class="ion ion-md-person mr-2"></i>Direct Manager:
-                            <span class="ml-2">{{ $employee->manager->name ?? 'No Manager Assigned' }}</span>
+                            <span class="ml-2">{{ $employee->manager?->name ?? 'No Manager Assigned' }}</span>
                         </li>
                         @if($project)
                         <li class="list-group-item">

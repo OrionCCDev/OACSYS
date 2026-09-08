@@ -6,11 +6,11 @@
         <div class="row mb-5">
             <div class="col-md-6">
                 <p><strong>Employee ID:</strong> {{ $employee->employee_id }}</p>
-                <p><strong>Department:</strong> {{ $employee->department->name }}</p>
+                <p><strong>Department:</strong> {{ $employee->department?->name }}</p>
             </div>
             <div class="col-md-6">
                 <p><strong>Name:</strong> {{ $employee->name }}</p>
-                <p><strong>Position:</strong> {{ $employee->position->name }}</p>
+                <p><strong>Position:</strong> {{ $employee->position?->name }}</p>
             </div>
         </div>
 

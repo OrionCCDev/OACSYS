@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Complete Transfer - {{ $transfer->transfer_code }}</h2>
-                <p>From: {{ $transfer->fromProject->project_name }} → To: {{ $transfer->toProject->project_name }}</p>
+                <p>From: {{ $transfer->fromProject?->project_name }} → To: {{ $transfer->toProject?->project_name }}</p>
             </div>
         </div>
 
@@ -36,9 +36,9 @@
                             <tbody>
                                 @foreach($devices as $transferRecord)
                                 <tr>
-                                    <td>{{ $transferRecord->device->device_name }}</td>
-                                    <td>{{ $transferRecord->device->device_code }}</td>
-                                    <td>{{ $transferRecord->device->device_type }}</td>
+                                    <td>{{ $transferRecord->device?->device_name }}</td>
+                                    <td>{{ $transferRecord->device?->device_code }}</td>
+                                    <td>{{ $transferRecord->device?->device_type }}</td>
                                     <td>{{ $transferRecord->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -63,9 +63,9 @@
                             <tbody>
                                 @foreach($simCards as $transferRecord)
                                 <tr>
-                                    <td>{{ $transferRecord->simCard->sim_number }}</td>
-                                    <td>{{ $transferRecord->simCard->sim_provider }}</td>
-                                    <td>{{ $transferRecord->simCard->sim_plan }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_number }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_provider }}</td>
+                                    <td>{{ $transferRecord->simCard?->sim_plan }}</td>
                                     <td>{{ $transferRecord->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach

@@ -106,19 +106,19 @@
                                 <div class="row mb-5">
                                     <div class="col-md-6">
                                         <h5>Employee Information</h5>
-                                        <p><strong>Name:</strong> {{ $deduction->employee->name }}</p>
-                                        <p><strong>ID:</strong> {{ $deduction->employee->employee_id }}</p>
-                                        <p><strong>Department:</strong> {{ $deduction->employee->department->name }}</p>
-                                        <p><strong>Position:</strong> {{ $deduction->employee->position->name }}</p>
+                                        <p><strong>Name:</strong> {{ $deduction->employee?->name }}</p>
+                                        <p><strong>ID:</strong> {{ $deduction->employee?->employee_id }}</p>
+                                        <p><strong>Department:</strong> {{ $deduction->employee?->department?->name }}</p>
+                                        <p><strong>Position:</strong> {{ $deduction->employee?->position?->name }}</p>
                                     </div>
                                     @if($deduction->device_id)
                                     <div class="col-md-6">
                                         <h5>Device Information</h5>
-                                        <p><strong>Device Name:</strong> {{ $deduction->device->device_name }}</p>
-                                        <p><strong>Device Code:</strong> {{ $deduction->device->device_code }}</p>
-                                        <p><strong>Device Code:</strong> {{ $deduction->device->device_price }}</p>
-                                        <p><strong>Type:</strong> {{  $deduction->device->device_type }}</p>
-                                        <p><strong>Device Code:</strong> {{ $deduction->device->short_description }}</p>
+                                        <p><strong>Device Name:</strong> {{ $deduction->device?->device_name }}</p>
+                                        <p><strong>Device Code:</strong> {{ $deduction->device?->device_code }}</p>
+                                        <p><strong>Device Code:</strong> {{ $deduction->device?->device_price }}</p>
+                                        <p><strong>Type:</strong> {{  $deduction->device?->device_type }}</p>
+                                        <p><strong>Device Code:</strong> {{ $deduction->device?->short_description }}</p>
                                     </div>
                                     @endif
                                 </div>

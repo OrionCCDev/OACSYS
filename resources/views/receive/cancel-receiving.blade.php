@@ -202,19 +202,19 @@
 
                                     <h6 class="mb-5">Date : <span  style="color:#174094 ">{{ now()->format('Y-m-d') }}</span></h6>
                                     @if ($device->employee_id != null)
-                                        <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->employee->name }}</span></h6>
-                                        <h6 class="mb-5">Orion-ID : <span  style="color:#174094 ">{{ $device->employee->employee_id }}</span></h6>
-                                        <h6 class="mb-5">Department : <span  style="color:#174094 ">{{ $device->employee->department->name }}</span></h6>
+                                        <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->employee?->name }}</span></h6>
+                                        <h6 class="mb-5">Orion-ID : <span  style="color:#174094 ">{{ $device->employee?->employee_id }}</span></h6>
+                                        <h6 class="mb-5">Department : <span  style="color:#174094 ">{{ $device->employee?->department?->name }}</span></h6>
 
                                     @endif
                                     @if ($device->client_id != null)
-                                    <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->clientEmployee->name }}</span></h6>
+                                    <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->clientEmployee?->name }}</span></h6>
                                     @endif
                                     @if ($device->consultant_id != null)
-                                    <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->consultant->name }}</span></h6>
+                                    <h6 class="mb-5">Name : <span  style="color:#174094 ">{{ $device->consultant?->name }}</span></h6>
                                     @endif
                                     @if ($device->project_id != null)
-                                        <h6 class="mb-5">Project : <span  style="color:#174094 ">{{ $device->project->project_code }}</span></h6>
+                                        <h6 class="mb-5">Project : <span  style="color:#174094 ">{{ $device->project?->project_code }}</span></h6>
                                     @endif
 
                                 </div>

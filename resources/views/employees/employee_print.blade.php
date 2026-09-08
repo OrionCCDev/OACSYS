@@ -47,7 +47,7 @@
     </div>
     <div class="id-cell">
         <h1 class="doc-title">{{ $employee->name }}</h1>
-        <div class="role">{{ $employee->position->name ?? 'No position on record' }} &middot; Orion ID {{ $employee->employee_id }}</div>
+        <div class="role">{{ $employee->position?->name ?? 'No position on record' }} &middot; Orion ID {{ $employee->employee_id }}</div>
     </div>
 </div>
 
@@ -55,9 +55,9 @@
 <table class="meta">
     <tr>
         <td class="k">Department</td>
-        <td class="v">{{ $employee->department->name ?? '-' }}</td>
+        <td class="v">{{ $employee->department?->name ?? '-' }}</td>
         <td class="k">Position</td>
-        <td class="v">{{ $employee->position->name ?? '-' }}</td>
+        <td class="v">{{ $employee->position?->name ?? '-' }}</td>
     </tr>
     <tr>
         <td class="k">Hire Date</td>
@@ -100,9 +100,9 @@
 <table class="meta">
     <tr>
         <td class="k">Project Name</td>
-        <td class="v">{{ $employee->project->project_name }}</td>
+        <td class="v">{{ $employee->project?->project_name }}</td>
         <td class="k">Project Code</td>
-        <td class="v mono">{{ $employee->project->project_code }}</td>
+        <td class="v mono">{{ $employee->project?->project_code }}</td>
     </tr>
 </table>
 @endif

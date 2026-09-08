@@ -58,13 +58,13 @@
         <td class="k">Orion ID</td>
         <td class="v mono">{{ $receiver->employee_id }}</td>
         <td class="k">Department</td>
-        <td class="v">{{ $receiver->department->name ?? '-' }}</td>
+        <td class="v">{{ $receiver->department?->name ?? '-' }}</td>
     </tr>
     @endif
     @if (($receiver->project_id ?? null) != null)
     <tr>
         <td class="k">Project</td>
-        <td class="v mono" colspan="3">{{ $receiver->project->project_code ?? '-' }}</td>
+        <td class="v mono" colspan="3">{{ $receiver->project?->project_code ?? '-' }}</td>
     </tr>
     @endif
 </table>

@@ -144,7 +144,7 @@
                                         <a href="{{ route('asset-request.show', $notification->id) }}" class="dropdown-item">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <div class="notifications-text">New asset request from <span class="text-dark text-capitalize">{{ $notification->employee->name }}</span></div>
+                                                    <div class="notifications-text">New asset request from <span class="text-dark text-capitalize">{{ $notification->employee?->name }}</span></div>
                                                     <div class="notifications-time">{{ $notification->created_at->diffForHumans() }}</div>
                                                 </div>
                                             </div>

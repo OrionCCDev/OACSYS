@@ -129,9 +129,9 @@
                 <div class="row mb-4" id="requestInfo">
                     <div class="col-md-6">
                         <h6>Requester Information</h6>
-                        <p><strong>Name:</strong> {{ $request->employee->name }}</p>
-                        <p><strong>Position:</strong> {{ $request->employee->position->name }}</p>
-                        <p><strong>Department:</strong> {{ $request->employee->department->name }}</p>
+                        <p><strong>Name:</strong> {{ $request->employee?->name }}</p>
+                        <p><strong>Position:</strong> {{ $request->employee?->position?->name }}</p>
+                        <p><strong>Department:</strong> {{ $request->employee?->department?->name }}</p>
                     </div>
                     <div class="col-md-6">
                         <h6>Request Details</h6>

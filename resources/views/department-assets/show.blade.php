@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">{{ $department->name }} - Assets</h2>
-                <p>Manager: {{ $department->manager->name ?? 'Not assigned' }}</p>
+                <p>Manager: {{ $department->manager?->name ?? 'Not assigned' }}</p>
             </div>
             <div class="d-flex">
                 <a href="{{ route('department-assets.index') }}" class="btn btn-secondary btn-sm mr-2">

@@ -86,14 +86,14 @@
                         <table class="table table-sm table-bordered mb-0">
                             <tr><th style="width:40%">Model</th><td>{{ $printer->model ?? '-' }}</td></tr>
                             <tr><th>Serial Number</th><td>{{ $printer->serial_number ?? '-' }}</td></tr>
-                            <tr><th>Supplier</th><td>{{ $printer->supplier->name ?? '-' }}</td></tr>
+                            <tr><th>Supplier</th><td>{{ $printer->supplier?->name ?? '-' }}</td></tr>
                             <tr><th>Assigned To</th><td>{{ $printer->assignedToLabel() }} <span class="text-muted">({{ $printer->delivered_to_type === 'office' ? 'our office' : $printer->delivered_to_type }})</span></td></tr>
                             <tr><th>On Rent</th><td class="rpt-period">{{ $printer->rentalPeriodLabel() }}</td></tr>
                             @if($printer->transferredFrom)
-                            <tr><th>Came From</th><td><a href="{{ route('printers.reports.project', $printer->transferredFrom->project_id) }}">{{ $printer->transferredFrom->project->project_name ?? 'a previous project' }}</a></td></tr>
+                            <tr><th>Came From</th><td><a href="{{ route('printers.reports.project', $printer->transferredFrom?->project_id) }}">{{ $printer->transferredFrom?->project?->project_name ?? 'a previous project' }}</a></td></tr>
                             @endif
                             @if($printer->transferredTo)
-                            <tr><th>Moved To</th><td><a href="{{ route('printers.reports.project', $printer->transferredTo->project_id) }}">{{ $printer->transferredTo->project->project_name ?? 'another project' }}</a></td></tr>
+                            <tr><th>Moved To</th><td><a href="{{ route('printers.reports.project', $printer->transferredTo?->project_id) }}">{{ $printer->transferredTo?->project?->project_name ?? 'another project' }}</a></td></tr>
                             @endif
                             @if($printer->notes)
                             <tr><th>Notes</th><td>{{ $printer->notes }}</td></tr>

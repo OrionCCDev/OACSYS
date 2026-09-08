@@ -44,8 +44,8 @@
                                     <tr>
                                         <td>{{ $project->project_name }}</td>
                                         <td>{{ $project->project_code }}</td>
-                                        <td>{{ $project->manager->name ?? 'N/A' }}</td>
-                                        <td>{{ $project->client->name ?? 'N/A' }}</td>
+                                        <td>{{ $project->manager?->name ?? 'N/A' }}</td>
+                                        <td>{{ $project->client?->name ?? 'N/A' }}</td>
                                         <td><span class="badge badge-info">{{ $project->devices_count }}</span></td>
                                         <td><span class="badge badge-success">{{ $project->sim_cards_count }}</span></td>
                                         <td><span class="badge badge-primary">{{ $project->total_assets_count }}</span></td>

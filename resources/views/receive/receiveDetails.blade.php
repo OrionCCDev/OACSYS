@@ -112,10 +112,10 @@
                         <div class="row">
                             <div class="col-12 mb-30 text-center" style="justify-items: center">
                                 <p><strong>Name:</strong>
-                                    {{ $receive->employee->name }}
+                                    {{ $receive->employee?->name }}
                                 </p>
                                 <p><strong>ID:</strong>
-                                    {{ $receive->employee->employee_id }}
+                                    {{ $receive->employee?->employee_id }}
                                 </p>
                             </div>
                         </div>

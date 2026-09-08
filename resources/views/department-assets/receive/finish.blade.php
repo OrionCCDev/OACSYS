@@ -6,7 +6,7 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Complete Receive - {{ $receive->code }}</h2>
-                <p>Department: {{ $receive->department->name }}</p>
+                <p>Department: {{ $receive->department?->name }}</p>
             </div>
         </div>
 
@@ -31,9 +31,9 @@
                             <tbody>
                                 @foreach($deviceRecords as $record)
                                 <tr>
-                                    <td>{{ $record->device->device_name }}</td>
-                                    <td>{{ $record->device->device_code }}</td>
-                                    <td>{{ $record->device->device_type }}</td>
+                                    <td>{{ $record->device?->device_name }}</td>
+                                    <td>{{ $record->device?->device_code }}</td>
+                                    <td>{{ $record->device?->device_type }}</td>
                                     <td>{{ $record->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach
@@ -58,9 +58,9 @@
                             <tbody>
                                 @foreach($simRecords as $record)
                                 <tr>
-                                    <td>{{ $record->simCard->sim_number }}</td>
-                                    <td>{{ $record->simCard->sim_provider }}</td>
-                                    <td>{{ $record->simCard->sim_plan }}</td>
+                                    <td>{{ $record->simCard?->sim_number }}</td>
+                                    <td>{{ $record->simCard?->sim_provider }}</td>
+                                    <td>{{ $record->simCard?->sim_plan }}</td>
                                     <td>{{ $record->notes ?? '-' }}</td>
                                 </tr>
                                 @endforeach
