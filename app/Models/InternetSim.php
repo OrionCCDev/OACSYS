@@ -5,15 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Router extends Model
+/**
+ * A site internet SIM line - the data lines behind site routers and cameras.
+ *
+ * Kept separate from SimCard, which is the IT asset register (issued to
+ * people, cleared, received). These are provider accounts: who the line is
+ * registered to, its contract, whether it is live, and which router it sits
+ * in.
+ */
+class InternetSim extends Model
 {
     use SoftDeletes;
 
     protected $guarded = [];
 
-    public function supplier()
+    protected $casts = [
+        'line_active' => 'boolean',
+    ];
+
+    public function router()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Router::class);
     }
 
     public function employee()
@@ -42,31 +54,8 @@ class Router extends Model
     }
 
     /**
-     * The site internet SIM lines fitted in this router. These are
-     * InternetSim records, not the sim_cards asset register - the two are
-     * deliberately separate.
-     */
-    public function simCards()
-    {
-        return $this->hasMany(InternetSim::class);
-    }
-
-    /**
-     * Who currently holds the router. At most one of the holder columns is
-     * set, so the first one found is the answer.
-     */
-    public function holder(): ?Model
-    {
-        return $this->employee
-            ?? $this->department
-            ?? $this->project
-            ?? $this->clientEmployee
-            ?? $this->consultant;
-    }
-
-    /**
-     * Where the router sits, as the SIM report's "Account Site" column shows
-     * it - a person, a department, or a project.
+     * The report's "Account Site" - who the line was delivered to. At most one
+     * holder column is ever set, so the first found is the answer.
      */
     public function holderLabel(): string
     {
@@ -88,6 +77,12 @@ class Router extends Model
             (bool) $this->consultant_id => 'Consultant',
             default => '-',
         };
+    }
+
+    /** Live with the provider, which is separate from who holds it. */
+    public function lineStatusLabel(): string
+    {
+        return $this->line_active ? 'active' : 'NOT active';
     }
 
     /** Clears every holder column, so only one is ever set at a time. */

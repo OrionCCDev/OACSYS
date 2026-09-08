@@ -72,45 +72,6 @@
                                                     <button type="submit" class="btn btn-primary mb-2">Add</button>
                                                 </div>
                                             </div>
-
-                                            {{-- Fields the monthly site-internet SIM report is built from. --}}
-                                            <div class="form-row align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="input-group mb-2">
-                                                        <div class="input-group-prepend"><div class="input-group-text">Account Name</div></div>
-                                                        <input type="text" wire:model.lazy="account_name" class="form-control" placeholder="e.g. Eng. Saqer">
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="input-group mb-2">
-                                                        <div class="input-group-prepend"><div class="input-group-text">Contract No</div></div>
-                                                        <input type="text" wire:model.lazy="contract_no" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="input-group mb-2">
-                                                        <div class="input-group-prepend"><div class="input-group-text">Router</div></div>
-                                                        <select wire:model.lazy="router_id" class="form-control">
-                                                            <option value="">Not fitted</option>
-                                                            @foreach($routers as $r)
-                                                            <option value="{{ $r->id }}">{{ $r->name }}{{ $r->serial_number ? ' - ' . $r->serial_number : '' }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="input-group mb-2">
-                                                        <div class="input-group-prepend"><div class="input-group-text">Remark</div></div>
-                                                        <input type="text" wire:model.lazy="remark" class="form-control" placeholder="e.g. CAMERA SYS">
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="custom-control custom-checkbox mb-2">
-                                                        <input type="checkbox" wire:model.lazy="line_active" class="custom-control-input" id="lineActiveNew">
-                                                        <label class="custom-control-label" for="lineActiveNew">Line active</label>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </form>
                                         @error('SimCard_number')
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -218,7 +179,6 @@
                                                     Provider
                                                     @if($sortField === 'sim_provider') <i class="icon-{{ $sortDirection === 'asc' ? 'arrow-up' : 'arrow-down' }}"></i> @endif
                                                 </th>
-                                                <th>Account / Router</th>
                                                 <th>Owner & Status</th>
                                                 <th style="cursor:pointer" wire:click="sortBy('created_at')">
                                                     Added
@@ -251,35 +211,6 @@
                                                 <td>{{ $sim->sim_plan }}</td>
                                                 <td>{{ $sim->sim_provider }}</td>
                                             @endif
-                                                <td>
-                                                    @if ($edtId == $sim->id)
-                                                        <input type="text" wire:model="edtAccountName" class="form-control form-control-sm mb-1" placeholder="Account name">
-                                                        <input type="text" wire:model="edtContractNo" class="form-control form-control-sm mb-1" placeholder="Contract no">
-                                                        <select wire:model="edtRouterId" class="form-control form-control-sm mb-1">
-                                                            <option value="">Not fitted</option>
-                                                            @foreach($routers as $r)
-                                                            <option value="{{ $r->id }}">{{ $r->name }}{{ $r->serial_number ? ' - ' . $r->serial_number : '' }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <input type="text" wire:model="edtRemark" class="form-control form-control-sm mb-1" placeholder="Remark">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" wire:model="edtLineActive" class="custom-control-input" id="lineActive{{ $sim->id }}">
-                                                            <label class="custom-control-label" for="lineActive{{ $sim->id }}">Line active</label>
-                                                        </div>
-                                                    @else
-                                                        <div>{{ $sim->account_name ?? '-' }}</div>
-                                                        @if($sim->contract_no)
-                                                            <small class="text-muted d-block">Contract {{ $sim->contract_no }}</small>
-                                                        @endif
-                                                        @if($sim->router)
-                                                            <a href="{{ route('routers.show', $sim->router->id) }}"><small>{{ $sim->router->serial_number ?? $sim->router->name }}</small></a>
-                                                        @endif
-                                                        <span class="badge {{ $sim->line_active ? 'badge-success' : 'badge-danger' }}">{{ $sim->lineStatusLabel() }}</span>
-                                                        @if($sim->remark)
-                                                            <small class="d-block text-muted">{{ $sim->remark }}</small>
-                                                        @endif
-                                                    @endif
-                                                </td>
                                                 <td>
                                                     @if ($edtId == $sim->id)
                                                     <select wire:model='edtStatus' class="form-control">

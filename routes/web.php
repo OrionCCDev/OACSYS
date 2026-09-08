@@ -228,6 +228,19 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         Route::delete('/{routerId}/force', [\App\Http\Controllers\RouterController::class, 'forceDestroy'])->name('force-destroy');
     });
 
+    Route::prefix('internet-sims')->name('internet-sims.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\InternetSimController::class, 'index'])->name('index');
+        // Literals before /{internetSim}, or "create" binds as an id.
+        Route::get('/create', [\App\Http\Controllers\InternetSimController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\InternetSimController::class, 'store'])->name('store');
+        Route::get('/{internetSim}/edit', [\App\Http\Controllers\InternetSimController::class, 'edit'])->name('edit');
+        Route::put('/{internetSim}', [\App\Http\Controllers\InternetSimController::class, 'update'])->name('update');
+        Route::delete('/{internetSim}', [\App\Http\Controllers\InternetSimController::class, 'destroy'])->name('destroy');
+        // Trashed-only, so these take a raw id rather than a bound model.
+        Route::put('/{simId}/restore', [\App\Http\Controllers\InternetSimController::class, 'restore'])->name('restore');
+        Route::delete('/{simId}/force', [\App\Http\Controllers\InternetSimController::class, 'forceDestroy'])->name('force-destroy');
+    });
+
     Route::prefix('sim-report')->name('sim-report.')->group(function () {
         Route::get('/', [\App\Http\Controllers\SimReportController::class, 'monthly'])->name('monthly');
         Route::get('/pdf', [\App\Http\Controllers\SimReportController::class, 'monthlyPdf'])->name('monthly.pdf');

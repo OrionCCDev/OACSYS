@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SimCard;
+use App\Models\InternetSim;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -50,7 +50,7 @@ class SimReportController extends Controller
      */
     private function simsFor(Carbon $month)
     {
-        return SimCard::with([
+        return InternetSim::with([
                 'router', 'employee', 'department', 'project', 'clientEmployee', 'consultant',
             ])
             ->where('created_at', '<=', $month->copy()->endOfMonth())

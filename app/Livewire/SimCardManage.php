@@ -30,18 +30,6 @@ class SimCardManage extends Component
     public $edtPlan;
     public $edtStatus;
 
-    // Fields the monthly site-internet SIM report is built from.
-    public $account_name;
-    public $contract_no;
-    public $remark;
-    public $router_id;
-    public $line_active = true;
-    public $edtAccountName;
-    public $edtContractNo;
-    public $edtRemark;
-    public $edtRouterId;
-    public $edtLineActive = true;
-
     public $excelFile;
 
     protected $rules = [
@@ -68,17 +56,10 @@ class SimCardManage extends Component
         SimCard::create([
             'sim_number' => $this->SimCard_number,
             'sim_provider' => $this->sim_provider,
-            'sim_plan' => $this->sim_plan,
-            'account_name' => $this->account_name ?: null,
-            'contract_no' => $this->contract_no ?: null,
-            'remark' => $this->remark ?: null,
-            'router_id' => $this->router_id ?: null,
-            'line_active' => (bool) $this->line_active,
+            'sim_plan' => $this->sim_plan
         ]);
 
-        $this->reset(['SimCard_number', 'sim_provider', 'sim_plan', 'account_name',
-            'contract_no', 'remark', 'router_id']);
-        $this->line_active = true;
+        $this->reset(['SimCard_number', 'sim_provider', 'sim_plan']);
         $this->dispatch('showToast');
     }
 
@@ -141,12 +122,10 @@ class SimCardManage extends Component
             $query->where('sim_provider', $this->filterProvider);
         }
 
-        $data = $query->with('router')->orderBy($this->sortField, $this->sortDirection)->paginate(10);
+        $data = $query->orderBy($this->sortField, $this->sortDirection)->paginate(10);
 
         return view('livewire.sim-card-manage', [
-            'data' => $data,
-            // For the "fitted in router" picker on the add/edit rows.
-            'routers' => \App\Models\Router::orderBy('name')->get(),
+            'data' => $data
         ]);
     }
 
@@ -164,16 +143,11 @@ class SimCardManage extends Component
         $this->edtPlan = $sim->sim_plan;
 
         $this->edtStatus = $sim->status;
-        $this->edtAccountName = $sim->account_name;
-        $this->edtContractNo = $sim->contract_no;
-        $this->edtRemark = $sim->remark;
-        $this->edtRouterId = $sim->router_id;
-        $this->edtLineActive = (bool) $sim->line_active;
     }
     public function cancel()
     {
         $this->edtId = null;
-        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan', 'edtStatus', 'edtAccountName', 'edtContractNo', 'edtRemark', 'edtRouterId', 'edtLineActive']);
+        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' , 'edtStatus']);
     }
 
     public function exportSimCards()
@@ -187,12 +161,7 @@ class SimCardManage extends Component
             'sim_number' => $this->edtNumber,
             'sim_provider' => $this->edtProvider,
             'sim_plan' => $this->edtPlan,
-            'status' => $this->edtStatus,
-            'account_name' => $this->edtAccountName ?: null,
-            'contract_no' => $this->edtContractNo ?: null,
-            'remark' => $this->edtRemark ?: null,
-            'router_id' => $this->edtRouterId ?: null,
-            'line_active' => (bool) $this->edtLineActive,
+            'status' => $this->edtStatus
         ];
 
         // Marking a SIM "available" from here has to actually free it -
@@ -203,12 +172,11 @@ class SimCardManage extends Component
             $attributes['consultant_id'] = null;
             $attributes['client_employee_id'] = null;
             $attributes['device_id'] = null;
-            $attributes['router_id'] = null;
         }
 
         $sim->update($attributes);
         $this->edtId = null;
-        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan', 'edtStatus', 'edtAccountName', 'edtContractNo', 'edtRemark', 'edtRouterId', 'edtLineActive']);
+        $this->reset(['edtId', 'edtNumber', 'edtProvider', 'edtPlan' ,'edtStatus']);
         $this->dispatch('showToastOfUpdate');
     }
 }

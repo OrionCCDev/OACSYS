@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="rpt-noprint">
-                <a href="{{ route('simCard.index') }}" class="btn btn-secondary mr-2">SIM Cards</a>
+                <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mr-2">Internet SIMs</a>
                 <a href="{{ route('routers.index') }}" class="btn btn-secondary mr-2">Routers</a>
                 <a href="{{ route('sim-report.monthly.pdf', ['month' => $month->format('Y-m')]) }}"
                    class="btn btn-gradient-primary btn-rounded">Export PDF</a>
