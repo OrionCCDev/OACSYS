@@ -10,7 +10,7 @@
             </div>
             <div>
                 <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mr-2">Internet SIMs</a>
-                <a href="{{ route('sim-report.monthly') }}" class="btn btn-info mr-2">SIM Report</a>
+                <a href="{{ route('sim-report.monthly') }}" class="btn btn-info mr-2">Make Monthly Report</a>
                 <a href="{{ route('routers.create') }}" class="btn btn-gradient-primary btn-rounded">Add Router</a>
             </div>
         </div>

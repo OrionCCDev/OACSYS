@@ -12,7 +12,8 @@
                 </p>
             </div>
             <div>
-                <a href="{{ route('sim-report.monthly') }}" class="btn btn-info mr-2">Monthly Report</a>
+                <a href="{{ route('sim-report.monthly') }}" class="btn btn-gradient-info btn-rounded mr-2">Make Monthly Report</a>
+                <a href="{{ route('sim-report.index') }}" class="btn btn-secondary mr-2">Issued Reports</a>
                 <a href="{{ route('routers.index') }}" class="btn btn-secondary mr-2">Routers</a>
                 <a href="{{ route('internet-sims.create') }}" class="btn btn-gradient-primary btn-rounded">Add Internet SIM</a>
                 <button type="button" class="btn btn-secondary ml-2" data-toggle="modal" data-target="#importModal">Import Sheet</button>

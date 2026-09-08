@@ -243,9 +243,16 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
     });
 
     Route::prefix('sim-report')->name('sim-report.')->group(function () {
+        // The working view for a month, and issuing it.
         Route::get('/', [\App\Http\Controllers\SimReportController::class, 'monthly'])->name('monthly');
-        Route::get('/pdf', [\App\Http\Controllers\SimReportController::class, 'monthlyPdf'])->name('monthly.pdf');
+        Route::post('/', [\App\Http\Controllers\SimReportController::class, 'store'])->name('store');
         Route::get('/excel', [\App\Http\Controllers\SimReportController::class, 'monthlyExcel'])->name('monthly.excel');
+
+        // Issued reports. "issued" before /{report} so it is not read as an id.
+        Route::get('/issued', [\App\Http\Controllers\SimReportController::class, 'index'])->name('index');
+        Route::get('/issued/{report}', [\App\Http\Controllers\SimReportController::class, 'show'])->name('show');
+        Route::get('/issued/{report}/pdf', [\App\Http\Controllers\SimReportController::class, 'pdf'])->name('pdf');
+        Route::delete('/issued/{report}', [\App\Http\Controllers\SimReportController::class, 'destroy'])->name('destroy');
     });
 
     Route::prefix('printers')->name('printers.')->group(function () {

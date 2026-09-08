@@ -35,12 +35,12 @@
         <tr>
             <td><img src="{{ resource_path('images/pdf-logo.png') }}" alt=""></td>
             <td style="text-align:right">
-                <h1>Site Internet SIM Report - {{ strtoupper($month->format('M Y')) }}</h1>
+                <h1>Site Internet SIM Report - {{ strtoupper($month->format('M Y')) }}{{ $version ? ' (' . $version . ')' : '' }}</h1>
                 <div class="sub">
-                    Generated {{ now()->format('d M Y') }} |
-                    {{ $sims->count() }} SIM{{ $sims->count() == 1 ? '' : 's' }} |
-                    {{ $sims->where('line_active', true)->count() }} active,
-                    {{ $sims->where('line_active', false)->count() }} not active
+                    Issued {{ $issuedAt->format('d M Y') }} |
+                    {{ count($rows) }} SIM{{ count($rows) == 1 ? '' : 's' }} |
+                    {{ collect($rows)->where('line_active', true)->count() }} active,
+                    {{ collect($rows)->where('line_active', false)->count() }} not active
                 </div>
             </td>
         </tr>
@@ -62,21 +62,21 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($sims as $i => $sim)
-            <tr class="{{ $sim->line_active ? '' : 'off' }}">
-                <td class="sl">{{ $i + 1 }}</td>
-                <td>{{ $sim->sim_number ?? '-' }}</td>
-                <td>{{ $sim->sim_provider ?? '-' }}</td>
-                <td>{{ $sim->account_name ?? '-' }}</td>
-                <td>{{ $sim->siteLabel() }}</td>
-                <td class="c {{ $sim->line_active ? 'ok' : 'no' }}">{{ $sim->lineStatusLabel() }}</td>
-                <td>{{ $sim->sim_serial ?? '-' }}</td>
-                <td>{{ $sim->contract_no ?? '-' }}</td>
-                <td>{{ $sim->router?->serial_number ?? ($sim->router?->name ?? '-') }}</td>
-                <td>{{ $sim->remark ?? '-' }}</td>
+            @forelse($rows as $row)
+            <tr class="{{ $row['line_active'] ? '' : 'off' }}">
+                <td class="sl">{{ $row['sl_no'] }}</td>
+                <td>{{ $row['sim_number'] ?: '-' }}</td>
+                <td>{{ $row['sim_provider'] ?: '-' }}</td>
+                <td>{{ $row['account_name'] ?: '-' }}</td>
+                <td>{{ $row['account_site'] ?: '-' }}</td>
+                <td class="c {{ $row['line_active'] ? 'ok' : 'no' }}">{{ $row['line_active'] ? 'active' : 'NOT active' }}</td>
+                <td>{{ $row['sim_serial'] ?: '-' }}</td>
+                <td>{{ $row['contract_no'] ?: '-' }}</td>
+                <td>{{ $row['router_serial'] ?: '-' }}</td>
+                <td>{{ $row['remark'] ?: '-' }}</td>
             </tr>
             @empty
-            <tr><td colspan="10" class="c">No SIM cards had been recorded by the end of {{ $month->format('F Y') }}.</td></tr>
+            <tr><td colspan="10" class="c">This report has no lines.</td></tr>
             @endforelse
         </tbody>
     </table>
