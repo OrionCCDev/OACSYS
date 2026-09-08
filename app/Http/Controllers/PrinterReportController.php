@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Printer;
 use App\Models\Project;
 use App\Support\BillingCoverage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -81,6 +83,132 @@ class PrinterReportController extends Controller
         return view('printers.reports.project', compact(
             'project', 'printers', 'coverage', 'overall', 'invoiceCount', 'suppliers'
         ));
+    }
+
+    /**
+     * The monthly printers sheet: one block per project, its suppliers and
+     * counts, then a Big/Small split with where each group sits.
+     *
+     * "During the month" means the rental overlapped it at any point - started
+     * on or before the month ended, and had not already ended before it began.
+     * A printer transferred mid-month therefore appears under both projects,
+     * which is correct: both held it that month.
+     */
+    public function monthly(Request $request)
+    {
+        $month = $this->resolveMonth($request->input('month'));
+        [$from, $to] = [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()];
+
+        $printers = Printer::with(['project', 'supplier'])
+            ->whereDate('start_date', '<=', $to)
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhereDate('end_date', '>=', $from))
+            ->get();
+
+        $rows = $this->buildMonthlyRows($printers);
+
+        return view('printers.reports.monthly', [
+            'month' => $month,
+            'rows' => $rows,
+            'printers' => $printers,
+            'signatory' => $this->itManagerName(),
+        ]);
+    }
+
+    /** The same sheet as a PDF, for signing and filing. */
+    public function monthlyPdf(Request $request)
+    {
+        $month = $this->resolveMonth($request->input('month'));
+        [$from, $to] = [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()];
+
+        $printers = Printer::with(['project', 'supplier'])
+            ->whereDate('start_date', '<=', $to)
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhereDate('end_date', '>=', $from))
+            ->get();
+
+        $pdf = Pdf::loadView('printers.reports.monthly-pdf', [
+            'month' => $month,
+            'rows' => $this->buildMonthlyRows($printers),
+            'printers' => $printers,
+            'signatory' => $this->itManagerName(),
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('printers-report-' . $month->format('Y-m') . '.pdf');
+    }
+
+    /** Accepts YYYY-MM from the month picker; anything else means this month. */
+    private function resolveMonth(?string $input): Carbon
+    {
+        try {
+            return $input ? Carbon::createFromFormat('Y-m', $input)->startOfMonth() : Carbon::now()->startOfMonth();
+        } catch (\Throwable) {
+            return Carbon::now()->startOfMonth();
+        }
+    }
+
+    /**
+     * One entry per project: its suppliers with counts, and a line per size.
+     * A "Not set" size line appears only when some printers have no size, so
+     * the size lines always add up to the project's total rather than quietly
+     * losing rows.
+     */
+    private function buildMonthlyRows($printers): array
+    {
+        $rows = [];
+
+        foreach ($printers->groupBy('project_id') as $projectPrinters) {
+            $project = $projectPrinters->first()->project;
+
+            $suppliers = $projectPrinters
+                ->groupBy(fn ($p) => $p->supplier->name ?? 'No supplier')
+                ->map->count()
+                ->sortKeys();
+
+            $sizes = [];
+            foreach (['big', 'small'] as $size) {
+                $of = $projectPrinters->where('size', $size);
+                $sizes[] = [
+                    'label' => $size === 'big' ? 'Big' : 'Small',
+                    'count' => $of->count(),
+                    'designation' => $of->map->designationLabel()->unique()->filter(fn ($d) => $d !== '-')->implode(' & ') ?: '-',
+                ];
+            }
+
+            $unset = $projectPrinters->whereNull('size');
+            if ($unset->isNotEmpty()) {
+                $sizes[] = [
+                    'label' => 'Not set',
+                    'count' => $unset->count(),
+                    'designation' => $unset->map->designationLabel()->unique()->filter(fn ($d) => $d !== '-')->implode(' & ') ?: '-',
+                ];
+            }
+
+            $rows[] = [
+                'project' => $project,
+                'suppliers' => $suppliers,
+                'total' => $projectPrinters->count(),
+                'sizes' => $sizes,
+            ];
+        }
+
+        usort($rows, fn ($a, $b) => strcmp($a['project']->project_code ?? '', $b['project']->project_code ?? ''));
+
+        return $rows;
+    }
+
+    /**
+     * Who signs the sheet off. Uses the IT manager on record when there is
+     * one; the PDF still prints a signature line either way.
+     */
+    private function itManagerName(): ?string
+    {
+        // Users hold the roles and point at their employee record, not the
+        // other way round, so the lookup starts from the user side.
+        $user = \App\Models\User::whereHas('roles', fn ($q) => $q->whereIn('name', ['o-super-admin', 'o-admin']))
+            ->with('employee')
+            ->orderBy('id')
+            ->first();
+
+        return $user?->employee?->name ?? $user?->name;
     }
 
     /**

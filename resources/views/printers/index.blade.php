@@ -9,6 +9,7 @@
                 <p>Every rental printer we track, its PO, and where it currently is.</p>
             </div>
             <div>
+                <a href="{{ route('printers.reports.monthly') }}" class="btn btn-gradient-info btn-rounded mr-2">Monthly Report</a>
                 <a href="{{ route('printers.reports.projects') }}" class="btn btn-info mr-2">Report by Project</a>
                 <a href="{{ route('supplier.index') }}" class="btn btn-secondary mr-2">Suppliers</a>
                 <a href="{{ route('printers.create') }}" class="btn btn-gradient-primary btn-rounded">Add Printer</a>
@@ -51,6 +52,7 @@
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Model</th>
+                                        <th>Size</th>
                                         <th>Supplier</th>
                                         <th>Project</th>
                                         <th>Assigned To</th>
@@ -67,6 +69,7 @@
                                         </td>
                                         <td>{{ $printer->name }}</td>
                                         <td>{{ $printer->model ?? '-' }}</td>
+                                        <td>{{ $printer->sizeLabel() }}</td>
                                         <td>{{ $printer->supplier?->name ?? '-' }}</td>
                                         <td>{{ $printer->project?->project_name ?? '-' }}</td>
                                         <td>{{ $printer->assignedToLabel() }}</td>
@@ -101,7 +104,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No printers found.</td>
+                                        <td colspan="10" class="text-center">No printers found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>

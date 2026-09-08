@@ -109,6 +109,34 @@ class Printer extends Model
         return [$this->start_date, $end ?? now()->startOfDay()];
     }
 
+    /** Big / Small, as split on the monthly report. */
+    public function sizeLabel(): string
+    {
+        return match ($this->size) {
+            'big' => 'Big',
+            'small' => 'Small',
+            default => 'Not set',
+        };
+    }
+
+    /**
+     * Where the printer sits, in the words used on site. Falls back to who it
+     * is assigned to when nobody has written anything more specific.
+     */
+    public function designationLabel(): string
+    {
+        if (filled($this->designation)) {
+            return $this->designation;
+        }
+
+        return match ($this->delivered_to_type) {
+            'client' => 'Client Office',
+            'consultant' => 'Consultant Office',
+            'office' => 'Orion Office',
+            default => '-',
+        };
+    }
+
     /**
      * The rental period as shown in the reports. Built from rentalWindow() so
      * the dates on screen always agree with the day counts beside them.
@@ -161,6 +189,7 @@ class Printer extends Model
             'po_document' => $poDocument,
             'name' => $this->name,
             'model' => $this->model,
+            'size' => $this->size,
             'serial_number' => $this->serial_number,
             'main_image' => $this->main_image,
             'delivered_to_type' => $deliveredToType,
@@ -168,6 +197,8 @@ class Printer extends Model
             'consultant_id' => $deliveredToType === 'consultant' ? $deliveredToTargetId : null,
             'status' => 'active',
             'start_date' => $startDate,
+            // designation is deliberately not carried over: it describes where
+            // the printer sat on the previous project, not the new one.
             'transferred_from_id' => $this->id,
             'notes' => $notes,
         ]);

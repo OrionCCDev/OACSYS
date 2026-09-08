@@ -227,6 +227,8 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         // Read-only reports. Declared above /{printer} so "reports" isn't
         // matched as a printer id.
         Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/monthly', [\App\Http\Controllers\PrinterReportController::class, 'monthly'])->name('monthly');
+            Route::get('/monthly/pdf', [\App\Http\Controllers\PrinterReportController::class, 'monthlyPdf'])->name('monthly.pdf');
             Route::get('/projects', [\App\Http\Controllers\PrinterReportController::class, 'projects'])->name('projects');
             Route::get('/projects/{project}', [\App\Http\Controllers\PrinterReportController::class, 'project'])->name('project');
             Route::get('/printer/{printer}', [\App\Http\Controllers\PrinterReportController::class, 'printer'])->name('printer')->withTrashed();

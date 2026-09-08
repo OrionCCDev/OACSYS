@@ -92,6 +92,8 @@
                         <img src="{{ asset('X-Files/Dash/imgs/devices/' . $printer->main_image) }}" alt="" class="img-fluid img-thumbnail mb-20">
                         <table class="table table-sm text-left">
                             <tr><th>Model</th><td>{{ $printer->model ?? '-' }}</td></tr>
+                            <tr><th>Size</th><td>{{ $printer->sizeLabel() }}</td></tr>
+                            <tr><th>Designation</th><td>{{ $printer->designationLabel() }}</td></tr>
                             <tr><th>Serial Number</th><td>{{ $printer->serial_number ?? '-' }}</td></tr>
                             <tr><th>Supplier</th><td>{{ $printer->supplier?->name ?? '-' }}</td></tr>
                             <tr><th>Project</th><td>{{ $printer->project?->project_name ?? '-' }}</td></tr>

@@ -33,9 +33,18 @@
                                     <label>Printer Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" class="form-control" value="{{ old('name', $printer->name) }}" required>
                                 </div>
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-3 form-group">
                                     <label>Model</label>
                                     <input type="text" name="model" class="form-control" value="{{ old('model', $printer->model) }}">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Size <span class="text-danger">*</span></label>
+                                    <select name="size" class="form-control" required>
+                                        <option value="">Select size</option>
+                                        <option value="big" {{ old('size', $printer->size) == 'big' ? 'selected' : '' }}>Big</option>
+                                        <option value="small" {{ old('size', $printer->size) == 'small' ? 'selected' : '' }}>Small</option>
+                                    </select>
+                                    <small class="form-text text-muted">Splits the monthly report.</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -99,6 +108,15 @@
                                         <option value="{{ $consultant->id }}" {{ old('target_id', $printer->consultant_id) == $consultant->id ? 'selected' : '' }}>{{ $consultant->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>Designation</label>
+                                    <input type="text" name="designation" class="form-control" value="{{ old('designation', $printer->designation) }}"
+                                           placeholder="e.g. Ground Floor, DC Office, Mwafaq &amp; Hussain store">
+                                    <small class="form-text text-muted">Where it actually sits. Shown on the monthly report; defaults to the assignment above if left blank.</small>
                                 </div>
                             </div>
 
