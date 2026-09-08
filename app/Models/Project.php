@@ -68,4 +68,9 @@ class Project extends Model
             'total' => $this->devices()->count() + $this->simCards()->count()
         ];
     }
+
+    public function printers()
+    {
+        return $this->hasMany(Printer::class);
+    }
 }

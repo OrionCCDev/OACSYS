@@ -33,8 +33,12 @@ class PrinterController extends Controller
             });
         }
 
+        // "deleted" is not one of the status column's values - it is the
+        // soft-delete state, so it selects a different set of rows entirely.
         $status = $request->input('status', 'active');
-        if ($status !== 'all') {
+        if ($status === 'deleted') {
+            $query->onlyTrashed();
+        } elseif ($status !== 'all') {
             $query->where('status', $status);
         }
 
@@ -193,12 +197,37 @@ class PrinterController extends Controller
     }
 
     /**
-     * Delete a printer outright - for records entered by mistake. Its invoice
-     * rows cascade at the database level, so their documents are cleared off
-     * disk here first.
+     * Remove a printer from the listings. This is a soft delete: the row, its
+     * invoices and its documents all stay put, so a record deleted by mistake
+     * can be restored intact. Deleted printers are reachable through the
+     * report's "Deleted" filter.
      */
     public function destroy(Printer $printer)
     {
+        $printer->delete();
+
+        return redirect()->route('printers.index')
+            ->with('success', 'Printer deleted. You can restore it from the Deleted filter.');
+    }
+
+    /** Put a soft-deleted printer back into service. */
+    public function restore(int $printerId)
+    {
+        $printer = Printer::onlyTrashed()->findOrFail($printerId);
+        $printer->restore();
+
+        return redirect()->route('printers.show', $printer->id)->with('success', 'Printer restored.');
+    }
+
+    /**
+     * Erase a soft-deleted printer for good, with its invoices (cascaded by
+     * the database) and every uploaded document. Nothing here is recoverable,
+     * so it is only reachable for a printer that is already deleted.
+     */
+    public function forceDestroy(int $printerId)
+    {
+        $printer = Printer::onlyTrashed()->with('invoices')->findOrFail($printerId);
+
         foreach ($printer->invoices as $invoice) {
             $this->deleteUpload($invoice->invoice_document, 'printers/invoices');
         }
@@ -206,9 +235,10 @@ class PrinterController extends Controller
         $this->deleteUpload($printer->po_document, 'printers/po');
         $this->deleteUpload($printer->main_image, 'devices');
 
-        $printer->delete();
+        $printer->forceDelete();
 
-        return redirect()->route('printers.index')->with('success', 'Printer deleted.');
+        return redirect()->route('printers.index', ['status' => 'deleted'])
+            ->with('success', 'Printer permanently deleted.');
     }
 
     /**

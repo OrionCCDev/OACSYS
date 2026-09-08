@@ -9,6 +9,7 @@
                 <p>Every rental printer we track, its PO, and where it currently is.</p>
             </div>
             <div>
+                <a href="{{ route('printers.reports.projects') }}" class="btn btn-info mr-2">Report by Project</a>
                 <a href="{{ route('supplier.index') }}" class="btn btn-secondary mr-2">Suppliers</a>
                 <a href="{{ route('printers.create') }}" class="btn btn-gradient-primary btn-rounded">Add Printer</a>
             </div>
@@ -34,6 +35,7 @@
                                     <option value="transferred" {{ request('status') == 'transferred' ? 'selected' : '' }}>Transferred</option>
                                     <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                     <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>All</option>
+                                    <option value="deleted" {{ request('status') == 'deleted' ? 'selected' : '' }}>Deleted</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary mb-2">Filter</button>
@@ -73,10 +75,28 @@
                                             <span class="badge {{ ['active' => 'badge-success', 'transferred' => 'badge-info', 'cancelled' => 'badge-danger'][$printer->status] ?? 'badge-secondary' }} text-capitalize">
                                                 {{ $printer->status }}
                                             </span>
+                                            @if($printer->trashed())
+                                                <span class="badge badge-dark">deleted</span>
+                                            @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">View / History</a>
-                                            <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                            @if($printer->trashed())
+                                                <form action="{{ route('printers.restore', $printer->id) }}" method="POST" style="display:inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                                                </form>
+                                                <form action="{{ route('printers.force-destroy', $printer->id) }}" method="POST" style="display:inline"
+                                                      onsubmit="return confirm('Permanently delete this printer, its invoices and its documents? This cannot be undone.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete Forever</button>
+                                                </form>
+                                            @else
+                                                <a href="{{ route('printers.show', $printer->id) }}" class="btn btn-sm btn-info">View / History</a>
+                                                <a href="{{ route('printers.reports.printer', $printer->id) }}" class="btn btn-sm btn-outline-info">Report</a>
+                                                <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @empty

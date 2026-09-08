@@ -39,16 +39,39 @@
             </div>
             <div>
                 <a href="{{ route('printers.index') }}" class="btn btn-secondary mr-2">Back to Report</a>
-                <a href="{{ route('project.details', $printer->project_id) }}" class="btn btn-info mr-2">View Project</a>
-                <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-primary mr-2">Edit</a>
-                <form action="{{ route('printers.destroy', $printer->id) }}" method="POST" style="display:inline"
-                      onsubmit="return confirm('Delete this printer{{ $printer->invoices->count() ? ' and its ' . $printer->invoices->count() . ' invoice(s)' : '' }}? This cannot be undone.')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                <a href="{{ route('printers.reports.printer', $printer->id) }}" class="btn btn-outline-info mr-2">Printer Report</a>
+                @if($printer->trashed())
+                    <form action="{{ route('printers.restore', $printer->id) }}" method="POST" style="display:inline">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success mr-2">Restore</button>
+                    </form>
+                    <form action="{{ route('printers.force-destroy', $printer->id) }}" method="POST" style="display:inline"
+                          onsubmit="return confirm('Permanently delete this printer{{ $printer->invoices->count() ? ', its ' . $printer->invoices->count() . ' invoice(s)' : '' }} and every uploaded document? This cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete Forever</button>
+                    </form>
+                @else
+                    <a href="{{ route('project.details', $printer->project_id) }}" class="btn btn-info mr-2">View Project</a>
+                    <a href="{{ route('printers.edit', $printer->id) }}" class="btn btn-primary mr-2">Edit</a>
+                    <form action="{{ route('printers.destroy', $printer->id) }}" method="POST" style="display:inline"
+                          onsubmit="return confirm('Delete this printer{{ $printer->invoices->count() ? ' and its ' . $printer->invoices->count() . ' invoice(s)' : '' }}? You can restore it afterwards from the Deleted filter.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                @endif
             </div>
         </div>
+
+        @if($printer->trashed())
+        <div class="alert alert-dark">
+            <strong>This printer is deleted.</strong>
+            It is hidden from the printers report, its project page and all reports, but nothing has been erased &mdash;
+            deleted {{ $printer->deleted_at->diffForHumans() }}. Restore it to put it back into service.
+        </div>
+        @endif
 
         @if($printer->transferredFrom)
         <div class="alert alert-info">
@@ -88,7 +111,7 @@
                             <tr><th>Assigned To</th><td>{{ $printer->assignedToLabel() }}</td></tr>
                         </table>
 
-                        @if($printer->status === 'active')
+                        @if($printer->status === 'active' && !$printer->trashed())
                         <button type="button" class="btn btn-outline-primary btn-block mb-2" data-toggle="modal" data-target="#deliveryModal">
                             Change Assignment
                         </button>
@@ -106,9 +129,11 @@
                     <section class="hk-sec-wrapper">
                         <div class="d-flex justify-content-between align-items-center mb-20">
                             <h5 class="hk-sec-title mb-0">Invoices</h5>
+                            @unless($printer->trashed())
                             <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addInvoiceModal">
                                 Add Invoice
                             </button>
+                            @endunless
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered">
@@ -137,11 +162,13 @@
                                             @endif
                                         </td>
                                         <td>
+                                            @unless($printer->trashed())
                                             <form action="{{ route('printers.invoices.destroy', $invoice->id) }}" method="POST" onsubmit="return confirm('Delete this invoice?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                                             </form>
+                                            @endunless
                                         </td>
                                     </tr>
                                     @empty
@@ -159,7 +186,7 @@
     </div>
 </div>
 
-@if($printer->status === 'active')
+@if($printer->status === 'active' && !$printer->trashed())
 <!-- Change Delivery Modal -->
 <div class="modal fade" id="deliveryModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-scrollable" role="document">

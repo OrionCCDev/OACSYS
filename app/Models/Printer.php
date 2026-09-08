@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Printer extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     protected $casts = [
@@ -44,7 +47,7 @@ class Printer extends Model
      */
     public function transferredFrom()
     {
-        return $this->belongsTo(Printer::class, 'transferred_from_id');
+        return $this->belongsTo(Printer::class, 'transferred_from_id')->withTrashed();
     }
 
     /**
@@ -53,7 +56,68 @@ class Printer extends Model
      */
     public function transferredTo()
     {
-        return $this->hasOne(Printer::class, 'transferred_from_id');
+        return $this->hasOne(Printer::class, 'transferred_from_id')->withTrashed();
+    }
+
+    /**
+     * Every project engagement of this physical printer, oldest first.
+     *
+     * A transfer creates a new row rather than editing this one, so the
+     * machine on your floor is a chain of records, not a single one. Walking
+     * it in both directions from any link gives the whole asset's life.
+     * Soft-deleted links are included so a deleted record can't silently
+     * shorten the history.
+     */
+    public function lifecycleChain()
+    {
+        $first = $this;
+        $seen = [$this->id => true];
+        while ($first->transferred_from_id && ($prev = $first->transferredFrom) && !isset($seen[$prev->id])) {
+            $seen[$prev->id] = true;
+            $first = $prev;
+        }
+
+        $chain = collect([$first]);
+        $current = $first;
+        while (($next = $current->transferredTo) && !isset($seen[$next->id])) {
+            $seen[$next->id] = true;
+            $chain->push($next);
+            $current = $next;
+        }
+
+        return $chain;
+    }
+
+    /**
+     * The window this printer was actually on rent for on this project.
+     *
+     * An active printer has no end date, so it is still running: count it up
+     * to today. A transfer records the handover date as this engagement's
+     * end_date AND as the next one's start_date, so the last day here belongs
+     * to the next project - counting it on both would report a one-day
+     * billing gap on every printer that has ever moved. A cancelled printer's
+     * end_date is genuinely its last day on rent, so that one is inclusive.
+     */
+    public function rentalWindow(): array
+    {
+        $end = $this->end_date;
+
+        if ($end && $this->status === 'transferred') {
+            $end = $end->copy()->subDay();
+        }
+
+        return [$this->start_date, $end ?? now()->startOfDay()];
+    }
+
+    /**
+     * The rental period as shown in the reports. Built from rentalWindow() so
+     * the dates on screen always agree with the day counts beside them.
+     */
+    public function rentalPeriodLabel(string $format = 'd M Y'): string
+    {
+        [$start, $end] = $this->rentalWindow();
+
+        return $start->format($format) . ' - ' . ($this->end_date ? $end->format($format) : 'ongoing');
     }
 
     /**

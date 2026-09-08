@@ -611,8 +611,11 @@
                                     <div class="d-flex justify-content-between align-items-center mb-20">
                                         <h5 class="mb-0">Rental Printers</h5>
                                         <div>
+                                            <a href="{{ route('printers.reports.project', $project->id) }}" class="btn btn-info btn-rounded mr-2">
+                                                Full Report &amp; Invoices
+                                            </a>
                                             <a href="{{ route('printers.index') }}" class="btn btn-secondary btn-rounded mr-2">
-                                                Printers Report
+                                                All Printers
                                             </a>
                                             <a href="{{ route('printers.create', $project->id) }}" class="btn btn-gradient-info btn-rounded">
                                                 Receive Printer

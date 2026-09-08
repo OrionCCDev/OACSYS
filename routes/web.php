@@ -222,10 +222,24 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         Route::get('/create/{project?}', [\App\Http\Controllers\PrinterController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
         Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
-        Route::get('/{printer}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show');
+
+        // Read-only reports. Declared above /{printer} so "reports" isn't
+        // matched as a printer id.
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/projects', [\App\Http\Controllers\PrinterReportController::class, 'projects'])->name('projects');
+            Route::get('/projects/{project}', [\App\Http\Controllers\PrinterReportController::class, 'project'])->name('project');
+            Route::get('/printer/{printer}', [\App\Http\Controllers\PrinterReportController::class, 'printer'])->name('printer')->withTrashed();
+        });
+
+        // withTrashed: a soft-deleted printer still has to open, otherwise the
+        // report's Deleted filter links nowhere and it can never be restored.
+        Route::get('/{printer}', [\App\Http\Controllers\PrinterController::class, 'show'])->name('show')->withTrashed();
         Route::get('/{printer}/edit', [\App\Http\Controllers\PrinterController::class, 'edit'])->name('edit');
         Route::put('/{printer}', [\App\Http\Controllers\PrinterController::class, 'update'])->name('update');
         Route::delete('/{printer}', [\App\Http\Controllers\PrinterController::class, 'destroy'])->name('destroy');
+        // Trashed-only, so these take a raw id rather than a bound model.
+        Route::put('/{printerId}/restore', [\App\Http\Controllers\PrinterController::class, 'restore'])->name('restore');
+        Route::delete('/{printerId}/force', [\App\Http\Controllers\PrinterController::class, 'forceDestroy'])->name('force-destroy');
         Route::put('/{printer}/delivery', [\App\Http\Controllers\PrinterController::class, 'updateDelivery'])->name('delivery');
         Route::post('/{printer}/transfer', [\App\Http\Controllers\PrinterController::class, 'transfer'])->name('transfer');
         Route::post('/{printer}/cancel', [\App\Http\Controllers\PrinterController::class, 'cancel'])->name('cancel');
