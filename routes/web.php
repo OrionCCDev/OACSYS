@@ -349,7 +349,7 @@ Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function (
     Route::get('/clearance/{clearance}/pdf', [ClearanceController::class, 'pdf'])->name('clearance.pdf');
     Route::get('/clearance/select/{id}/{type}', [ClearanceController::class, 'selectDevicesAndSimCards'])->name('clearance.devices');
     Route::post('/clearance/selected-devices-and-simcards', [ClearanceController::class, 'selectedDevicesAndSimCardsToMakeClearance'])->name('clearance.selectedDevicesAndSimCardsToMakeClearance');
-    Route::get('/receive/make/{devices?}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
+    Route::get('/receive/make/{devices}/{receiver_id}/{receiver_type}/{receive_id}/{rcv_id}/{simCards?}', [ReceiveController::class, 'make'])->name('receive.make');
     Route::get('/receive/{receive}/pdf', [ReceiveController::class, 'pdf'])->name('receive.pdf');
     Route::post('/up/receive/image/{id}', [ReceiveController::class, 'finish'])->name('receive.finish');
     Route::put('/transfer/employee', [ProjectController::class, 'transfer'])->name('employee.transfer');

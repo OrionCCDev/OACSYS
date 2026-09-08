@@ -270,7 +270,13 @@ class ReceiveController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function make($devices = null, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards = null)
+    // $devices carries no default: it is followed by required parameters, so PHP
+    // treated it as required anyway and only warned about the dead default. Its
+    // route segment is likewise required once compiled. $simCards defaults to
+    // 'none' rather than null because that is the value the caller sends for
+    // "no SIMs", and it is what the check below compares against - a null would
+    // fall through to explode(',', null).
+    public function make($devices, $receiver_id, $receiver_type, $receive_id, $rcv_id, $simCards = 'none')
     {
 
 
