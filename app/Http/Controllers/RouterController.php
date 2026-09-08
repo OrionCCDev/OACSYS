@@ -18,65 +18,63 @@ use Illuminate\Support\Str;
  */
 class RouterController extends Controller
 {
+    /**
+     * One row per SIM line, because that is what a "router" is on site: an
+     * internet unit with its own SIM. The same project can have several -
+     * one with the project manager, one in the client office, one with the
+     * consultant - and each is its own row, exactly as on the sheet.
+     */
     public function index(Request $request)
     {
-        $query = Router::with('simCards')->withCount('simCards');
+        $query = InternetSim::with(['router' => fn ($q) => $q->withTrashed()]);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('brand', 'like', "%{$search}%")
-                    ->orWhere('model', 'like', "%{$search}%")
-                    ->orWhere('serial_number', 'like', "%{$search}%")
-                    ->orWhere('isp_provider', 'like', "%{$search}%")
+                $q->where('sim_number', 'like', "%{$search}%")
+                    ->orWhere('sim_serial', 'like', "%{$search}%")
+                    ->orWhere('sim_provider', 'like', "%{$search}%")
+                    ->orWhere('account_name', 'like', "%{$search}%")
                     ->orWhere('account_site', 'like', "%{$search}%")
-                    ->orWhereHas('simCards', fn ($sq) => $sq->where('sim_number', 'like', "%{$search}%")
-                        ->orWhere('account_name', 'like', "%{$search}%"));
+                    ->orWhere('contract_no', 'like', "%{$search}%")
+                    ->orWhere('remark', 'like', "%{$search}%")
+                    ->orWhereHas('router', fn ($rq) => $rq->withTrashed()
+                        ->where(fn ($w) => $w->where('serial_number', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%")));
             });
         }
 
-        // "deleted" is not a status value - it selects a different set of rows.
-        $status = $request->input('status', 'all');
-        if ($status === 'deleted') {
+        if ($request->filled('provider')) {
+            $query->where('sim_provider', $request->input('provider'));
+        }
+
+        // "deleted" selects a different set of rows, not a line state.
+        $line = $request->input('line', 'all');
+        if ($line === 'deleted') {
             $query->onlyTrashed();
-        } elseif ($status !== 'all') {
-            $query->where('status', $status);
+        } elseif ($line === 'active') {
+            $query->where('line_active', true);
+        } elseif ($line === 'inactive') {
+            $query->where('line_active', false);
         }
 
-        // Entry order is sheet order, so the list reads like the sheet it came
-        // from. 50 a page keeps every router on one screen for a long while.
-        $routers = $query->orderBy('id')->paginate(50)->withQueryString();
+        // Entry order is sheet order, so this reads like the sheet; 50 a page
+        // keeps the whole thing on one screen for a long while.
+        $units = $query->orderBy('id')->paginate(50)->withQueryString();
 
-        // The sheet has SIM lines that sit in no router at all - roughly half
-        // of them. Someone looking for "all the SIMs" on this page would
-        // otherwise never see those, so they get their own table underneath.
-        $unfitted = collect();
-        if ($status !== 'deleted') {
-            $unfittedQuery = InternetSim::whereNull('router_id');
-            if ($request->filled('search')) {
-                $search = $request->input('search');
-                $unfittedQuery->where(function ($q) use ($search) {
-                    $q->where('sim_number', 'like', "%{$search}%")
-                        ->orWhere('sim_provider', 'like', "%{$search}%")
-                        ->orWhere('account_name', 'like', "%{$search}%")
-                        ->orWhere('account_site', 'like', "%{$search}%")
-                        ->orWhere('remark', 'like', "%{$search}%");
-                });
-            }
-            if ($status === 'active') {
-                $unfittedQuery->where('line_active', true);
-            }
-            $unfitted = $unfittedQuery->orderBy('id')->get();
-        }
+        $providers = InternetSim::select('sim_provider')->distinct()->orderBy('sim_provider')->pluck('sim_provider');
+
+        // Soft-deleted routers are only reachable from here, so keep a way
+        // back to them.
+        $deletedRouters = Router::onlyTrashed()->orderBy('id')->get();
 
         $totals = [
-            'routers' => Router::count(),
-            'lines' => InternetSim::count(),
-            'unfitted' => InternetSim::whereNull('router_id')->count(),
+            'units' => InternetSim::count(),
+            'active' => InternetSim::where('line_active', true)->count(),
+            'sites' => InternetSim::whereNotNull('account_site')->distinct()->count('account_site'),
         ];
 
-        return view('routers.index', compact('routers', 'unfitted', 'totals'));
+        return view('routers.index', compact('units', 'providers', 'deletedRouters', 'totals'));
     }
 
     public function create()

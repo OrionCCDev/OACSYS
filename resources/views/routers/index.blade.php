@@ -7,11 +7,11 @@
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Routers</h2>
                 <p>
-                    Every router we track, where it is, and which SIM is fitted in it.
-                    SIM lines that are not in any router are listed underneath, so the whole sheet is on this page.
-                    <span class="text-muted">
-                        {{ $totals['routers'] }} routers &middot; {{ $totals['lines'] }} SIM lines,
-                        {{ $totals['unfitted'] }} of them with no router.
+                    Every internet unit on site, one row per SIM line, in the order of the sheet.
+                    A project can have several: with the project manager, in the client office, with the consultant -
+                    the <strong>Held by</strong> column says which.
+                    <span class="text-muted d-block">
+                        {{ $totals['units'] }} units &middot; {{ $totals['active'] }} active &middot; {{ $totals['sites'] }} sites
                     </span>
                 </p>
             </div>
@@ -30,21 +30,29 @@
                         <form method="GET" action="{{ route('routers.index') }}" class="form-inline mb-20">
                             <div class="input-group mb-2 mr-2">
                                 <div class="input-group-prepend"><div class="input-group-text">Search</div></div>
-                                <input type="text" name="search" class="form-control" placeholder="Name, serial, ISP, site, SIM number, owner" value="{{ request('search') }}">
+                                <input type="text" name="search" class="form-control" style="min-width:280px"
+                                       placeholder="SIM number, router S/N, site, account, held by" value="{{ request('search') }}">
                             </div>
                             <div class="input-group mb-2 mr-2">
-                                <div class="input-group-prepend"><div class="input-group-text">Status</div></div>
-                                <select name="status" class="form-control">
-                                    <option value="all" {{ request('status', 'all') == 'all' ? 'selected' : '' }}>All</option>
-                                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                                    <option value="in-stock" {{ request('status') == 'in-stock' ? 'selected' : '' }}>In Stock</option>
-                                    <option value="faulty" {{ request('status') == 'faulty' ? 'selected' : '' }}>Faulty</option>
-                                    <option value="retired" {{ request('status') == 'retired' ? 'selected' : '' }}>Retired</option>
-                                    <option value="deleted" {{ request('status') == 'deleted' ? 'selected' : '' }}>Deleted</option>
+                                <div class="input-group-prepend"><div class="input-group-text">Provider</div></div>
+                                <select name="provider" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach($providers as $p)
+                                    <option value="{{ $p }}" {{ request('provider') == $p ? 'selected' : '' }}>{{ $p }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="input-group mb-2 mr-2">
+                                <div class="input-group-prepend"><div class="input-group-text">Line</div></div>
+                                <select name="line" class="form-control">
+                                    <option value="all" {{ request('line', 'all') == 'all' ? 'selected' : '' }}>All</option>
+                                    <option value="active" {{ request('line') == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ request('line') == 'inactive' ? 'selected' : '' }}>Not active</option>
+                                    <option value="deleted" {{ request('line') == 'deleted' ? 'selected' : '' }}>Deleted</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary mb-2">Filter</button>
-                            @if(request('search') || request('status'))
+                            @if(request('search') || request('provider') || (request('line') && request('line') !== 'all'))
                             <a href="{{ route('routers.index') }}" class="btn btn-secondary mb-2 ml-2">Clear</a>
                             @endif
                         </form>
@@ -53,105 +61,99 @@
                             <table class="table table-hover table-bordered">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Router</th>
+                                        <th>#</th>
                                         <th>SIM Number</th>
-                                        <th>ISP Provider</th>
+                                        <th>Provider</th>
                                         <th>Account Site</th>
-                                        <th class="text-center">SIMs</th>
-                                        <th>Status</th>
+                                        <th>Held by</th>
+                                        <th>Account Name</th>
+                                        <th>Router S/N</th>
+                                        <th class="text-center">Line</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($routers as $router)
+                                    @forelse($units as $unit)
                                     <tr>
-                                        <td>
-                                            {{ $router->name }}
-                                            {{-- imported routers are named by their serial; only repeat it when it differs --}}
-                                            @if($router->serial_number && $router->serial_number !== $router->name)
-                                                <small class="text-muted d-block">S/N {{ $router->serial_number }}</small>
+                                        <td class="text-muted">{{ $units->firstItem() + $loop->index }}</td>
+                                        <td style="font-family:Consolas,monospace">{{ $unit->sim_number }}</td>
+                                        <td>{{ $unit->sim_provider }}</td>
+                                        <td>{{ $unit->siteLabel() }}</td>
+                                        <td>{{ $unit->remark ?? '-' }}</td>
+                                        <td>{{ $unit->account_name ?? '-' }}</td>
+                                        <td style="font-family:Consolas,monospace">
+                                            @if($unit->router)
+                                                <a href="{{ route('routers.show', $unit->router->id) }}">{{ $unit->router->serial_number ?? $unit->router->name }}</a>
+                                                @if($unit->router->trashed())
+                                                    <span class="badge badge-dark">deleted</span>
+                                                @endif
+                                            @else
+                                                <span class="text-muted">-</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            @forelse($router->simCards as $sim)
-                                                <div style="font-family:Consolas,monospace">{{ $sim->sim_number }}</div>
-                                            @empty
-                                                <span class="text-muted">no SIM</span>
-                                            @endforelse
-                                        </td>
-                                        <td>{{ $router->isp_provider ?? '-' }}</td>
-                                        <td>{{ $router->siteLabel() }}</td>
-                                        <td class="text-center">{{ $router->sim_cards_count }}</td>
-                                        <td>
-                                            <span class="badge {{ ['active' => 'badge-success', 'in-stock' => 'badge-info', 'faulty' => 'badge-warning', 'retired' => 'badge-secondary'][$router->status] ?? 'badge-secondary' }}">
-                                                {{ $router->status }}
-                                            </span>
-                                            @if($router->trashed())
+                                        <td class="text-center">
+                                            <span class="badge {{ $unit->line_active ? 'badge-success' : 'badge-danger' }}">{{ $unit->lineStatusLabel() }}</span>
+                                            @if($unit->trashed())
                                                 <span class="badge badge-dark">deleted</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            @if($router->trashed())
-                                                <form action="{{ route('routers.restore', $router->id) }}" method="POST" style="display:inline">
+                                        <td class="text-nowrap">
+                                            @if($unit->trashed())
+                                                <form action="{{ route('internet-sims.restore', $unit->id) }}" method="POST" style="display:inline">
                                                     @csrf
                                                     @method('PUT')
                                                     <button type="submit" class="btn btn-sm btn-success">Restore</button>
                                                 </form>
-                                                <form action="{{ route('routers.force-destroy', $router->id) }}" method="POST" style="display:inline"
-                                                      onsubmit="return confirm('Permanently delete this router? Any SIM fitted in it will be unpaired. This cannot be undone.')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">Delete Forever</button>
-                                                </form>
                                             @else
-                                                <a href="{{ route('routers.show', $router->id) }}" class="btn btn-sm btn-info">View</a>
-                                                <a href="{{ route('routers.edit', $router->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                                @if($unit->router && !$unit->router->trashed())
+                                                    <a href="{{ route('routers.show', $unit->router->id) }}" class="btn btn-sm btn-info">View</a>
+                                                @endif
+                                                <a href="{{ route('internet-sims.edit', $unit->id) }}" class="btn btn-sm btn-primary">Edit</a>
                                             @endif
                                         </td>
                                     </tr>
                                     @empty
-                                    <tr><td colspan="7" class="text-center">No routers found.</td></tr>
+                                    <tr><td colspan="9" class="text-center">No units found.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
 
-                        {{ $routers->links() }}
+                        {{ $units->links() }}
                     </section>
 
-                    @if($unfitted->isNotEmpty())
+                    @if($deletedRouters->isNotEmpty())
                     <section class="hk-sec-wrapper">
-                        <h5 class="hk-sec-title">SIM lines with no router ({{ $unfitted->count() }})</h5>
-                        <p class="mb-20">
-                            These lines are on the monthly report but are not fitted in a router we track -
-                            cameras, phones, spares. To put one in a router, edit it and pick the router.
-                        </p>
+                        <h5 class="hk-sec-title">Deleted routers ({{ $deletedRouters->count() }})</h5>
+                        <p class="mb-20">Router records that were deleted. Restore one to bring it back with its SIM pairing.</p>
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
+                            <table class="table table-bordered">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>SIM Number</th>
-                                        <th>ISP Provider</th>
-                                        <th>Account Name</th>
+                                        <th>Router</th>
+                                        <th>Router S/N</th>
                                         <th>Account Site</th>
-                                        <th>Remark</th>
-                                        <th>Line</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($unfitted as $sim)
+                                    @foreach($deletedRouters as $router)
                                     <tr>
-                                        <td style="font-family:Consolas,monospace">{{ $sim->sim_number }}</td>
-                                        <td>{{ $sim->sim_provider }}</td>
-                                        <td>{{ $sim->account_name ?? '-' }}</td>
-                                        <td>{{ $sim->siteLabel() }}</td>
-                                        <td>{{ $sim->remark ?? '-' }}</td>
-                                        <td>
-                                            <span class="badge {{ $sim->line_active ? 'badge-success' : 'badge-danger' }}">{{ $sim->lineStatusLabel() }}</span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('internet-sims.edit', $sim->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        <td>{{ $router->name }}</td>
+                                        <td style="font-family:Consolas,monospace">{{ $router->serial_number ?? '-' }}</td>
+                                        <td>{{ $router->siteLabel() }}</td>
+                                        <td class="text-nowrap">
+                                            <form action="{{ route('routers.restore', $router->id) }}" method="POST" style="display:inline">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-sm btn-success">Restore</button>
+                                            </form>
+                                            <form action="{{ route('routers.force-destroy', $router->id) }}" method="POST" style="display:inline"
+                                                  onsubmit="return confirm('Permanently delete this router? Any SIM fitted in it will be unpaired. This cannot be undone.')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">Delete Forever</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     @endforeach
