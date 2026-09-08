@@ -6,7 +6,14 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Routers</h2>
-                <p>Every router we track, where it is, and how many SIM cards are fitted in it.</p>
+                <p>
+                    Every router we track, where it is, and which SIM is fitted in it.
+                    SIM lines that are not in any router are listed underneath, so the whole sheet is on this page.
+                    <span class="text-muted">
+                        {{ $totals['routers'] }} routers &middot; {{ $totals['lines'] }} SIM lines,
+                        {{ $totals['unfitted'] }} of them with no router.
+                    </span>
+                </p>
             </div>
             <div>
                 <a href="{{ route('internet-sims.index') }}" class="btn btn-secondary mr-2">Internet SIMs</a>
@@ -111,6 +118,48 @@
 
                         {{ $routers->links() }}
                     </section>
+
+                    @if($unfitted->isNotEmpty())
+                    <section class="hk-sec-wrapper">
+                        <h5 class="hk-sec-title">SIM lines with no router ({{ $unfitted->count() }})</h5>
+                        <p class="mb-20">
+                            These lines are on the monthly report but are not fitted in a router we track -
+                            cameras, phones, spares. To put one in a router, edit it and pick the router.
+                        </p>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>SIM Number</th>
+                                        <th>ISP Provider</th>
+                                        <th>Account Name</th>
+                                        <th>Account Site</th>
+                                        <th>Remark</th>
+                                        <th>Line</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($unfitted as $sim)
+                                    <tr>
+                                        <td style="font-family:Consolas,monospace">{{ $sim->sim_number }}</td>
+                                        <td>{{ $sim->sim_provider }}</td>
+                                        <td>{{ $sim->account_name ?? '-' }}</td>
+                                        <td>{{ $sim->siteLabel() }}</td>
+                                        <td>{{ $sim->remark ?? '-' }}</td>
+                                        <td>
+                                            <span class="badge {{ $sim->line_active ? 'badge-success' : 'badge-danger' }}">{{ $sim->lineStatusLabel() }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('internet-sims.edit', $sim->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    @endif
                 </div>
             </div>
         </div>

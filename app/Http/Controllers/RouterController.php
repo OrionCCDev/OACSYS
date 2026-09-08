@@ -44,9 +44,39 @@ class RouterController extends Controller
             $query->where('status', $status);
         }
 
-        $routers = $query->orderByDesc('id')->paginate(15)->withQueryString();
+        // Entry order is sheet order, so the list reads like the sheet it came
+        // from. 50 a page keeps every router on one screen for a long while.
+        $routers = $query->orderBy('id')->paginate(50)->withQueryString();
 
-        return view('routers.index', compact('routers'));
+        // The sheet has SIM lines that sit in no router at all - roughly half
+        // of them. Someone looking for "all the SIMs" on this page would
+        // otherwise never see those, so they get their own table underneath.
+        $unfitted = collect();
+        if ($status !== 'deleted') {
+            $unfittedQuery = InternetSim::whereNull('router_id');
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+                $unfittedQuery->where(function ($q) use ($search) {
+                    $q->where('sim_number', 'like', "%{$search}%")
+                        ->orWhere('sim_provider', 'like', "%{$search}%")
+                        ->orWhere('account_name', 'like', "%{$search}%")
+                        ->orWhere('account_site', 'like', "%{$search}%")
+                        ->orWhere('remark', 'like', "%{$search}%");
+                });
+            }
+            if ($status === 'active') {
+                $unfittedQuery->where('line_active', true);
+            }
+            $unfitted = $unfittedQuery->orderBy('id')->get();
+        }
+
+        $totals = [
+            'routers' => Router::count(),
+            'lines' => InternetSim::count(),
+            'unfitted' => InternetSim::whereNull('router_id')->count(),
+        ];
+
+        return view('routers.index', compact('routers', 'unfitted', 'totals'));
     }
 
     public function create()
