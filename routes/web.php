@@ -221,6 +221,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         // coming from a project's own page (which pre-selects it).
         Route::get('/create/{project?}', [\App\Http\Controllers\PrinterController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\PrinterController::class, 'store'])->name('store');
+        Route::put('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'updateInvoice'])->name('invoices.update');
         Route::delete('/invoices/{invoice}', [\App\Http\Controllers\PrinterController::class, 'destroyInvoice'])->name('invoices.destroy');
 
         // Read-only reports. Declared above /{printer} so "reports" isn't

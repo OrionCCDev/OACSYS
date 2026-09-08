@@ -163,11 +163,16 @@
                                         </td>
                                         <td>
                                             @unless($printer->trashed())
-                                            <form action="{{ route('printers.invoices.destroy', $invoice->id) }}" method="POST" onsubmit="return confirm('Delete this invoice?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                            </form>
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-sm btn-outline-primary mr-1"
+                                                        data-toggle="modal" data-target="#editInvoiceModal{{ $invoice->id }}">Edit</button>
+                                                <form action="{{ route('printers.invoices.destroy', $invoice->id) }}" method="POST"
+                                                      onsubmit="return confirm('Delete invoice {{ $invoice->num }} and its document? This cannot be undone.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                </form>
+                                            </div>
                                             @endunless
                                         </td>
                                     </tr>
@@ -340,6 +345,63 @@
 @endif
 
 <!-- Add Invoice Modal -->
+@unless($printer->trashed())
+@foreach($printer->invoices as $invoice)
+<div class="modal fade" id="editInvoiceModal{{ $invoice->id }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <form action="{{ route('printers.invoices.update', $invoice->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Invoice {{ $invoice->num }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Invoice Number</label>
+                        <input type="text" name="num" class="form-control" value="{{ $invoice->num }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Released Date</label>
+                        <input type="date" name="released_date" class="form-control" value="{{ $invoice->released_date?->format('Y-m-d') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Period Start</label>
+                        <input type="date" name="start_date" class="form-control" value="{{ $invoice->start_date->format('Y-m-d') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Period End</label>
+                        <input type="date" name="end_date" class="form-control" value="{{ $invoice->end_date->format('Y-m-d') }}" required>
+                    </div>
+                    <small class="form-text text-muted mb-2 d-block">These dates drive the billing coverage on the reports, so a wrong period shows up there as a gap or a double-billing.</small>
+                    <div class="form-group">
+                        <label>Payment Term</label>
+                        <input type="text" name="payment_term" class="form-control" value="{{ $invoice->payment_term }}" placeholder="e.g. Net 30">
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Document</label>
+                        <input type="file" name="invoice_document" class="form-control" accept="image/*,application/pdf">
+                        <small class="form-text text-muted">
+                            @if($invoice->invoice_document)
+                                <a href="{{ asset('X-Files/Dash/imgs/printers/invoices/' . $invoice->invoice_document) }}" target="_blank">Current document</a> &mdash; choose a file to replace it.
+                            @else
+                                No document uploaded yet.
+                            @endif
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+@endunless
+
 <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">

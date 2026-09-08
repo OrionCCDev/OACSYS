@@ -359,12 +359,72 @@ class PrinterController extends Controller
         return redirect()->route('printers.show', $printer->id)->with('success', 'Invoice added.');
     }
 
+    /**
+     * Correct an invoice in place. Its dates are what the billing-coverage
+     * reports read, so a mistyped period shows up there as a false gap or a
+     * false double-billing - fixing that shouldn't cost you the attached
+     * document, which is what deleting and re-adding used to mean.
+     */
+    public function updateInvoice(Request $request, Invoice $invoice)
+    {
+        if ($this->invoiceLocked($invoice)) {
+            return redirect()->route('printers.show', $invoice->printer_id)
+                ->with('error', 'This printer is deleted. Restore it before changing its invoices.');
+        }
+
+        $validated = $request->validate([
+            'num' => 'required|string|max:255',
+            'released_date' => 'required|date',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'payment_term' => 'nullable|string|max:255',
+            'invoice_document' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:4096',
+        ]);
+
+        $invoice->update([
+            'num' => $validated['num'],
+            'released_date' => $validated['released_date'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'payment_term' => $validated['payment_term'] ?? null,
+        ]);
+
+        // Replace the document only when a new one is supplied, and clear the
+        // old file so replacements don't pile up on disk.
+        if ($request->hasFile('invoice_document')) {
+            $old = $invoice->invoice_document;
+            $invoice->update(['invoice_document' => $this->storeUpload($request->file('invoice_document'), 'printers/invoices')]);
+            $this->deleteUpload($old, 'printers/invoices');
+        }
+
+        return redirect()->route('printers.show', $invoice->printer_id)->with('success', 'Invoice updated.');
+    }
+
     public function destroyInvoice(Invoice $invoice)
     {
+        if ($this->invoiceLocked($invoice)) {
+            return redirect()->route('printers.show', $invoice->printer_id)
+                ->with('error', 'This printer is deleted. Restore it before changing its invoices.');
+        }
+
         $printerId = $invoice->printer_id;
+
+        // The row goes, so its document has to go with it - nothing will ever
+        // reference the file again.
+        $this->deleteUpload($invoice->invoice_document, 'printers/invoices');
         $invoice->delete();
 
         return redirect()->route('printers.show', $printerId)->with('success', 'Invoice removed.');
+    }
+
+    /**
+     * Invoices bind by their own id, so unlike the printer routes they stay
+     * reachable when their printer is soft-deleted. A deleted printer is
+     * read-only, so its invoices are too.
+     */
+    private function invoiceLocked(Invoice $invoice): bool
+    {
+        return Printer::withTrashed()->find($invoice->printer_id)?->trashed() ?? false;
     }
 
     /**
