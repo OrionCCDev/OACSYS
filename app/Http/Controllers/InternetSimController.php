@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\InternetSim;
 use App\Models\Router;
+use App\Support\InternetSimSheetImporter;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -103,6 +105,40 @@ class InternetSimController extends Controller
 
         return redirect()->route('internet-sims.index', ['line' => 'deleted'])
             ->with('success', 'Internet SIM permanently deleted.');
+    }
+
+    /**
+     * Load a month's sheet.
+     *
+     * Safe to run again: a line is matched on its SIM S/N (or number plus
+     * site when the sheet has none) and updated rather than duplicated, so a
+     * corrected sheet can simply be uploaded again.
+     *
+     * "Recorded from" back-dates the rows so they appear on that month's
+     * report and every month after it.
+     */
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'sheet' => 'required|file|mimes:xlsx,xls|max:4096',
+            'recorded_from' => 'nullable|date_format:Y-m',
+        ]);
+
+        $recordedAt = $validated['recorded_from'] ?? null
+            ? Carbon::createFromFormat('Y-m', $validated['recorded_from'])->startOfMonth()
+            : Carbon::now();
+
+        try {
+            $importer = (new InternetSimSheetImporter)
+                ->import($request->file('sheet')->getRealPath(), $recordedAt);
+        } catch (\Throwable $e) {
+            return redirect()->route('internet-sims.index')
+                ->with('error', 'Could not read that sheet: ' . $e->getMessage());
+        }
+
+        return redirect()->route('internet-sims.index')
+            ->with('success', $importer->summary())
+            ->with('import_warnings', $importer->warnings);
     }
 
     private function validateSim(Request $request, ?int $ignoreId = null): array

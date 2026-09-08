@@ -233,6 +233,7 @@ Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
         // Literals before /{internetSim}, or "create" binds as an id.
         Route::get('/create', [\App\Http\Controllers\InternetSimController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\InternetSimController::class, 'store'])->name('store');
+        Route::post('/import', [\App\Http\Controllers\InternetSimController::class, 'import'])->name('import');
         Route::get('/{internetSim}/edit', [\App\Http\Controllers\InternetSimController::class, 'edit'])->name('edit');
         Route::put('/{internetSim}', [\App\Http\Controllers\InternetSimController::class, 'update'])->name('update');
         Route::delete('/{internetSim}', [\App\Http\Controllers\InternetSimController::class, 'destroy'])->name('destroy');
