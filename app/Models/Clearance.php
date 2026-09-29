@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Clearance extends Model
 {
+    use \App\Models\Concerns\ForceClosable;
+
     protected $guarded = [];
 
 

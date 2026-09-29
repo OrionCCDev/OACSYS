@@ -96,6 +96,7 @@
                         </div>
                         @include('partials.uploaded-document', [
                             'file' => $clearance->clear_image,
+                            'record' => $clearance,
                             'dir' => 'clearance',
                             'name' => 'clearance-' . $clearance->clear_code,
                             'title' => 'Signed Clearance',
@@ -135,6 +136,7 @@
                             <button type="submit" class="btn btn-danger">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Clearance
                             </button>
+                            @include('partials.force-close', ['what' => 'clearance'])
                         </form>
                     @endif
                 </section>
@@ -152,6 +154,7 @@
                         </div>
                         @include('partials.uploaded-document', [
                             'file' => $receive->receive_image,
+                            'record' => $receive,
                             'dir' => 'receives',
                             'name' => 'receiving-' . $receive->code,
                             'title' => 'Signed Receiving',
@@ -191,6 +194,7 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="fa fa-upload"></i> Upload &amp; Sign Receive
                             </button>
+                            @include('partials.force-close', ['what' => 'receive'])
                         </form>
                     @endif
                 </section>

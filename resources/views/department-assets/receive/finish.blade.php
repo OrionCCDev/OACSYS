@@ -16,6 +16,7 @@
                 <section class="hk-sec-wrapper">
                     @include('partials.uploaded-document', [
                         'file' => $receive->receive_image,
+                        'record' => $receive,
                         'dir' => 'receives',
                         'name' => 'receiving-' . $receive->code,
                         'title' => 'Signed Receiving',
@@ -128,6 +129,7 @@
                                                 <i class="fa fa-check"></i> Complete Receive
                                             </button>
                                         </div>
+                                        @include('partials.force-close', ['what' => 'receive'])
                                     </form>
                                 </div>
                             </div>

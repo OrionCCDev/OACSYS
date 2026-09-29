@@ -8,6 +8,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Receive extends Model implements HasMedia
 {
+    use \App\Models\Concerns\ForceClosable;
+
     use InteractsWithMedia;
     protected $guarded = [];
 

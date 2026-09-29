@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ClosesWithoutDocument;
 use App\Models\Device;
 use App\Models\Project;
 use App\Models\SimCard;
@@ -18,6 +19,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClearanceController extends Controller
 {
+    use ClosesWithoutDocument;
+
     /**
      * Display a listing of the resource.
      */
@@ -170,24 +173,12 @@ class ClearanceController extends Controller
 
     public function uploadSignature(Request $request, $id)
     {
-        $request->validate([
-            'signature' => 'required|mimes:jpeg,png,jpg,pdf|max:2048'
-        ]);
+        $forced = $this->validateClosing($request, 'signature', 'jpeg,png,jpg,pdf');
 
         $clearance = Clearance::with(['devices', 'simCards'])->findOrFail($id);
 
-        if ($request->hasFile('signature')) {
-
-            $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->signature->extension();
-
-            $destinationPath = public_path('X-Files/Dash/imgs/clearance');
-            $request->signature->move($destinationPath, $imageName);
-
-            // Update clearance with signature path
-            $clearance->clear_image = $imageName;
-            $clearance->status = 'finished';
-
-            $clearance->save();
+        if ($forced || $request->hasFile('signature')) {
+            $clearance->forceFill($this->closingAttributes($request, $forced, 'signature', 'clear_image', 'clearance', 'finished'))->save();
             foreach ($clearance->devices as $device) {
                 $device->update([
                     'employee_id' => null,
@@ -213,7 +204,9 @@ class ClearanceController extends Controller
             ->with('swal', [
                 'icon' => 'success',
                 'title' => 'Success!',
-                'text' => 'Signature uploaded successfully'
+                'text' => $clearance->wasForceClosed()
+                    ? 'Clearance closed without a signed document'
+                    : 'Signature uploaded successfully'
             ]);
     }
     /**

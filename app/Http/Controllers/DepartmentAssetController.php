@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ClosesWithoutDocument;
 use App\Models\Device;
 use App\Models\Receive;
 use App\Models\SimCard;
@@ -15,6 +16,8 @@ use App\Models\DeviceAndSimClearance;
 
 class DepartmentAssetController extends Controller
 {
+    use ClosesWithoutDocument;
+
     /**
      * Display all departments with their assets
      */
@@ -181,22 +184,13 @@ class DepartmentAssetController extends Controller
      */
     public function completeReceive(Request $request, $receiveId)
     {
-        $request->validate([
-            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'receiving_signature', 'jpeg,png,jpg,svg,pdf');
 
-        return DB::transaction(function () use ($request, $receiveId) {
+        return DB::transaction(function () use ($request, $receiveId, $forced) {
             $receive = Receive::findOrFail($receiveId);
 
-            if ($request->hasFile('receiving_signature')) {
-                $image = $request->file('receiving_signature');
-                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
-
-                $receive->receive_image = $imageName;
-                $receive->status = 'received';
-                $receive->save();
-            }
+            // The signed paper, or the note that it was closed without one.
+            $receive->forceFill($this->closingAttributes($request, $forced, 'receiving_signature', 'receive_image', 'receives', 'received'))->save();
 
             $records = DeviceAndSimReceive::where('receive_id', $receiveId)->get();
 
@@ -215,7 +209,7 @@ class DepartmentAssetController extends Controller
             }
 
             return redirect()->route('department-assets.show', $receive->department_id)
-                ->with('success', 'Assets received successfully!');
+                ->with('success', $receive->wasForceClosed() ? 'Closed without a signed document.' : 'Assets received successfully!');
         });
     }
 
@@ -344,23 +338,14 @@ class DepartmentAssetController extends Controller
      */
     public function completeClearance(Request $request, $clearanceId)
     {
-        $request->validate([
-            'clearing_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'clearing_signature', 'jpeg,png,jpg,svg,pdf');
 
-        return DB::transaction(function () use ($request, $clearanceId) {
+        return DB::transaction(function () use ($request, $clearanceId, $forced) {
             $clearance = Clearance::findOrFail($clearanceId);
             $departmentId = $clearance->department_id;
 
-            if ($request->hasFile('clearing_signature')) {
-                $image = $request->file('clearing_signature');
-                $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('X-Files/Dash/imgs/clearance'), $imageName);
-
-                $clearance->clear_image = $imageName;
-                $clearance->status = 'finished';
-                $clearance->save();
-            }
+            // The signed paper, or the note that it was closed without one.
+            $clearance->forceFill($this->closingAttributes($request, $forced, 'clearing_signature', 'clear_image', 'clearance', 'finished'))->save();
 
             $deviceRecords = DeviceAndSimClearance::where('clearance_id', $clearanceId)
                 ->whereNotNull('device_id')
@@ -392,7 +377,7 @@ class DepartmentAssetController extends Controller
             }
 
             return redirect()->route('department-assets.show', $departmentId)
-                ->with('success', 'Assets cleared successfully!');
+                ->with('success', $clearance->wasForceClosed() ? 'Closed without a signed document.' : 'Assets cleared successfully!');
         });
     }
 

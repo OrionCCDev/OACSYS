@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ClosesWithoutDocument;
 use App\Models\Device;
 use App\Models\Project;
 use App\Models\Receive;
@@ -18,6 +19,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReceiveController extends Controller
 {
+    use ClosesWithoutDocument;
+
     /**
      * Display a listing of the resource.
      */
@@ -181,38 +184,28 @@ class ReceiveController extends Controller
      */
     public function finishRproject(Request $request, $id)
     {
-        $request->validate([
-            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
+        $forced = $this->validateClosing($request, 'receiving_signature', 'jpeg,png,jpg,svg,pdf', [
             'devices' => 'required|json',
         ]);
 
         // Get the receive record
         $receive = Receive::findOrFail($id);
 
-        // Process the image
-        if ($request->hasFile('receiving_signature')) {
-            $image = $request->file('receiving_signature');
-            $imageName = \Illuminate\Support\Str::uuid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
+        $receive->forceFill($this->closingAttributes($request, $forced, 'receiving_signature', 'receive_image', 'receives', 'received'))->save();
 
-            $receive->receive_image = $imageName;
-            $receive->status = 'received';
-            $receive->save();
-
-            // Update all devices in the JSON to 'In-Project-Site' status
-            $devices = json_decode($request->devices);
-            foreach ($devices as $device) {
-                Device::where('id', $device->id)
-                    ->update([
-                        'status' => 'In-Project-Site',
-                    ]);
-            }
-
-            return redirect()->route('project.details', $receive->project_id)
-                ->with('success', 'Devices received successfully!');
+        // Update all devices in the JSON to 'In-Project-Site' status
+        $devices = json_decode($request->devices);
+        foreach ($devices as $device) {
+            Device::where('id', $device->id)
+                ->update([
+                    'status' => 'In-Project-Site',
+                ]);
         }
 
-        return back()->with('error', 'Error uploading signature.');
+        return redirect()->route('project.details', $receive->project_id)
+            ->with('success', $receive->wasForceClosed()
+                ? 'Receive closed without a signed document.'
+                : 'Devices received successfully!');
     }
 
     /**
@@ -387,9 +380,7 @@ class ReceiveController extends Controller
      */
     public function finish($receive, Request $request)
     {
-        $request->validate([
-            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'receiving_signature', 'jpeg,png,jpg,svg,pdf');
         $rcv = Receive::findOrFail($receive);
         $devices = json_decode($request->devices);
 
@@ -408,13 +399,12 @@ class ReceiveController extends Controller
             }
         }
 
-        $imageName = \Illuminate\Support\Str::uuid() . '.' . $request->receiving_signature->extension();
-        $destinationPath = public_path('X-Files/Dash/imgs/receives');
-        $request->receiving_signature->move($destinationPath, $imageName);
-        $rcv->receive_image = $imageName;
-        $rcv->status = 'received';
-        $rcv->save();
-        return redirect()->route('receive.index')->with('success', 'Receive updated successfully.');
+        $rcv->forceFill($this->closingAttributes($request, $forced, 'receiving_signature', 'receive_image', 'receives', 'received'))->save();
+
+        return redirect()->route('receive.index')->with(
+            'success',
+            $rcv->wasForceClosed() ? 'Receive closed without a signed document.' : 'Receive updated successfully.'
+        );
     }
     /**
      * Show the form for editing the specified resource.

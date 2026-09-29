@@ -72,6 +72,7 @@
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Upload</button>
                             </div>
+                            @include('partials.force-close', ['what' => 'receive'])
                         </form>
                     </div>
                 </div>
@@ -93,6 +94,7 @@
             <div class="col-xl-12">
                 @include('partials.uploaded-document', [
                     'file' => $receive->receive_image,
+                    'record' => $receive,
                     'dir' => 'receives',
                     'name' => 'receiving-' . $receive->code,
                     'title' => 'Signed Receiving',

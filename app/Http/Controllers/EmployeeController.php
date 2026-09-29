@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ClosesWithoutDocument;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -22,6 +23,8 @@ use App\Support\PdfFonts;
 
 class EmployeeController extends Controller
 {
+    use ClosesWithoutDocument;
+
     /**
      * Display a listing of the resource.
      */
@@ -313,9 +316,7 @@ class EmployeeController extends Controller
 
     public function finishResign($id, $clr, Request $request)
     {
-        $request->validate([
-            'signature' => 'required|mimes:png,jpg,jpeg,webp,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'signature', 'png,jpg,jpeg,webp,pdf');
         $employee = Employee::with('devices', 'sim_card')->findOrFail($id);
         $finalClearance = Clearance::findOrFail($clr);
 
@@ -323,18 +324,12 @@ class EmployeeController extends Controller
             abort(403, 'This clearance does not belong to this employee.');
         }
 
-        if (!$request->hasFile('signature')) {
+        if (!$forced && !$request->hasFile('signature')) {
             return back()->with('error', 'A signature file is required to finish this resignation.');
         }
 
-        DB::transaction(function () use ($request, $employee, $finalClearance) {
-            $signature = $request->file('signature');
-            $signatureName = \Illuminate\Support\Str::uuid() . '.' . $signature->getClientOriginalExtension();
-            $signature->move(public_path('X-Files/Dash/imgs/clearance'), $signatureName);
-            $finalClearance->update([
-                'clear_image' => $signatureName,
-                'status' => 'resigned',
-            ]);
+        DB::transaction(function () use ($request, $employee, $finalClearance, $forced) {
+            $finalClearance->forceFill($this->closingAttributes($request, $forced, 'signature', 'clear_image', 'clearance', 'resigned'))->save();
 
             $employee->update([
                 'resign_date' => now(),
@@ -368,7 +363,10 @@ class EmployeeController extends Controller
             );
         }
 
-        return to_route('employees.index')->with('success', 'Resignation completed.');
+        return to_route('employees.index')->with(
+            'success',
+            $finalClearance->wasForceClosed() ? 'Resignation completed without a signed document.' : 'Resignation completed.'
+        );
     }
 
     /**

@@ -62,6 +62,9 @@
                                     @if ($recv->status == 'received')
 
                                         <span class="badge badge-success mt-15">{{ $recv->status }}</span>
+                                        @if ($recv->wasForceClosed())
+                                        <span class="badge badge-warning mt-15" title="Closed without a signed document">no document</span>
+                                        @endif
 
                                     @else
 

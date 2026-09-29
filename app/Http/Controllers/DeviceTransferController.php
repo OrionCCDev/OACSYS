@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ClosesWithoutDocument;
 use App\Models\Clearance;
 use App\Models\Device;
 use App\Models\DeviceAndSimReceive;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 
 class DeviceTransferController extends Controller
 {
+    use ClosesWithoutDocument;
+
     /**
      * Show the picker form (releasing employee, receiving employee, devices/sims).
      */
@@ -52,20 +55,14 @@ class DeviceTransferController extends Controller
      */
     public function completeClearance(Request $request, Clearance $clearance)
     {
-        $request->validate([
-            'clearing_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'clearing_signature', 'jpeg,png,jpg,svg,pdf');
 
-        $image = $request->file('clearing_signature');
-        $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('X-Files/Dash/imgs/clearance'), $imageName);
+        $clearance->forceFill($this->closingAttributes($request, $forced, 'clearing_signature', 'clear_image', 'clearance', 'finished'))->save();
 
-        $clearance->update([
-            'clear_image' => $imageName,
-            'status' => 'finished',
-        ]);
-
-        return redirect()->back()->with('success', 'Clearance signed.');
+        return redirect()->back()->with(
+            'success',
+            $clearance->wasForceClosed() ? 'Clearance closed without a signed document.' : 'Clearance signed.'
+        );
     }
 
     /**
@@ -74,19 +71,10 @@ class DeviceTransferController extends Controller
      */
     public function completeReceive(Request $request, Receive $receive)
     {
-        $request->validate([
-            'receiving_signature' => 'required|mimes:jpeg,png,jpg,svg,pdf|max:2048',
-        ]);
+        $forced = $this->validateClosing($request, 'receiving_signature', 'jpeg,png,jpg,svg,pdf');
 
-        return DB::transaction(function () use ($request, $receive) {
-            $image = $request->file('receiving_signature');
-            $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('X-Files/Dash/imgs/receives'), $imageName);
-
-            $receive->update([
-                'receive_image' => $imageName,
-                'status' => 'received',
-            ]);
+        return DB::transaction(function () use ($request, $receive, $forced) {
+            $receive->forceFill($this->closingAttributes($request, $forced, 'receiving_signature', 'receive_image', 'receives', 'received'))->save();
 
             $deviceIds = DeviceAndSimReceive::where('receive_id', $receive->id)
                 ->whereNotNull('device_id')

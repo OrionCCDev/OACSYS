@@ -130,6 +130,7 @@
                                         </script>
                                         <button type="submit" class="btn btn-primary">Upload</button>
                                         <button data-dismiss="modal" class="btn btn-danger">Cancel</button>
+                                        @include('partials.force-close', ['what' => 'receive'])
                                     </form>
                                 </div>
                             </div>
@@ -312,6 +313,7 @@
                 <div class="col-xl-12">
                     @include('partials.uploaded-document', [
                         'file' => $receive->receive_image,
+                        'record' => $receive,
                         'dir' => 'receives',
                         'name' => 'receiving-' . $receive->code,
                         'title' => 'Signed Receiving',
@@ -460,6 +462,7 @@
                                         </script>
                                         <button type="submit" class="btn btn-primary">Upload</button>
                                         <button data-dismiss="modal" class="btn btn-danger">Cancel</button>
+                                        @include('partials.force-close', ['what' => 'receive'])
                                     </form>
                                 </div>
                             </div>
@@ -650,6 +653,7 @@
                 <div class="col-xl-12">
                     @include('partials.uploaded-document', [
                         'file' => $receive->receive_image,
+                        'record' => $receive,
                         'dir' => 'receives',
                         'name' => 'receiving-' . $receive->code,
                         'title' => 'Signed Receiving',

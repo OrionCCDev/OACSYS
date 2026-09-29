@@ -16,6 +16,7 @@
                 <section class="hk-sec-wrapper">
                     @include('partials.uploaded-document', [
                         'file' => $clearance->clear_image,
+                        'record' => $clearance,
                         'dir' => 'clearance',
                         'name' => 'clearance-' . $clearance->clear_code,
                         'title' => 'Signed Clearance',
@@ -128,6 +129,7 @@
                                                 <i class="fa fa-check"></i> Complete Clearance
                                             </button>
                                         </div>
+                                        @include('partials.force-close', ['what' => 'clearance'])
                                     </form>
                                 </div>
                             </div>

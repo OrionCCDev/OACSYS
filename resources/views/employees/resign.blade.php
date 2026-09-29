@@ -74,6 +74,7 @@
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Upload</button>
                             </div>
+                            @include('partials.force-close', ['what' => 'resignation'])
                         </form>
                     </div>
                 </div>
@@ -92,6 +93,7 @@
                 @if ($clearanceResign->status == 'resigned')
                 @include('partials.uploaded-document', [
                     'file' => $clearanceResign->clear_image,
+                    'record' => $clearanceResign,
                     'dir' => 'clearance',
                     'name' => 'resignation-' . $clearanceResign->clear_code,
                     'title' => 'Signed Resignation Clearance',

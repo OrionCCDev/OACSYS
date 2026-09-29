@@ -64,6 +64,9 @@
                                         {{ $filter->label($clearance->status) }}
                                     </span>
                                     @endif
+                                    @if ($clearance->wasForceClosed())
+                                    <span class="badge badge-warning" title="Closed without a signed document">no document</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{ route('clearance.show' , ['clearance' => $clearance->id]) }}"

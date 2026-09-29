@@ -8,6 +8,7 @@
         'dir'  => 'clearance',                  // folder under X-Files/Dash/imgs
         'name' => 'clearance-' . $clearance->clear_code,   // optional download name
         'title' => 'Signed Clearance',          // optional heading
+        'record' => $clearance,                 // optional; explains a record closed with no paper
     ])
 
     A record can name a file that is no longer on disk, so that case is
@@ -23,10 +24,32 @@
     $docIsPdf = $docExt === 'pdf';
     // Keep the real extension on the saved copy, whatever we call the file.
     $docDownload = ($name ?? 'document') . ($docExt ? '.' . $docExt : '');
+
+    // Closed on purpose with no paper: say so, and by whom, instead of
+    // looking like an upload that went missing.
+    $docRecord = $record ?? null;
+    $docForced = $docRecord && ($docRecord->force_closed_at ?? null);
+    $docFormRoute = ['receives' => 'receive.pdf', 'clearance' => 'clearance.pdf'][$docDir] ?? null;
 @endphp
 
 <div class="uploaded-document">
-    @if(!$docFile)
+    @if(!$docFile && $docForced)
+        <div class="alert alert-warning mb-0">
+            <strong>Closed without a signed document.</strong>
+            Closed by {{ $docRecord->forceClosedBy?->name ?? 'a user who no longer exists' }}
+            on {{ $docRecord->force_closed_at->format('d M Y, H:i') }}.
+            @if($docRecord->force_close_reason)
+                <div class="mt-1">Reason: {{ $docRecord->force_close_reason }}</div>
+            @endif
+            @if($docFormRoute && \Illuminate\Support\Facades\Route::has($docFormRoute))
+                <div class="mt-2 no-print">
+                    <a href="{{ route($docFormRoute, $docRecord->id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-info">
+                        Open the form as PDF
+                    </a>
+                </div>
+            @endif
+        </div>
+    @elseif(!$docFile)
         <div class="alert alert-secondary mb-0">No signed document has been uploaded yet.</div>
     @elseif(!$docExists)
         <div class="alert alert-warning mb-0">

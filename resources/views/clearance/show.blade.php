@@ -72,6 +72,7 @@
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Upload</button>
                             </div>
+                            @include('partials.force-close', ['what' => 'clearance'])
                         </form>
                     </div>
                 </div>
@@ -94,6 +95,7 @@
                 <div class="col-12">
                     @include('partials.uploaded-document', [
                         'file' => $data['clearance']->clear_image,
+                        'record' => $data['clearance'],
                         'dir' => 'clearance',
                         'name' => 'clearance-' . $data['clearance']->clear_code,
                         'title' => 'Signed Clearance',
