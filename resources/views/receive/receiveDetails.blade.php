@@ -39,6 +39,12 @@
             <button type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#uploadModal">
                 Upload Signed Receiving
             </button>
+            @include('partials.force-close-button', [
+                'route' => route('receive.force-close', $receive->id),
+                'what' => 'receive',
+                'class' => 'btn btn-danger mr-3',
+                'label' => 'Force Close (no document)',
+            ])
             <form id="clr-dlt-btn-form"
                 action="{{ route('receive.destroy' , ['receive' => $receive->id]) }}" method="post">
                 @csrf

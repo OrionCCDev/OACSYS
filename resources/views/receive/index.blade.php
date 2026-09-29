@@ -30,6 +30,11 @@
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
                     <h5 class="hk-sec-title">Receives</h5>
+                    @foreach (['success' => 'alert-success', 'error' => 'alert-danger'] as $flashKey => $flashClass)
+                        @if (session($flashKey))
+                        <div class="alert {{ $flashClass }}">{{ session($flashKey) }}</div>
+                        @endif
+                    @endforeach
                     @include('partials.status-filter', ['filter' => $filter, 'route' => 'receive.index'])
                     <table class="table table-info table-hover mb-0">
                         <thead>
@@ -79,6 +84,11 @@
                                         class="btn btn-warning btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
                                             class="btn-text">Continue</span><span class="icon-label"><i
                                                 class="fa fa-angle-right"></i> </span></a>
+                                    @include('partials.force-close-button', [
+                                        'route' => route('receive.force-close', $recv->id),
+                                        'what' => 'receive',
+                                        'class' => 'btn btn-danger btn-rounded ml-1',
+                                    ])
                                     @else
 
 

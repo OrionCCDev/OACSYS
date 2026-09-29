@@ -39,6 +39,12 @@
             <button type="button" class="btn btn-success mr-3" data-toggle="modal" data-target="#uploadModal">
                 Upload Signed Clearance
             </button>
+            @include('partials.force-close-button', [
+                'route' => route('clearance.force-close', $data['clearance']->id),
+                'what' => 'clearance',
+                'class' => 'btn btn-danger mr-3',
+                'label' => 'Force Close (no document)',
+            ])
             <form id="clr-dlt-btn-form"
                 action="{{ route('clearance.destroy' , ['clearance' => $data['clearance']->id]) }}" method="post">
                 @csrf
@@ -78,7 +84,12 @@
                 </div>
             </div>
             @elseif($data['clearance']->status == 'pending_resign')
-
+            @include('partials.force-close-button', [
+                'route' => route('clearance.force-close', $data['clearance']->id),
+                'what' => 'resignation',
+                'class' => 'btn btn-danger mr-3',
+                'label' => 'Force Close (no document)',
+            ])
             @endif
             <a href="{{ route('clearance.pdf', $data['clearance']->id) }}" target="_blank" class="btn btn-info mr-3">
                 Print Clearance

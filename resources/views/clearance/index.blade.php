@@ -29,6 +29,11 @@
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
                     <h5 class="hk-sec-title">Clearances</h5>
+                    @foreach (['success' => 'alert-success', 'error' => 'alert-danger'] as $flashKey => $flashClass)
+                        @if (session($flashKey))
+                        <div class="alert {{ $flashClass }}">{{ session($flashKey) }}</div>
+                        @endif
+                    @endforeach
                     @include('partials.status-filter', ['filter' => $filter, 'route' => 'clearance.index'])
                     <table class="table table-hover mb-0">
                         <thead>
@@ -73,6 +78,13 @@
                                         class="btn btn-success btn-wth-icon icon-wthot-bg btn-rounded icon-right"><span
                                             class="btn-text">Show</span><span class="icon-label"><i
                                                 class="fa fa-angle-right"></i> </span></a>
+                                    @if (in_array($clearance->status, ['pending', 'pending_resign']))
+                                    @include('partials.force-close-button', [
+                                        'route' => route('clearance.force-close', $clearance->id),
+                                        'what' => $clearance->status === 'pending_resign' ? 'resignation' : 'clearance',
+                                        'class' => 'btn btn-danger btn-rounded ml-1',
+                                    ])
+                                    @endif
 
                                 </td>
                             </tr>

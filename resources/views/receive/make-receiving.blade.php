@@ -34,6 +34,12 @@
                         data-target="#exampleModalForms" class="btn btn-secondary btn-wth-icon btn-rounded icon-right">
                         <span class="btn-text">Upload Receiving Signature</span>
                     </button>
+                    @include('partials.force-close-button', [
+                        'route' => route('receive.force-close', $receive->id),
+                        'what' => 'receive',
+                        'class' => 'btn btn-danger',
+                        'label' => 'Force Close (no document)',
+                    ])
                     <div class="modal fade" id="exampleModalForms" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalForms" aria-hidden="true" style="display: none;">
                         <div class="modal-dialog" role="document">
@@ -366,6 +372,12 @@
                         data-target="#exampleModalForms" class="btn btn-secondary btn-wth-icon btn-rounded icon-right">
                         <span class="btn-text">Upload Receiving Signture</span>
                     </button>
+                    @include('partials.force-close-button', [
+                        'route' => route('receive.force-close', $receive->id),
+                        'what' => 'receive',
+                        'class' => 'btn btn-danger',
+                        'label' => 'Force Close (no document)',
+                    ])
                     <div class="modal fade" id="exampleModalForms" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalForms" aria-hidden="true" style="display: none;">
                         <div class="modal-dialog" role="document">
