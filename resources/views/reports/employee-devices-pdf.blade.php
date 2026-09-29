@@ -24,14 +24,15 @@
         <tr>
             <th style="width:4%">SL</th>
             <th style="width:9%">Orion ID</th>
-            <th style="width:16%">Employee</th>
-            <th style="width:11%">Department</th>
-            <th style="width:8%">Project</th>
-            <th style="width:12%">Device Code</th>
-            <th style="width:14%">Device</th>
-            <th style="width:7%">Type</th>
-            <th style="width:10%">Serial No</th>
-            <th style="width:9%">Status</th>
+            <th style="width:14%">Employee</th>
+            <th style="width:11%">Position</th>
+            <th style="width:9%">Department</th>
+            <th style="width:7%">Project</th>
+            <th style="width:11%">Device Code</th>
+            <th style="width:13%">Device</th>
+            <th style="width:6%">Type</th>
+            <th style="width:9%">Serial No</th>
+            <th style="width:8%">Status</th>
         </tr>
     </thead>
     <tbody>
@@ -40,6 +41,7 @@
             <td>{{ $row['sl_no'] }}</td>
             <td class="mono">{{ $row['orion_id'] ?: '-' }}</td>
             <td>{{ $row['employee'] }}</td>
+            <td>{{ $row['position'] ?: '-' }}</td>
             <td>{{ $row['department'] ?: '-' }}</td>
             <td class="mono">{{ $row['project'] ?: '-' }}</td>
             <td class="mono">{{ $row['device_code'] }}</td>
@@ -49,7 +51,7 @@
             <td>{{ $row['status'] }}</td>
         </tr>
         @empty
-        <tr><td colspan="10" style="text-align:center">No devices to list.</td></tr>
+        <tr><td colspan="11" style="text-align:center">No devices to list.</td></tr>
         @endforelse
     </tbody>
 </table>

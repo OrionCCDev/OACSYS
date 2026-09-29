@@ -6,6 +6,7 @@ use App\Exports\EmployeeDevicesExport;
 use App\Models\Department;
 use App\Models\Device;
 use App\Models\Employee;
+use App\Models\Position;
 use App\Support\PdfFonts;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -41,6 +42,8 @@ class EmployeeDeviceReportController extends Controller
             'totals' => $this->totals($filters),
             'resignedHolding' => $this->totals(['who' => 'resigned'] + $this->filters(new Request())),
             'departments' => Department::orderBy('name')->get(['id', 'name']),
+            // a title exists once per department that has it, so offer each title once
+            'positions' => Position::whereNotNull('name')->where('name', '!=', '')->distinct()->orderBy('name')->pluck('name'),
             'types' => Device::whereNotNull('employee_id')->whereNotNull('device_type')
                 ->where('device_type', '!=', '')->distinct()->orderBy('device_type')->pluck('device_type'),
             'statuses' => self::STATUSES,
@@ -78,6 +81,7 @@ class EmployeeDeviceReportController extends Controller
             'who' => $request->query('who') === 'resigned' ? 'resigned' : 'current',
             'search' => trim((string) $request->query('search', '')),
             'department' => ctype_digit((string) $request->query('department')) ? (int) $request->query('department') : null,
+            'position' => trim((string) $request->query('position', '')),
             'type' => trim((string) $request->query('type', '')),
             'status' => isset(self::STATUSES[$status]) ? $status : '',
         ];
@@ -102,12 +106,14 @@ class EmployeeDeviceReportController extends Controller
                 fn ($q) => $q->where('type', '!=', 'resigned')
             )
             ->when($filters['department'], fn ($q, $department) => $q->where('department_id', $department))
+            ->when($filters['position'] !== '', fn ($q) => $q->whereHas('position', fn ($p) => $p->where('name', $filters['position'])))
             ->whereHas('devices', $devices)
             ->when($filters['search'] !== '', function ($q) use ($filters, $devices) {
                 $term = '%' . $filters['search'] . '%';
                 $q->where(function ($w) use ($term, $devices) {
                     $w->where('name', 'like', $term)
                         ->orWhere('employee_id', 'like', $term)
+                        ->orWhereHas('position', fn ($p) => $p->where('name', 'like', $term))
                         ->orWhereHas('devices', fn ($d) => $devices($d)->where(function ($x) use ($term) {
                             $x->where('device_code', 'like', $term)
                                 ->orWhere('device_name', 'like', $term)
@@ -181,6 +187,9 @@ class EmployeeDeviceReportController extends Controller
 
         if ($filters['department']) {
             $parts[] = 'Department: ' . (Department::find($filters['department'])?->name ?? '-');
+        }
+        if ($filters['position'] !== '') {
+            $parts[] = 'Position: ' . $filters['position'];
         }
         if ($filters['type'] !== '') {
             $parts[] = 'Type: ' . $filters['type'];

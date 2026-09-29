@@ -3,7 +3,7 @@
 @section('content')
 @php
     $resigned = $filters['who'] === 'resigned';
-    $query = array_filter(request()->only(['who', 'search', 'department', 'type', 'status']), fn ($v) => $v !== null && $v !== '');
+    $query = array_filter(request()->only(['who', 'search', 'position', 'department', 'type', 'status']), fn ($v) => $v !== null && $v !== '');
     $badges = ['taken' => 'badge-success', 'pending-receiving' => 'badge-warning', 'pending-cancel' => 'badge-info'];
     $number = $employees->firstItem() ?? 0;
 @endphp
@@ -56,7 +56,16 @@
                             <div class="input-group mb-2 mr-2">
                                 <div class="input-group-prepend"><div class="input-group-text">Search</div></div>
                                 <input type="text" name="search" class="form-control" style="min-width:260px"
-                                       placeholder="Name, Orion ID, device code, serial" value="{{ $filters['search'] }}">
+                                       placeholder="Name, Orion ID, position, device code, serial" value="{{ $filters['search'] }}">
+                            </div>
+                            <div class="input-group mb-2 mr-2">
+                                <div class="input-group-prepend"><div class="input-group-text">Position</div></div>
+                                <select name="position" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach($positions as $position)
+                                    <option value="{{ $position }}" {{ $filters['position'] === $position ? 'selected' : '' }}>{{ $position }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="input-group mb-2 mr-2">
                                 <div class="input-group-prepend"><div class="input-group-text">Department</div></div>
@@ -86,7 +95,7 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary mb-2">Filter</button>
-                            @if($filters['search'] !== '' || $filters['department'] || $filters['type'] !== '' || $filters['status'] !== '')
+                            @if($filters['search'] !== '' || $filters['position'] !== '' || $filters['department'] || $filters['type'] !== '' || $filters['status'] !== '')
                             <a href="{{ route('reports.employee-devices', $resigned ? ['who' => 'resigned'] : []) }}" class="btn btn-secondary mb-2 ml-2">Clear</a>
                             @endif
                         </form>
@@ -98,6 +107,7 @@
                                         <th>#</th>
                                         <th>Orion ID</th>
                                         <th>Employee</th>
+                                        <th>Position</th>
                                         <th>Department</th>
                                         <th>Project</th>
                                         <th>Device Code</th>
@@ -122,6 +132,7 @@
                                                 @endif
                                                 <small class="d-block text-muted">{{ $span }} {{ $span === 1 ? 'device' : 'devices' }}</small>
                                             </td>
+                                            <td rowspan="{{ $span }}">{{ $employee->position?->name ?? '-' }}</td>
                                             <td rowspan="{{ $span }}">{{ $employee->department?->name ?? '-' }}</td>
                                             <td rowspan="{{ $span }}">{{ $employee->project?->project_code ?? '-' }}</td>
                                             @endif
@@ -140,7 +151,7 @@
                                         @endforeach
                                     @empty
                                     <tr>
-                                        <td colspan="10" class="text-center" style="text-transform:none">
+                                        <td colspan="11" class="text-center" style="text-transform:none">
                                             @if($resigned)
                                                 No device is recorded against a resigned employee.
                                             @else
