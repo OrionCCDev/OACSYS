@@ -30,6 +30,7 @@
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
                     <h5 class="hk-sec-title">Receives</h5>
+                    @include('partials.status-filter', ['filter' => $filter, 'route' => 'receive.index'])
                     <table class="table table-info table-hover mb-0">
                         <thead>
                             <tr>
@@ -86,6 +87,18 @@
                                 </td>
                             </tr>
                             @endforeach
+                            @if ($data->isEmpty())
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    @if ($filter->current)
+                                        No receives are {{ strtolower($filter->label($filter->current)) }}.
+                                        <a href="{{ route('receive.index') }}">Show all</a>
+                                    @else
+                                        No receives yet.
+                                    @endif
+                                </td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
 

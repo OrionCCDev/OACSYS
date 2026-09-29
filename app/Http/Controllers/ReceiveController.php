@@ -8,6 +8,7 @@ use App\Models\Receive;
 use App\Models\SimCard;
 use App\Models\Department;
 use App\Support\PdfFonts;
+use App\Support\StatusFilter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,12 +21,19 @@ class ReceiveController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Receive::with(['clientEmployee', 'consultant', 'employee'])
+        $filter = new StatusFilter(Receive::class, [
+            'pending' => 'Pending',
+            'received' => 'Received',
+        ], $request);
+
+        $data = $filter->apply(Receive::with(['clientEmployee', 'consultant', 'employee', 'project']))
             ->orderBy('updated_at', 'desc')
-            ->paginate(10);
-        return view('receive.index', compact('data'));
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('receive.index', compact('data', 'filter'));
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Models\Clearance;
 use App\Models\Department;
 use App\Models\Consultant;
 use App\Support\PdfFonts;
+use App\Support\StatusFilter;
 use Illuminate\Http\Request;
 use App\Models\ClientEmployee;
 use App\Models\DeviceAndSimClearance;
@@ -20,12 +21,21 @@ class ClearanceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Clearance::with(['clientEmployee', 'consultant', 'employee'])
+        $filter = new StatusFilter(Clearance::class, [
+            'pending' => 'Pending',
+            'finished' => 'Finished',
+            'pending_resign' => 'Pending resignation',
+            'resigned' => 'Resigned',
+        ], $request);
+
+        $data = $filter->apply(Clearance::with(['clientEmployee', 'consultant', 'employee']))
             ->orderBy('updated_at', 'desc')
-            ->paginate(10);
-        return view('clearance.index', compact('data'));
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('clearance.index', compact('data', 'filter'));
     }
 
     /**

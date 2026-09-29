@@ -29,6 +29,7 @@
             <section class="hk-sec-wrapper">
                 <div class="table-responsive mt-4">
                     <h5 class="hk-sec-title">Clearances</h5>
+                    @include('partials.status-filter', ['filter' => $filter, 'route' => 'clearance.index'])
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
@@ -53,13 +54,14 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($clearance->status == 'pending')
+                                    {{-- both "pending" and "pending_resign" are still waiting on someone --}}
+                                    @if (in_array($clearance->status, ['pending', 'pending_resign']))
                                     <span class="badge badge-warning">
-                                        {{ $clearance->status }}
+                                        {{ $filter->label($clearance->status) }}
                                     </span>
                                     @else
                                     <span class="badge badge-indigo">
-                                        {{ $clearance->status }}
+                                        {{ $filter->label($clearance->status) }}
                                     </span>
                                     @endif
                                 </td>
@@ -72,6 +74,18 @@
                                 </td>
                             </tr>
                             @endforeach
+                            @if ($data->isEmpty())
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    @if ($filter->current)
+                                        No clearances are {{ strtolower($filter->label($filter->current)) }}.
+                                        <a href="{{ route('clearance.index') }}">Show all</a>
+                                    @else
+                                        No clearances yet.
+                                    @endif
+                                </td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
                     {{ $data->links('pagination::bootstrap-4') }}
