@@ -31,6 +31,9 @@
                                         <line x1="8" y1="12" x2="16" y2="12"></line>
                                     </svg></span> </span>
                         </a>
+                        <a href="{{ route('reports.employee-devices') }}" class="btn btn-info btn-rounded">
+                            Devices With Employees
+                        </a>
                         <a href="{{ route('device.assignDeviceToEmp') }}"
                             class="btn btn-gradient-dark btn-wth-icon btn-rounded icon-right">
                             <span class="btn-text">Assigne Device To Employee</span>

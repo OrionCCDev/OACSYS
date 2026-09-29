@@ -201,6 +201,13 @@ Route::middleware(['web', 'auth'])->group(function () {
 // });
 
 Route::middleware(['auth', 'role:o-super-admin|o-admin'])->group(function () {
+    // Which devices are with which employees. Read-only.
+    Route::prefix('reports/devices-with-employees')->name('reports.employee-devices')->group(function () {
+        Route::get('/', [\App\Http\Controllers\EmployeeDeviceReportController::class, 'index']);
+        Route::get('/excel', [\App\Http\Controllers\EmployeeDeviceReportController::class, 'excel'])->name('.excel');
+        Route::get('/pdf', [\App\Http\Controllers\EmployeeDeviceReportController::class, 'pdf'])->name('.pdf');
+    });
+
     // Close a receive or clearance with no signed paper, from the lists and record pages.
     Route::post('/receive/{receive}/force-close', [\App\Http\Controllers\ForceCloseController::class, 'receive'])->name('receive.force-close');
     Route::post('/clearance/{clearance}/force-close', [\App\Http\Controllers\ForceCloseController::class, 'clearance'])->name('clearance.force-close');
