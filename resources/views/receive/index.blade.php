@@ -21,6 +21,7 @@
                                     <line x1="8" y1="12" x2="16" y2="12"></line>
                                 </svg></span> </span>
                     </a>
+                    @include('receive.partials.new-employee-modal', ['part' => 'button'])
                 </h2>
             </div>
         </div>
@@ -126,5 +127,7 @@
         </div>
     </div>
 </div>
+
+@include('receive.partials.new-employee-modal', ['part' => 'modal'])
 
 @endsection

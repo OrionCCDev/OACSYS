@@ -8,6 +8,10 @@
         <div class="hk-pg-header align-items-top">
             <div>
                 <h2 class="hk-pg-title font-weight-600 mb-10">Make Receiving</h2>
+                <p class="mb-10">
+                    Person not in the system yet?
+                    @include('receive.partials.new-employee-modal', ['part' => 'button'])
+                </p>
             </div>
         </div>
         <!-- Title -->
@@ -73,4 +77,6 @@
     </div>
 </div>
 </div>
+@include('receive.partials.new-employee-modal', ['part' => 'modal'])
+
 @endsection

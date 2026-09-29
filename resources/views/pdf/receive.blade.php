@@ -53,7 +53,19 @@
         <td class="k">Name</td>
         <td class="v">{{ $receiver->name ?? '-' }}</td>
     </tr>
-    @if ($receiver_type == 'employee')
+    @if ($receiver_type == 'employee' && ($receiver->registration_pending ?? false))
+    {{-- a new joiner, not registered yet: no Orion ID or department to print --}}
+    <tr>
+        <td class="k">Mobile</td>
+        <td class="v mono">{{ $receiver->personal_mobile ?? '-' }}</td>
+        <td class="k">Personal Email</td>
+        <td class="v">{{ $receiver->personal_email ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="k">Orion ID</td>
+        <td class="v" colspan="3">New employee - not registered yet</td>
+    </tr>
+    @elseif ($receiver_type == 'employee')
     <tr>
         <td class="k">Orion ID</td>
         <td class="v mono">{{ $receiver->employee_id }}</td>

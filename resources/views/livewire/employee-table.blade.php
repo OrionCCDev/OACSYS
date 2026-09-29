@@ -91,7 +91,12 @@
                                                         <td><img class="img-fluid rounded"
                                                                 src="{{ asset('X-Files/Dash/imgs/EmployeeProfilePic/' . $employee->profile_image) }}" width="50" height="50" alt="icon"></td>
                                                         <td>{{ $employee->employee_id }}</td>
-                                                        <td>{{ $employee->name }}</td>
+                                                        <td>
+                                                            {{ $employee->name }}
+                                                            @if ($employee->registration_pending)
+                                                            <span class="badge badge-warning" title="Recorded at a handover. Give them an Orion ID to finish registering them.">not registered yet</span>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             {{-- @foreach ($employee->sim_card as $sim)
                                                             <span class="badge badge-success">{{ $sim->sim_number }}</span>

@@ -380,6 +380,8 @@ Route::delete('project/receives/{receive}', [ReceiveController::class, 'destroyR
 Route::middleware(['auth', 'role:o-hr|o-super-admin|o-admin'])->group(function () {
     // Route::resource('department' , DepartmentController::class );
     Route::resource('/clearance', ClearanceController::class);
+    // A receiving for a new joiner who is not in the system yet.
+    Route::post('/receive/new-employee', [\App\Http\Controllers\NewEmployeeReceiveController::class, 'store'])->name('receive.new-employee');
     Route::resource('/receive', ReceiveController::class);
     Route::get('/resign/employee/{id}', [EmployeeController::class, 'preResign'])->name('employee.preResign');
     Route::get('/device/employee/assign', [DeviceController::class, 'assignDeviceToEmp'])->name('device.assignDeviceToEmp');

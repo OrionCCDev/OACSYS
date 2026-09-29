@@ -11,6 +11,21 @@ class Employee extends Model implements HasMedia
     use InteractsWithMedia;
     protected $guarded = [];
 
+    protected $casts = [
+        'registration_pending' => 'boolean',
+    ];
+
+    protected static function booted(): void
+    {
+        // Recorded in a hurry with no Orion ID; once HR gives them one, they
+        // are registered like anybody else.
+        static::saving(function (Employee $employee) {
+            if ($employee->registration_pending && filled($employee->employee_id)) {
+                $employee->registration_pending = false;
+            }
+        });
+    }
+
     public function devices(){
         return $this->hasMany(Device::class);
     }

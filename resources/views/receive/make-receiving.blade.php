@@ -170,6 +170,14 @@
             <!-- /Title -->
 
             <!-- Row -->
+            @if (session('success'))
+            <div class="alert alert-success no-print d-flex flex-wrap align-items-center justify-content-between">
+                <span>{{ session('success') }}</span>
+                <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-info ml-2">
+                    Print the company form
+                </a>
+            </div>
+            @endif
             <div class="row" id="PrintingArea">
                 @if ($receive->status != 'received')
                 <div class="col-xl-12">
@@ -196,11 +204,19 @@
                                     <h6 class="mb-5">Project : <span style="color:#174094 ">{{ $project->project_name }}</span>
                                     <h6 class="mb-5">Code : <span style="color:#174094 ">{{ $project->project_code }}</span>
                                     </h6>
+                                    @if ($receiver_type == 'employee' && ($receiver->registration_pending ?? false))
+                                    {{-- a new joiner, not registered yet: no Orion ID or department to show --}}
+                                    <h6 class="mb-5">Mobile : <span style="color:#174094 ">{{ $receiver->personal_mobile }}</span></h6>
+                                    <h6 class="mb-5">Personal Email : <span style="color:#174094;text-transform:none ">{{ $receiver->personal_email }}</span></h6>
+                                    <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">New employee - not registered yet</span></h6>
+                                    @endif
                                     @if ($receiver_type == 'employee')
+                                    @if (!($receiver->registration_pending ?? false))
                                     <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">{{ $receiver->employee_id
                                             }}</span></h6>
                                     <h6 class="mb-5">Department : <span style="color:#174094 ">{{
                                             $receiver->department?->name }}</span></h6>
+                                    @endif
                                     @if ($receiver->project_id != null)
                                     <h6 class="mb-5">Project : <span style="color:#174094 ">{{
                                             $receiver->project?->project_code }}</span></h6>
@@ -513,6 +529,14 @@
             <!-- /Title -->
 
             <!-- Row -->
+            @if (session('success'))
+            <div class="alert alert-success no-print d-flex flex-wrap align-items-center justify-content-between">
+                <span>{{ session('success') }}</span>
+                <a href="{{ route('receive.pdf', $receive->id) }}" target="_blank" rel="noopener" class="btn btn-sm btn-info ml-2">
+                    Print the company form
+                </a>
+            </div>
+            @endif
             <div class="row" id="PrintingArea">
                 @if ($receive->status != 'received')
                 <div class="col-xl-12">
@@ -538,11 +562,19 @@
                                             }}</span></h6>
                                     <h6 class="mb-5">Name : <span style="color:#174094 ">{{ $receiver->name }}</span>
                                     </h6>
+                                    @if ($receiver_type == 'employee' && ($receiver->registration_pending ?? false))
+                                    {{-- a new joiner, not registered yet: no Orion ID or department to show --}}
+                                    <h6 class="mb-5">Mobile : <span style="color:#174094 ">{{ $receiver->personal_mobile }}</span></h6>
+                                    <h6 class="mb-5">Personal Email : <span style="color:#174094;text-transform:none ">{{ $receiver->personal_email }}</span></h6>
+                                    <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">New employee - not registered yet</span></h6>
+                                    @endif
                                     @if ($receiver_type == 'employee')
+                                    @if (!($receiver->registration_pending ?? false))
                                     <h6 class="mb-5">Orion-ID : <span style="color:#174094 ">{{ $receiver->employee_id
                                             }}</span></h6>
                                     <h6 class="mb-5">Department : <span style="color:#174094 ">{{
                                             $receiver->department?->name }}</span></h6>
+                                    @endif
                                     @if ($receiver->project_id != null)
                                     <h6 class="mb-5">Project : <span style="color:#174094 ">{{
                                             $receiver->project?->project_code }}</span></h6>
